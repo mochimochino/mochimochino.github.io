@@ -121,7 +121,7 @@
 
             <h3>groups.conf</h3>
             <p>YAMLファイルを参照させるために<code>groups.conf</code>を編集します。</p>
-            <pre><code>[root@grid04 ~]# cat /etc/clustershell/groups.conf
+            <pre><code>cat /etc/clustershell/groups.conf
 # ClusterShell node groups main configuration file
 [Main]
 default: roles
@@ -134,17 +134,15 @@ all: [ -f $CFGDIR/groups ] && f=$CFGDIR/groups || f=$CFGDIR/groups.d/local.cfg; 
 list: [ -f $CFGDIR/groups ] && f=$CFGDIR/groups || f=$CFGDIR/groups.d/local.cfg; sed -n 's/^\([0-9A-Za-z_-]*\):.*/\1/p' $f</code></pre>
 
             <h3>cluster.yaml</h3>
-            <pre><code>[root@grid04 ~]# cat /etc/clustershell/groups.d/cluster.yaml
+            <pre><code>cat /etc/clustershell/groups.d/cluster.yaml
 roles:
-  vobox: 'grid01'
-  condor:
-    - 'grid01'
-    - 'qx[301-320]'
-  worker_node: 'qx[301-320]'
-  eos_mgm: 'grid[04-06]'
-  eos_fst: 'nfs[11-13]'
+  group1: 'node01'
+  group2: 'wn[01-99]'   
+  gather:
+    - 'node01'
+    - 'wn[01-99]'
 
-  all: '@vobox,@worker_node,@eos_mgm,@eos_fst'</code></pre>
+  all: '@group1,@group2'</code></pre>
 
             <hr class="my-10">
 
@@ -162,7 +160,7 @@ vi myfile.conf
 # Then, copy it to the destination on all nodes in the group
 clush -w @group -c myfile.conf --dest=/etc/myfile.conf</code></pre>
             <p>特定のノードを指定してコマンドを実行:</p>
-            <pre><code>clush -w grid[04,05] "systemctl restart eos@mgm"</code></pre>
+            <pre><code>clush -w wn[02,03] "ip addr"</code></pre>
 
             <div class="mt-16 text-center">
                 <a href="index.html" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors no-underline">
