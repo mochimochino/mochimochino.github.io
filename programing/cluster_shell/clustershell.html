@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cluster Shellとは</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+        }
+        /* Custom styles for prose content */
+        .prose h1, .prose h2, .prose h3 {
+            font-weight: 700;
+            color: #1f2937; /* gray-800 */
+        }
+        .prose pre {
+            background-color: #1f2937; /* gray-800 */
+            color: #d1d5db; /* gray-300 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+        }
+        .prose code {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+        }
+        .prose table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .prose th, .prose td {
+            border: 1px solid #d1d5db; /* gray-300 */
+            padding: 0.75rem 1rem;
+            text-align: left;
+        }
+        .prose th {
+            background-color: #f3f4f6; /* gray-100 */
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <main class="max-w-4xl mx-auto py-16 px-4">
+        <div class="bg-white rounded-xl shadow-lg p-8 lg:p-12 prose max-w-none">
+            
+            <h1>Cluster Shellとは</h1>
+
+            <a href="https://clustershell.readthedocs.io/en/latest/intro.html" target="_blank" rel="noopener noreferrer" class="block my-8 p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-shadow no-underline">
+                <div class="font-bold text-indigo-700 text-lg">Introduction — clustershell 1.9.3 documentation</div>
+                <div class="text-sm text-gray-500 mt-1">clustershell.readthedocs.io</div>
+            </a>
+            
+            <h2>概要</h2>
+            <p>Cluster Shellは、クラスタ管理用の軽量かつ統一されたPythonフレームワークです。大規模なクラスタを効率的に管理するために設計されており、以下の特徴を持ちます。</p>
+            <ul class="list-disc pl-6 space-y-2">
+                <li><strong>並列かつスケーラブルなコマンド実行エンジン:</strong> 数百から数千のノードに対して同時にリモートシェルコマンドを実行可能です。</li>
+                <li><strong>統一されたノードグループ構文と外部グループアクセス:</strong> <code>NodeSet</code>クラスを用いてノード群を柔軟に指定可能です。</li>
+            </ul>
+            <p>ClusterShellはフランスのCEAのHPC開発チームによって開発され、スーパーコンピュータ管理で利用されています。</p>
+
+            <h2>仕組み</h2>
+            <h3>コマンド実行エンジン</h3>
+            <ul class="list-disc pl-6 space-y-2">
+                <li><strong>並列処理:</strong> 内部でイベントループを用い、非同期I/Oにより多数ノードへの同時SSH接続を効率的に処理します。</li>
+                <li><strong>出力収集:</strong> 各ノードからの標準出力・エラーをまとめて収集し、ノード単位でグルーピングして管理者に提示します。</li>
+            </ul>
+            
+            <hr class="my-10">
+
+            <h1>導入方法 - RHEL9</h1>
+
+            <a href="https://clustershell.readthedocs.io/en/latest/install.html" target="_blank" rel="noopener noreferrer" class="block my-8 p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-shadow no-underline">
+                <div class="font-bold text-indigo-700 text-lg">Installation — clustershell 1.9.3 documentation</div>
+                <div class="text-sm text-gray-500 mt-1">clustershell.readthedocs.io</div>
+            </a>
+            <ul class="list-disc pl-6 space-y-2">
+                <li><strong>管理ノード (1台):</strong> ClusterShellをインストールして、全ノードを制御します。</li>
+                <li><strong>管理対象ノード:</strong> 必ずしもClusterShellをインストールする必要はありません。SSHでパスワード無しで接続できるようにする必要があります。</li>
+            </ul>
+            
+            <h2>EPELからのインストール方法</h2>
+            <p>EPELを有効にする (していない場合):</p>
+            <pre><code>dnf --enablerepo=extras install epel-release</code></pre>
+            <p>ClusterShellをインストール:</p>
+            <pre><code>dnf install clustershell</code></pre>
+            
+            <h2>Configuration</h2>
+            <p>基本的な設定ファイルは以下の場所にあります。</p>
+            <ul class="list-disc pl-6">
+                <li><code>/etc/clustershell/clush.conf</code></li>
+                <li><code>/etc/clustershell/groups.conf</code></li>
+                <li><code>/etc/clustershell/groups.d/cluster.yaml</code></li>
+            </ul>
+            <p><code>groups.conf</code>でグループ定義の参照先を設定し、<code>cluster.yaml</code>が実際のグループ定義ファイルとなります。<code>clush.conf</code>は<code>clush</code>コマンドの挙動を調整する設定ファイルです。</p>
+
+            <h3>clush の設定</h3>
+            <p><code>/etc/clustershell/clush.conf</code>を設定します。以下は公式ドキュメントからの引用です。</p>
+            <div class="overflow-x-auto">
+                <table>
+                    <thead>
+                        <tr><th>Key</th><th>Value</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>fanout</td><td>Size of the sliding window of connectors (eg. max number of ssh allowed to run at the same time).</td></tr>
+                        <tr><td>connect_timeout</td><td>Timeout in seconds to allow a connection to establish.</td></tr>
+                        <tr><td>command_timeout</td><td>Timeout in seconds to allow a command to complete since the connection has been established.</td></tr>
+                        <tr><td>color</td><td>Whether to use ANSI colors. Valid arguments: never, always, auto.</td></tr>
+                        <tr><td>fd_max</td><td>Maximum number of open file descriptors permitted per clush process.</td></tr>
+                        <tr><td>history_size</td><td>Maximum number of history entries saved.</td></tr>
+                        <tr><td>node_count</td><td>Should clush display additional node count information? (yes/no)</td></tr>
+                        <tr><td>maxrc</td><td>Should clush return the largest of command return codes? (yes/no)</td></tr>
+                        <tr><td>ssh_user</td><td>Set the ssh user to use for remote connection.</td></tr>
+                        <tr><td>ssh_path</td><td>Set the ssh binary path.</td></tr>
+                        <tr><td>ssh_options</td><td>Set additional options to pass to the ssh command.</td></tr>
+                        <tr><td>scp_path</td><td>Set the scp binary path.</td></tr>
+                        <tr><td>scp_options</td><td>Set additional options to pass to the scp command.</td></tr>
+                        </tbody>
+                </table>
+            </div>
+
+            <h3>groups.conf</h3>
+            <p>YAMLファイルを参照させるために<code>groups.conf</code>を編集します。</p>
+            <pre><code>[root@grid04 ~]# cat /etc/clustershell/groups.conf
+# ClusterShell node groups main configuration file
+[Main]
+default: roles
+confdir: /etc/clustershell/groups.conf.d $CFGDIR/groups.conf.d
+autodir: /etc/clustershell/groups.d $CFGDIR/groups.d
+# ... (rest of the file)
+[local]
+map: [ -f $CFGDIR/groups ] && f=$CFGDIR/groups || f=$CFGDIR/groups.d/local.cfg; sed -n 's/^$GROUP:\(.*\)/\1/p' $f
+all: [ -f $CFGDIR/groups ] && f=$CFGDIR/groups || f=$CFGDIR/groups.d/local.cfg; sed -n 's/^all:\(.*\)/\1/p' $f
+list: [ -f $CFGDIR/groups ] && f=$CFGDIR/groups || f=$CFGDIR/groups.d/local.cfg; sed -n 's/^\([0-9A-Za-z_-]*\):.*/\1/p' $f</code></pre>
+
+            <h3>cluster.yaml</h3>
+            <pre><code>[root@grid04 ~]# cat /etc/clustershell/groups.d/cluster.yaml
+roles:
+  vobox: 'grid01'
+  condor:
+    - 'grid01'
+    - 'qx[301-320]'
+  worker_node: 'qx[301-320]'
+  eos_mgm: 'grid[04-06]'
+  eos_fst: 'nfs[11-13]'
+
+  all: '@vobox,@worker_node,@eos_mgm,@eos_fst'</code></pre>
+
+            <hr class="my-10">
+
+            <h2>使用例</h2>
+            <p>定義したグループの確認:</p>
+            <pre><code>nodeset -LL</code></pre>
+            <p>コマンドが作動するか確認:</p>
+            <pre><code>clush -w @all df -h</code></pre>
+            <p>任意のグループに対してコマンドを実行:</p>
+            <pre><code>clush -w @worker_node condor_status</code></pre>
+            <p>任意のグループへ設定ファイルを配布:</p>
+            <pre><code># First, create the file on the admin server
+vi myfile.conf
+
+# Then, copy it to the destination on all nodes in the group
+clush -w @group -c myfile.conf --dest=/etc/myfile.conf</code></pre>
+            <p>特定のノードを指定してコマンドを実行:</p>
+            <pre><code>clush -w grid[04,05] "systemctl restart eos@mgm"</code></pre>
+
+            <div class="mt-16 text-center">
+                <a href="index.html" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors no-underline">
+                    ← ツール特集に戻る
+                </a>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
