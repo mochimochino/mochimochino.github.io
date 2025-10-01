@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My page</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Inter Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         /* Custom styles */
@@ -19,23 +17,16 @@
             background-size: cover;
             background-position: center;
         }
-        .section-title {
-            @apply text-3xl font-bold text-center mb-12 text-gray-800;
+        .card-link {
+            text-decoration: none; 
         }
-        .card {
-            @apply bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105;
-        }
-        .nav-link {
-            @apply px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors;
-        }
-        .nav-link-mobile {
-            @apply block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors;
+        .card-link h3, .card-link p {
+            color: inherit;
         }
     </style>
 </head>
 <body class="bg-gray-100">
 
-    <!-- Navigation Bar -->
     <nav class="bg-white shadow-md fixed w-full z-10 top-0">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
@@ -44,42 +35,36 @@
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="#home" class="nav-link">ホーム</a>
-                        <a href="#about" class="nav-link">自己紹介</a>
-                        <a href="#hobbies" class="nav-link">趣味</a>
-                        <a href="#restaurants" class="nav-link">美味しいお店</a>
+                        <a href="#home" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors">ホーム</a>
+                        <a href="#about" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors">自己紹介</a>
+                        <a href="#hobbies" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors">趣味</a>
+                        <a href="#restaurants" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors">美味しいお店</a>
                     </div>
                 </div>
-                <!-- Mobile menu button -->
                 <div class="md:hidden">
                     <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                         <span class="sr-only">メインメニューを開く</span>
-                        <!-- Icon when menu is closed. -->
-                        <svg id="menu-closed-icon" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <svg id="menu-closed-icon" class="block h-6 w-6" xmlns="http://www.w.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
                         </svg>
-                        <!-- Icon when menu is open. -->
-                        <svg id="menu-open-icon" class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <svg id="menu-open-icon" class="hidden h-6 w-6" xmlns="http://www.w.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
                 </div>
             </div>
         </div>
-        <!-- Mobile menu, show/hide based on menu state. -->
         <div class="md:hidden hidden" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#home" class="nav-link-mobile">ホーム</a>
-                <a href="#about" class="nav-link-mobile">自己紹介</a>
-                <a href="#hobbies" class="nav-link-mobile">趣味</a>
-                <a href="#restaurants" class="nav-link-mobile">美味しいお店</a>
+                <a href="#home" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors">ホーム</a>
+                <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors">自己紹介</a>
+                <a href="#hobbies" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors">趣味</a>
+                <a href="#restaurants" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors">美味しいお店</a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section (Home) -->
-    <header id="home" class="hero-bg text-white pt-16"> <!-- pt-16 to offset fixed navbar -->
-        <div class="bg-black bg-opacity-50 min-h-[calc(100vh-4rem)] flex items-center justify-center">
+    <header id="home" class="hero-bg text-white pt-16"> <div class="bg-black bg-opacity-50 min-h-[calc(100vh-4rem)] flex items-center justify-center">
             <div class="text-center p-8">
                 <h1 class="text-5xl font-bold mb-4">Hello</h1>
                 <p class="text-xl mb-8">マイページへようこそ - Welcome to my page</p>
@@ -88,12 +73,10 @@
         </div>
     </header>
 
-    <!-- Main Content -->
     <main class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
 
-        <!-- About Me Section -->
         <section id="about" class="py-16">
-            <h2 class="section-title">自己紹介</h2>
+            <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">自己紹介</h2>
             <div class="bg-white rounded-xl shadow-xl p-8 md:p-12 flex flex-col md:flex-row items-center">
                 <div class="md:w-1/3 mb-8 md:mb-0 md:mr-12">
                     <img src="/images/intro.png" alt="私の写真" class="rounded-full shadow-lg mx-auto w-64 h-64 md:w-full md:h-auto object-cover">
@@ -101,11 +84,8 @@
                 <div class="md:w-2/3">
                     <h3 class="text-2xl font-semibold text-gray-700 mb-4">松本 拓磨(Takuma Matsumoto)</h3>
                     <p class="text-gray-600 leading-relaxed mb-4">
-                        <p class="text-gray-600 leading-relaxed mb-4">
                         はじめまして！
                         研究歴等はクォーク物理学研究室の<a href="https://www.quark.hiroshima-u.ac.jp/member/activity/24matsumoto.html" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:underline">ページ</a>に記載してあります。
-                        
-                    </p>
                     </p>
                     <p class="text-gray-600 leading-relaxed">
                         趣味はスイーツ巡り、電車旅、写真撮影、サイクリング、ハイキングなど多岐にわたります。新しい技術を学ぶことや、自然の中でリフレッシュすることが好きです。
@@ -120,22 +100,22 @@
             </div>
         </section>
 
-<section id="hobbies" class="py-16 bg-gray-50 rounded-xl shadow-inner">
-            <h2 class="section-title">趣味</h2>
+        <section id="hobbies" class="py-16 bg-gray-50 rounded-xl shadow-inner">
+            <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">趣味</h2>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-                <a href="programing/main.html" class="block card-link"> <div class="card">
-                        <img src="images/programing.png" alt="プログラミング" class="w-full h-48 object-cover">
+                <a href="programing/main.html" class="block card-link">
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105">
+                        <img src="images/programing.png" alt="ツール" class="w-full h-48 object-cover">
                         <div class="p-6">
-                            <h3 class="text-xl font-semibold text-gray-800 mb-2">プログラミング</h3>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">ツール紹介</h3>
                             <p class="text-gray-600 text-sm">
                                 新しいウェブ技術を学んだり、小さなツールを作ったりするのが好きです。
                             </p>
                         </div>
                     </div>
                 </a>
-
-                <a href="/photo/main.html" class="block card-link"> <div class="card">
+                <a href="/photo/main.html" class="block card-link">
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105">
                         <img src="/images/camera.png" alt="写真撮影" class="w-full h-48 object-cover">
                         <div class="p-6">
                             <h3 class="text-xl font-semibold text-gray-800 mb-2">写真撮影</h3>
@@ -145,8 +125,8 @@
                         </div>
                     </div>
                 </a>
-
-                <a href="/bike/main.html" class="block card-link"> <div class="card">
+                <a href="/bike/main.html" class="block card-link">
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105">
                         <img src="images/nature.png" alt="自然" class="w-full h-48 object-cover">
                         <div class="p-6">
                             <h3 class="text-xl font-semibold text-gray-800 mb-2">自然</h3>
@@ -156,26 +136,15 @@
                         </div>
                     </div>
                 </a>
-
-                </div>
+            </div>
         </section>
 
-        <style>
-            .card-link {
-                text-decoration: none; 
-            }
-            .card-link h3, .card-link p {
-                color: inherit; /
-            }
-        </style>
-<!-- Favorite Restaurants Section -->
         <section id="restaurants" class="py-16">
-            <h2 class="section-title">美味しいお店コーナー</h2>
+            <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">美味しいお店コーナー</h2>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Restaurant Card 1 -->
-                <div class="card">
-                    <img src="/shop/image/image.png" alt="定食" class="w-full h-48 object-cover rounded-t-xl">
-                    <div class="card-content">
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105">
+                    <img src="/shop/image/image.png" alt="定食" class="w-full h-48 object-cover">
+                    <div class="p-6">
                         <h3 class="text-xl font-semibold text-gray-800 mb-2">後日更新</h3>
                         <p class="text-gray-600 text-sm mb-1"><span class="font-semibold">ジャンル:</span> 後日更新</p>
                         <p class="text-gray-600 text-sm mb-3"><span class="font-semibold">おすすめ:</span> 後日更新</p>
@@ -183,15 +152,13 @@
                             後日更新
                         </p>
                     </div>
-                    <div class="map-container">
-                        <!-- Replace with actual Google Maps embed code -->
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3282.889944916284!2d135.4992903152301!3d34.6322689804521!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6000e76b1a0a3c7d%3A0x6b1b6c9f6a6f9b1e!2z5p2x5Lqs6YO95a62IOODk-ODqyDoqqHjgqPjg5Pjg7M!5e0!3m2!1sja!2sjp!4v1622880000000!5m2!1sja!2sjp" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <div class="aspect-w-16 aspect-h-9">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3293.265786199427!2d132.7144833152233!3d34.3690649805218!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3550616b251a816f%3A0x6b78f4e69317a3a!2z5bqD5bO25aSn5a2m!5e0!3m2!1sja!2sjp!4v1664522857850!5m2!1sja!2sjp" width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>
                 </div>
-                <!-- Restaurant Card 2 -->
-                <div class="card">
-                    <img src="/shop/image/image.png" alt="定食" class="w-full h-48 object-cover rounded-t-xl">
-                    <div class="card-content">
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105">
+                    <img src="/shop/image/image.png" alt="定食" class="w-full h-48 object-cover">
+                    <div class="p-6">
                         <h3 class="text-xl font-semibold text-gray-800 mb-2">後日更新</h3>
                         <p class="text-gray-600 text-sm mb-1"><span class="font-semibold">ジャンル:</span> 後日更新</p>
                         <p class="text-gray-600 text-sm mb-3"><span class="font-semibold">おすすめ:</span> 後日更新</p>
@@ -199,15 +166,13 @@
                             後日更新
                         </p>
                     </div>
-                    <div class="map-container">
-                        <!-- Replace with actual Google Maps embed code -->
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3280.123456789012!2d135.5063301152321!3d34.6012345804345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6000e0d1a9a8a7e5%3A0x5b5a4c3c2d1f8e9d!2z6bq6IOWkp-WgtA!5e0!3m2!1sja!2sjp!4v1622880000001!5m2!1sja!2sjp" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <div class="aspect-w-16 aspect-h-9">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3293.265786199427!2d132.7144833152233!3d34.3690649805218!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3550616b251a816f%3A0x6b78f4e69317a3a!2z5bqD5bO25aSn5a2m!5e0!3m2!1sja!2sjp!4v1664522857850!5m2!1sja!2sjp" width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>
                 </div>
-                <!-- Restaurant Card 3 -->
-                <div class="card">
-                    <img src="/shop/image/image.png" alt="定食" class="w-full h-48 object-cover rounded-t-xl">
-                    <div class="card-content">
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105">
+                    <img src="/shop/image/image.png" alt="定食" class="w-full h-48 object-cover">
+                    <div class="p-6">
                         <h3 class="text-xl font-semibold text-gray-800 mb-2">後日更新</h3>
                         <p class="text-gray-600 text-sm mb-1"><span class="font-semibold">ジャンル:</span>後日更新</p>
                         <p class="text-gray-600 text-sm mb-3"><span class="font-semibold">おすすめ:</span> 後日更新</p>
@@ -215,18 +180,15 @@
                             後日更新
                         </p>
                     </div>
-                    <div class="map-container">
-                        <!-- Replace with actual Google Maps embed code -->
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3281.000000000000!2d135.5123456789012!3d34.6123456789012!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6000e1a2b3c4d5e7%3A0x1a2b3c4d5e6f7g8h!2sCafe%20Lumi%C3%A8re!5e0!3m2!1sja!2sjp!4v1622880000002!5m2!1sja!2sjp" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <div class="aspect-w-16 aspect-h-9">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3293.265786199427!2d132.7144833152233!3d34.3690649805218!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3550616b251a816f%3A0x6b78f4e69317a3a!2z5bqD5bO25aSn5a2m!5e0!3m2!1sja!2sjp!4v1664522857850!5m2!1sja!2sjp" width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>
                 </div>
-                <!-- Add more restaurant cards as needed -->
             </div>
         </section>
 
     </main>
 
-    <!-- Footer -->
     <footer class="bg-gray-800 text-white text-center p-8">
         <p>© <span id="current-year"></span> Takuma Matsumoto</p>
         <p class="mt-2">このページは個人の趣味で作成されたものです。</p>
@@ -259,10 +221,9 @@
         // Set current year in footer
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
-        // Smooth scroll for navigation links (for browsers that don't support CSS scroll-behavior well)
+        // Smooth scroll for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
-                // Check if the link is for the mobile menu itself or a real anchor
                 if (this.getAttribute('href') === '#' || this.closest('#mobile-menu-button')) {
                     return; 
                 }
@@ -270,7 +231,6 @@
                 const targetId = this.getAttribute('href');
                 const targetElement = document.querySelector(targetId);
                 if (targetElement) {
-                    // Offset for fixed navbar height (64px or 4rem)
                     const navbarHeight = document.querySelector('nav').offsetHeight;
                     const elementPosition = targetElement.getBoundingClientRect().top;
                     const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
