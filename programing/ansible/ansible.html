@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ansibleとは</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+        }
+        /* Custom styles for prose content */
+        .prose h1, .prose h2, .prose h3 {
+            font-weight: 700;
+            color: #1f2937; /* gray-800 */
+        }
+        .prose pre {
+            background-color: #1f2937; /* gray-800 */
+            color: #d1d5db; /* gray-300 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+        }
+        .prose code {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <main class="max-w-4xl mx-auto py-16 px-4">
+        <div class="bg-white rounded-xl shadow-lg p-8 lg:p-12 prose max-w-none">
+            
+            <h1>Ansibleとは</h1>
+            <p>Ansibleは構成管理を行うためのツールです。複数のノードの設定を行う際に作業を効率的に行うことができます。Playbookさえ作ってしまえば、同じ環境の構築を自動的に行うことができます。広島サイトのEOSシステム構築はAnsibleを用いて行いました。</p>
+            
+            <a href="https://qiita.com/t_nakayama0714/items/fe55ee56d6446f67113c" target="_blank" rel="noopener noreferrer" class="block my-6 p-4 bg-blue-50 border-l-4 border-blue-400 no-underline">
+                <div class="font-bold text-blue-800">Ansibleをはじめる人に。 - Qiita</div>
+                <p class="text-sm text-gray-600 mt-1 !mb-0">この記事では Ansibleをはじめる人 を対象に、下記の Ansible 入門的な内容についてまとめています...</p>
+            </a>
+
+            <hr class="my-10">
+            
+            <h2>参考資料</h2>
+            <p>Ansibleの勉強に使えそうな資料をいくつか紹介します。</p>
+            <ul class="list-none p-0 space-y-4">
+                <li>
+                    <a href="https://zenn.dev/y_mrok/books/ansible-no-tsukaikata/viewer/chapter1" target="_blank" rel="noopener noreferrer" class="block p-4 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg no-underline transition-all">
+                        <div class="font-semibold text-indigo-700">はじめに｜Ansible の使い方</div>
+                        <div class="text-sm text-gray-500 mt-1">zenn.dev</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.redhat.com/ja/topics/automation/learning-ansible-tutorial" target="_blank" rel="noopener noreferrer" class="block p-4 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg no-underline transition-all">
+                        <div class="font-semibold text-indigo-700">Ansible の基本を学ぶ</div>
+                        <div class="text-sm text-gray-500 mt-1">redhat.com</div>
+                    </a>
+                </li>
+                 <li>
+                    <a href="https://qiita.com/tmurakam99/items/8e609f174f5804308a20" target="_blank" rel="noopener noreferrer" class="block p-4 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg no-underline transition-all">
+                        <div class="font-semibold text-indigo-700">Ansible でよく使うモジュールまとめ - Qiita</div>
+                        <div class="text-sm text-gray-500 mt-1">qiita.com</div>
+                    </a>
+                </li>
+            </ul>
+
+            <hr class="my-10">
+
+            <h2>Ansibleの基本的な使い方</h2>
+            <h3>一般的なディレクトリ構造</h3>
+            <pre><code>project/
+├── inventory.yml
+├── your-playbook.yml
+└── roles/
+    └── ...</code></pre>
+
+            <h3>インベントリファイル</h3>
+            <p>Ansibleで操作対象のサーバーを定義するファイルです。INI形式とYAML形式があります。（最近はYAML形式が主流です）</p>
+            <strong>注: .ymlファイルではTabsを使用できません。インデントにはスペースを使用してください。</strong>
+            
+            <div class="grid md:grid-cols-2 gap-6 mt-4">
+                <div>
+                    <h4 class="!mt-0 !mb-2">INI形式</h4>
+                    <pre class="!mt-0"><code>[eos_mgm]
+grid04
+grid05
+grid06
+
+[eos_fst]
+nfs11
+nfs12
+nfs13
+
+[all:vars]
+ansible_ssh_user=root</code></pre>
+                </div>
+                <div>
+                    <h4 class="!mt-0 !mb-2">YAML形式</h4>
+                    <pre class="!mt-0"><code>all:
+  children:
+    eos_mgm:
+      hosts:
+        grid04:
+        grid05:
+        grid06:
+    eos_fst:
+      hosts:
+        nfs11:
+        nfs12:
+        nfs13:
+  vars:
+    ansible_ssh_user: root</code></pre>
+                </div>
+            </div>
+            
+            <p class="mt-4"><strong>インベントリファイルの場所:</strong> デフォルトは <code>/etc/ansible/hosts</code> ですが、<code>-i</code> オプションで任意の場所を指定できます。</p>
+
+            <hr class="my-10">
+            
+            <h2>事前設定</h2>
+            <h3>SSH keyの配置</h3>
+            <p>複数の管理ノードにパスワード無しでSSH接続できるようにします。ここでは、<code>grid04</code>をコントロールノードとして設定する例を説明します。</p>
+
+            <h4>SSHキーペアの生成</h4>
+            <p>コントロールノード(<code>grid04</code>)上でSSHキーペアを生成します。</p>
+            <pre><code>ssh-keygen -t rsa -b 4096</code></pre>
+
+            <h4>SSH設定ファイルを編集</h4>
+            <p><strong>全てのノードで</strong>SSH接続を<code>root</code>ユーザーで行えるように設定を編集します。<code>/etc/ssh/sshd_config</code>内の<code>PermitRootLogin</code>を<code>yes</code>に変更します。</p>
+            <pre><code># /etc/ssh/sshd_config
+PermitRootLogin yes</code></pre>
+            <p>編集後、sshdを再起動して設定を反映させます。</p>
+            <pre><code>systemctl restart sshd</code></pre>
+            
+            <h4>SSH公開鍵の配布</h4>
+            <p>コントロールノードから管理対象の全ノードへ公開鍵をコピーします。</p>
+            <pre><code>ssh-copy-id -i ~/.ssh/id_rsa.pub root@&lt;target-host-domain&gt;</code></pre>
+            <p>これにより、パスワード無しでSSH接続が可能になります。</p>
+
+            <h4>Ansibleの接続テスト</h4>
+            <p>コントロールノード上で以下のコマンドを実行し、すべてのノードへ接続できるか確認します。</p>
+            <pre><code>ansible all -m ping</code></pre>
+
+            <hr class="my-10">
+
+            <h2>基本的な実行方法</h2>
+            
+            <h3>pingの確認</h3>
+            <p>グループを指定してノード間の接続を確認します。</p>
+            <pre><code># inventoryファイルを指定しない場合 (デフォルトのhostsファイルを参照)
+ansible eos_mgm -m ping
+
+# inventoryファイルを指定する場合
+ansible -i inventory.yml eos_mgm -m ping</code></pre>
+            <p>成功すると "pong" という応答が返ってきます。</p>
+            <pre><code>grid05 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}</code></pre>
+
+            <h3>構文のチェック</h3>
+            <pre><code>ansible-playbook -i inventory.yml your-playbook.yml --syntax-check</code></pre>
+            
+            <h3>Dry Run (変更されるファイルの確認)</h3>
+            <pre><code>ansible-playbook -i inventory.yml your-playbook.yml --check --diff</code></pre>
+            
+            <h3>Playbookの実行方法</h3>
+            <pre><code># 全てのホストで実行
+ansible-playbook -i inventory.yml your-playbook.yml
+
+# 特定のグループのみで実行
+ansible-playbook -i inventory.yml your-playbook.yml -l eos_mgm</code></pre>
+
+            <hr class="my-10">
+
+            <h2>パスワードファイルの暗号化 (ansible-vault)</h2>
+            <p>Gitでプレイブックを管理する場合など、パスワードや秘密情報を安全に保つために暗号化が推奨されます。</p>
+            <h3>暗号化方法</h3>
+            <pre><code>ansible-vault encrypt password-file</code></pre>
+            
+            <h3>実行方法</h3>
+            <p>暗号化したファイルを利用する際は<code>--ask-vault-pass</code>オプションを付けて実行時にパスワードを入力します。</p>
+            <pre><code>ansible-playbook -i inventory.yml your-playbook.yml --ask-vault-pass</code></pre>
+
+            <div class="mt-16 text-center">
+                <a href="/programing/main.html" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors no-underline">
+                    ← ツール特集に戻る
+                </a>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
