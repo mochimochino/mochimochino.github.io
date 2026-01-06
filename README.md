@@ -6,3 +6,4 @@ add-readme-line - テスト用
 # Todo
 SElinux
 Certificate
+Flathub

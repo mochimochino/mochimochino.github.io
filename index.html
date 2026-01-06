@@ -3,185 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My page</title>
+    <title>Takuma Matsumoto</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&family=Noto+Serif+JP:wght@300;600&family=Inter:wght@300;600&display=swap" rel="stylesheet">
     <style>
-        /* Custom styles */
+        :root {
+            /* 和風の色　https://ja.wikipedia.org/wiki/%E6%97%A5%E6%9C%AC%E3%81%AE%E8%89%B2%E3%81%AE%E4%B8%80%E8%A6%A7 */
+            --wafu-bg: #f0f4f8; /* 白藍（しらあい）風の淡い青 */
+            --wafu-sumi: #1b2538; /* 墨色（青みを含ませた黒） */
+            --wafu-ai: #103374; /* 群青（ぐんじょう） */
+            --wafu-nando: #2b5f8e; /* 縹色（はなだいろ） */
+        }
         body {
-            font-family: 'Inter', 'Noto Sans JP', sans-serif;
-            scroll-behavior: smooth; /* Smooth scroll for anchor links */
+            font-family: 'Inter', 'Noto Serif JP', serif;
+            background-color: var(--wafu-bg);
+            color: var(--wafu-sumi);
+            scroll-behavior: smooth;
         }
-        .hero-bg {
-            background-image: url('/images/orion.png');
-            background-size: cover;
-            background-position: center;
+        h1, h2, h3 {
+            font-family: 'Shippori Mincho', serif;
         }
-        .card-link {
-            text-decoration: none; 
+        /* Navigation with blue-glass effect */
+        .glass-nav {
+            background: rgba(240, 244, 248, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(13, 42, 97, 0.1);
         }
-        .card-link h3, .card-link p {
-            color: inherit;
+        /* Ken Burns Effect (Moving Image) */
+        .ken-burns {
+            animation: move-bg 30s infinite alternate ease-in-out;
+        }
+        @keyframes move-bg {
+            0% { transform: scale(1.0); }
+            100% { transform: scale(1.1); }
+        }
+        /* Decorative vertical elements */
+        .vertical-text {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+        /* Section title with blue gradient line */
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--wafu-ai), transparent);
+            margin: 15px auto;
+        }
+        /* Wafu Card with Blue Shadow hover */
+        .wafu-card {
+            transition: all 0.6s cubic-bezier(0.2, 1, 0.3, 1);
+            border: 1px solid transparent;
+        }
+        .wafu-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(13, 42, 97, 0.15);
+            box-shadow: 0 25px 50px -12px rgba(13, 42, 97, 0.1);
+        }
+        /* Grayscale to Color Transition */
+        .img-reveal {
+            filter: grayscale(100%);
+            transition: filter 0.8s ease, transform 0.8s ease;
+        }
+        .wafu-card:hover .img-reveal, 
+        .hover-reveal:hover .img-reveal {
+            filter: grayscale(0%);
         }
     </style>
 </head>
-<body class="bg-gray-100">
+<body class="selection:bg-blue-100">
 
-    <nav class="bg-white shadow-md fixed w-full z-10 top-0">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <a href="#" class="text-2xl font-bold text-indigo-600">HOME</a>
+    <!-- Navigation -->
+    <nav class="glass-nav fixed w-full z-50 top-0">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex items-center justify-between h-20">
+                <a href="#" class="text-xl font-bold tracking-widest text-indigo-950">
+                    松本 拓磨 <span class="text-xs font-normal ml-2 opacity-50 tracking-tighter">PHYSICS RESEARCHER</span>
+                </a>
+                <div class="hidden md:flex space-x-12 items-center">
+                    <a href="#about" class="text-xs tracking-widest hover:text-blue-700 transition-colors font-semibold">ABOUT</a>
+                    <a href="#hobbies" class="text-xs tracking-widest hover:text-blue-700 transition-colors font-semibold">HOBBIES</a>
+                    <a href="#restaurants" class="text-xs tracking-widest hover:text-blue-700 transition-colors font-semibold">GOURMET</a>
+                    <a href="mailto:matsumoto@quark.hiroshima-u.ac.jp" class="bg-indigo-950 text-white px-6 py-2 rounded-full text-[10px] tracking-widest hover:bg-blue-800 transition-all shadow-lg shadow-blue-900/20">CONTACT</a>
                 </div>
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="#home" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors">ホーム</a>
-                        <a href="#about" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors">自己紹介</a>
-                        <a href="#hobbies" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors">趣味</a>
-                        <a href="#restaurants" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors">美味しいお店</a>
-                    </div>
-                </div>
-                <div class="md:hidden">
-                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
-                        <span class="sr-only">メインメニューを開く</span>
-                        <svg id="menu-closed-icon" class="block h-6 w-6" xmlns="http://www.w.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                        </svg>
-                        <svg id="menu-open-icon" class="hidden h-6 w-6" xmlns="http://www.w.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="md:hidden hidden" id="mobile-menu">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#home" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors">ホーム</a>
-                <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors">自己紹介</a>
-                <a href="#hobbies" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors">趣味</a>
-                <a href="#restaurants" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors">美味しいお店</a>
             </div>
         </div>
     </nav>
 
-    <header id="home" class="hero-bg text-white pt-16"> <div class="bg-black bg-opacity-50 min-h-[calc(100vh-4rem)] flex items-center justify-center">
-            <div class="text-center p-8">
-                <h1 class="text-5xl font-bold mb-4">Hello</h1>
-                <p class="text-xl mb-8">マイページへようこそ - Welcome to my page</p>
-                <a href="#about" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg text-lg transition-colors">more details</a>
-            </div>
+    <!-- Hero Section -->
+    <section id="home" class="relative h-screen overflow-hidden flex items-center justify-center bg-[#050a14]">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1920&q=80" 
+                 alt="Blue Cosmos" class="w-full h-full object-cover opacity-60 ken-burns">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#050a14]/40 to-[#050a14]"></div>
         </div>
-    </header>
+        
+        <div class="relative z-10 text-center text-white px-4">
+            <div class="inline-block border-l border-r border-white/20 px-8 py-2 mb-10">
+                <p class="text-[10px] tracking-[0.6em] uppercase font-light">Quark Matter & Universe</p>
+            </div>
+            <h1 class="text-6xl md:text-9xl font-bold mb-8 tracking-tighter leading-tight">
+                蒼き、<br class="md:hidden">深淵へ。
+            </h1>
+            <p class="text-base md:text-lg font-light text-blue-100/70 max-w-2xl mx-auto mb-16 tracking-[0.3em]">
+                理性の光で、未知の領域を照らす。
+            </p>
+            <a href="#about" class="inline-flex items-center gap-6 text-[10px] tracking-[0.5em] hover:text-blue-300 transition-all group">
+                SCROLL TO EXPLORE
+                <span class="w-20 h-[1px] bg-blue-500/50 group-hover:w-32 transition-all"></span>
+            </a>
+        </div>
+    </section>
 
-    <main class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
-
-        <section id="about" class="py-16">
-            <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">自己紹介</h2>
-            <div class="bg-white rounded-xl shadow-xl p-8 md:p-12 flex flex-col md:flex-row items-center">
-                <div class="md:w-1/3 mb-8 md:mb-0 md:mr-12">
-                    <img src="/images/intro.png" alt="私の写真" class="rounded-full shadow-lg mx-auto w-64 h-64 md:w-full md:h-auto object-cover">
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-6">
+        
+        <!-- About Section -->
+        <section id="about" class="py-48">
+            <div class="relative grid md:grid-cols-12 gap-16 items-center">
+                <div class="md:col-span-5 relative group hover-reveal">
+                    <div class="absolute -top-8 -left-8 w-32 h-32 border-t-2 border-l-2 border-blue-900/20 z-0"></div>
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80" alt="Takuma Matsumoto" class="img-reveal relative z-10 w-full rounded-sm shadow-2xl">
+                    <div class="absolute -bottom-4 -right-4 text-[8px] tracking-widest text-blue-900/30 uppercase vertical-text">Takuma Matsumoto</div>
                 </div>
-                <div class="md:w-2/3">
-                    <h3 class="text-2xl font-semibold text-gray-700 mb-4">松本 拓磨(Takuma Matsumoto)</h3>
-                    <p class="text-gray-600 leading-relaxed mb-4">
-                        はじめまして！
-                        研究歴等はクォーク物理学研究室の<a href="https://www.quark.hiroshima-u.ac.jp/member/activity/24matsumoto.html" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:underline">ページ</a>に記載してあります。
-                    </p>
-                    <p class="text-gray-600 leading-relaxed">
-                        趣味はスイーツ巡り、電車旅、写真撮影、サイクリング、ハイキングなど多岐にわたります。新しい技術を学ぶことや、自然の中でリフレッシュすることが好きです。
-                        何か面白いプロジェクトやアイデアがあれば、ぜひ！
-                    </p>
-                    <div class="mt-6">
-                        <a href="mailto:matsumoto@quark.hiroshima-u.ac.jp" class="text-indigo-600 hover:text-indigo-800 font-medium">matsumoto@quark.hiroshima-u.ac.jp</a>
-                        <a href="https://www.quark.hiroshima-u.ac.jp/" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-800 font-medium block mb-2">クォーク物理学研究室</a>
-                       <!-- <a href="hiroshima_grid.html" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-800 font-medium block mb-2">Hiroshima Tier-2 siteについて</a> -->
+                <div class="md:col-span-7 md:pl-16">
+                    <span class="text-[10px] tracking-[0.5em] text-blue-900/40 uppercase block mb-6">Introduction</span>
+                    <h2 class="text-5xl font-bold mb-10 section-title !text-left !after:mx-0">自己紹介</h2>
+                    <div class="space-y-8 text-slate-600 leading-relaxed font-light">
+                        <p class="text-2xl text-slate-900 font-semibold tracking-tight">松本 拓磨</p>
+                        <p class="text-sm border-l-2 border-blue-900/20 pl-6 italic">
+                            広島大学 クォーク物理学研究室
+                        </p>
+                        <p>
+                            クォーク物理学という極微の世界の謎に挑んでいます。データと論理の積み重ねの先に、宇宙の真理を見出すプロセスに魅了されています。
+                        </p>
+                        <p>
+                            研究室を離れれば、一台のカメラを携えて星空の下へ、あるいは路地裏の甘味処へと足を運びます。静寂と喧騒、マクロとミクロ。その両極を行き来することが、私の創造性の源泉です。
+                        </p>
+                    </div>
+                    <div class="mt-16 flex gap-12 items-center">
+                        <a href="https://www.quark.hiroshima-u.ac.jp/" target="_blank" class="group flex items-center gap-3 text-xs font-bold tracking-widest text-blue-900">
+                            VIEW LAB SITE
+                            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                        </a>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="hobbies" class="py-16 bg-gray-50 rounded-xl shadow-inner">
-            <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">趣味</h2>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <a href="programing/main.html" class="block card-link">
-                    <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105">
-                        <img src="images/programing.png" alt="ツール" class="w-full h-48 object-cover">
-                        <div class="p-6">
-                            <h3 class="text-xl font-semibold text-gray-800 mb-2">ツール紹介</h3>
-                            <p class="text-gray-600 text-sm">
-                                新しいウェブ技術を学んだり、小さなツールを作ったりするのが好きです。
-                            </p>
-                        </div>
+        <!-- Hobbies Section -->
+        <section id="hobbies" class="py-48 border-t border-blue-900/5">
+            <div class="text-center mb-32">
+                <span class="text-[10px] tracking-[0.5em] text-blue-900/40 uppercase block mb-6">Fields of Interest</span>
+                <h2 class="text-5xl font-bold section-title">趣 味</h2>
+            </div>
+            <div class="grid md:grid-cols-3 gap-12">
+                <!-- Hobby Item 1 -->
+                <div class="wafu-card group cursor-pointer bg-white/50 p-4 rounded-xl">
+                    <div class="relative aspect-[4/5] overflow-hidden rounded-lg mb-8">
+                        <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80" alt="Tech" class="img-reveal w-full h-full object-cover">
                     </div>
-                </a>
-                <a href="/photo/main.html" class="block card-link">
-                    <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105">
-                        <img src="/images/camera.png" alt="写真撮影" class="w-full h-48 object-cover">
-                        <div class="p-6">
-                            <h3 class="text-xl font-semibold text-gray-800 mb-2">写真撮影</h3>
-                            <p class="text-gray-600 text-sm">
-                                天体写真の撮影が好きです。他にも建物や景色も撮影したりします。
-                            </p>
-                        </div>
+                    <h3 class="text-xl font-bold mb-4 px-2">ツール・開発</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed font-light px-2">計算を効率化するツールの開発や、最新のWebフレームワークの習得。論理を形にする喜びがあります。</p>
+                </div>
+                <!-- Hobby Item 2 -->
+                <div class="wafu-card group cursor-pointer bg-white/50 p-4 rounded-xl">
+                    <div class="relative aspect-[4/5] overflow-hidden rounded-lg mb-8">
+                        <img src="https://images.unsplash.com/photo-1444703686981-a3abb99d4fe3?auto=format&fit=crop&w=800&q=80" alt="Astrophotography" class="img-reveal w-full h-full object-cover">
                     </div>
-                </a>
-                <a href="/bike/main.html" class="block card-link">
-                    <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105">
-                        <img src="images/nature.png" alt="自然" class="w-full h-48 object-cover">
-                        <div class="p-6">
-                            <h3 class="text-xl font-semibold text-gray-800 mb-2">自然</h3>
-                            <p class="text-gray-600 text-sm">
-                                景色を眺めるのが好きです。
-                            </p>
-                        </div>
+                    <h3 class="text-xl font-bold mb-4 px-2">天体・風景撮影</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed font-light px-2">数万光年先の光を定着させる。天体撮影は、私にとって宇宙との対話の時間です。</p>
+                </div>
+                <!-- Hobby Item 3 -->
+                <div class="wafu-card group cursor-pointer bg-white/50 p-4 rounded-xl">
+                    <div class="relative aspect-[4/5] overflow-hidden rounded-lg mb-8">
+                        <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80" alt="Nature" class="img-reveal w-full h-full object-cover">
                     </div>
-                </a>
+                    <h3 class="text-xl font-bold mb-4 px-2">自然・散策</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed font-light px-2">サイクリングで風を感じ、山頂で空を仰ぐ。思考をリセットし、新たな視座を得るための旅。</p>
+                </div>
             </div>
         </section>
 
-        <section id="restaurants" class="py-16">
-            <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">美味しいお店コーナー</h2>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105">
-                    <img src="/shop/image/image.png" alt="定食" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-800 mb-2">後日更新</h3>
-                        <p class="text-gray-600 text-sm mb-1"><span class="font-semibold">ジャンル:</span> 後日更新</p>
-                        <p class="text-gray-600 text-sm mb-3"><span class="font-semibold">おすすめ:</span> 後日更新</p>
-                        <p class="text-gray-600 text-sm">
-                            後日更新
-                        </p>
-                    </div>
-                    <div class="aspect-w-16 aspect-h-9">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3293.265786199427!2d132.7144833152233!3d34.3690649805218!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3550616b251a816f%3A0x6b78f4e69317a3a!2z5bqD5bO25aSn5a2m!5e0!3m2!1sja!2sjp!4v1664522857850!5m2!1sja!2sjp" width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                    </div>
+        <!-- Gourmet Section -->
+        <section id="restaurants" class="py-48 border-t border-blue-900/5">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-32">
+                    <span class="text-[10px] tracking-[0.5em] text-blue-900/40 uppercase block mb-6">Culinary Records</span>
+                    <h2 class="text-5xl font-bold section-title">美食の記録</h2>
                 </div>
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105">
-                    <img src="/shop/image/image.png" alt="定食" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-800 mb-2">後日更新</h3>
-                        <p class="text-gray-600 text-sm mb-1"><span class="font-semibold">ジャンル:</span> 後日更新</p>
-                        <p class="text-gray-600 text-sm mb-3"><span class="font-semibold">おすすめ:</span> 後日更新</p>
-                        <p class="text-gray-600 text-sm">
-                            後日更新
-                        </p>
-                    </div>
-                    <div class="aspect-w-16 aspect-h-9">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3293.265786199427!2d132.7144833152233!3d34.3690649805218!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3550616b251a816f%3A0x6b78f4e69317a3a!2z5bqD5bO25aSn5a2m!5e0!3m2!1sja!2sjp!4v1664522857850!5m2!1sja!2sjp" width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                    </div>
-                </div>
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105">
-                    <img src="/shop/image/image.png" alt="定食" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-800 mb-2">後日更新</h3>
-                        <p class="text-gray-600 text-sm mb-1"><span class="font-semibold">ジャンル:</span>後日更新</p>
-                        <p class="text-gray-600 text-sm mb-3"><span class="font-semibold">おすすめ:</span> 後日更新</p>
-                        <p class="text-gray-600 text-sm">
-                            後日更新
-                        </p>
-                    </div>
-                    <div class="aspect-w-16 aspect-h-9">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3293.265786199427!2d132.7144833152233!3d34.3690649805218!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3550616b251a816f%3A0x6b78f4e69317a3a!2z5bqD5bO25aSn5a2m!5e0!3m2!1sja!2sjp!4v1664522857850!5m2!1sja!2sjp" width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <div class="bg-white/40 p-3 rounded-2xl border border-blue-900/5 shadow-sm group hover-reveal cursor-pointer">
+                    <div class="relative overflow-hidden rounded-xl">
+                        <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=1200&q=80" alt="Sweets" class="img-reveal w-full h-[500px] object-cover">
+                        <div class="absolute inset-0 flex flex-col items-center justify-center text-white bg-blue-950/40 opacity-0 group-hover:opacity-100 transition-all duration-700">
+                            <p class="tracking-[1em] text-[10px] mb-6 font-bold">RECORDS PREPARING</p>
+                            <h3 class="text-4xl font-bold italic">Coming Soon</h3>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -189,60 +207,51 @@
 
     </main>
 
-    <footer class="bg-gray-800 text-white text-center p-8">
-        <p>© <span id="current-year"></span> Takuma Matsumoto</p>
-        <p class="mt-2">このページは個人の趣味で作成されたものです。</p>
-        <p class="mt-4"><a href="troubleshooting.html" class="text-gray-300 hover:text-white hover:underline">トラブルシューティング</a></p>
-    </footer>   
+    <!-- Footer -->
+    <footer class="bg-[#050a14] text-blue-100/40 py-40 mt-20">
+        <div class="max-w-6xl mx-auto px-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-12">
+                <div>
+                    <h2 class="text-3xl font-bold text-white mb-4 tracking-tighter">松本 拓磨</h2>
+                    <p class="text-xs tracking-widest leading-loose">
+                        HIROSHIMA UNIVERSITY<br>
+                        QUARK PHYSICS LABORATORY
+                    </p>
+                </div>
+                <div class="text-left md:text-right">
+                    <a href="mailto:matsumoto@quark.hiroshima-u.ac.jp" class="text-xl md:text-3xl font-light text-white hover:text-blue-400 transition-colors mb-8 block">
+                        matsumoto@quark.hiroshima-u.ac.jp
+                    </a>
+                    <div class="flex gap-8 md:justify-end text-[10px] tracking-[0.3em]">
+                        <span>© <span id="year"></span> Takuma Matsumoto</span>
+                        <a href="#" class="hover:text-white">PRIVACY</a>
+                        <a href="#" class="hover:text-white">SUPPORT</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script>
-        // Mobile menu toggle
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const menuClosedIcon = document.getElementById('menu-closed-icon');
-        const menuOpenIcon = document.getElementById('menu-open-icon');
-
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-            menuClosedIcon.classList.toggle('hidden');
-            menuOpenIcon.classList.toggle('hidden');
-        });
-
-        // Close mobile menu when a link is clicked
-        const mobileNavLinks = mobileMenu.querySelectorAll('a');
-        mobileNavLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
-                menuClosedIcon.classList.remove('hidden');
-                menuOpenIcon.classList.add('hidden');
-            });
-        });
+        document.getElementById('year').textContent = new Date().getFullYear();
         
-        // Set current year in footer
-        document.getElementById('current-year').textContent = new Date().getFullYear();
-
-        // Smooth scroll for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                if (this.getAttribute('href') === '#' || this.closest('#mobile-menu-button')) {
-                    return; 
-                }
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    const navbarHeight = document.querySelector('nav').offsetHeight;
-                    const elementPosition = targetElement.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
-                
-                    window.scrollTo({
-                        top: offsetPosition,
-                        behavior: "smooth"
-                    });
+        // Intersection Observer for Smooth Reveal
+        const options = { threshold: 0.15 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = "1";
+                    entry.target.style.transform = "translateY(0)";
                 }
             });
+        }, options);
+
+        document.querySelectorAll('section').forEach(el => {
+            el.style.opacity = "0";
+            el.style.transform = "translateY(40px)";
+            el.style.transition = "all 1.2s cubic-bezier(0.16, 1, 0.3, 1)";
+            observer.observe(el);
         });
     </script>
-
 </body>
 </html>
