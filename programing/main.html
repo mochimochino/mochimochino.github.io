@@ -38,22 +38,26 @@
             display: block;
             text-decoration: none;
             color: inherit;
-            transition: all 0.6s cubic-bezier(0.2, 1, 0.3, 1);
-            background: rgba(255, 255, 255, 0.5);
-            border: 1px solid transparent;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            background: rgba(255, 255, 255, 0.3);
+            border-left: 2px solid transparent;
         }
         .wafu-card:hover {
-            transform: translateY(-8px);
-            border-color: rgba(13, 42, 97, 0.15);
-            box-shadow: 0 25px 50px -12px rgba(13, 42, 97, 0.1);
+            transform: translateX(10px);
+            border-left-color: var(--wafu-ai);
             background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 10px 30px rgba(13, 42, 97, 0.05);
         }
-        .img-reveal {
-            filter: grayscale(100%);
-            transition: filter 0.8s ease;
+        /* Vertical number index */
+        .tool-index {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            color: rgba(13, 42, 97, 0.2);
+            font-size: 2rem;
+            line-height: 1;
         }
-        .wafu-card:hover .img-reveal {
-            filter: grayscale(0%);
+        .wafu-card:hover .tool-index {
+            color: var(--wafu-ai);
         }
     </style>
 </head>
@@ -64,107 +68,125 @@
         <div class="max-w-7xl mx-auto px-8">
             <div class="flex items-center justify-between h-20">
                 <a href="../index.html" class="text-xl font-bold tracking-widest text-indigo-950">
-                    HOME <span class="text-xs font-normal ml-2 opacity-50">TOOLS</span>
+                    HOME <span class="text-xs font-normal ml-2 opacity-50 uppercase">Computing</span>
                 </a>
-                <a href="../index.html" class="text-xs tracking-widest hover:text-blue-700 transition-colors font-semibold">
-                    ← BACK TO HOME
+                <a href="../index.html" class="text-xs tracking-widest hover:text-blue-700 transition-colors font-semibold uppercase">
+                    ← Back
                 </a>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-5xl mx-auto pt-40 pb-32 px-6">
+    <main class="max-w-4xl mx-auto pt-40 pb-32 px-6">
         
         <!-- Page Title -->
         <div class="text-center mb-24">
             <span class="text-[10px] tracking-[0.5em] text-blue-900/40 uppercase block mb-6">Programming & Research Tools</span>
-            <h1 class="text-5xl font-bold section-title">Computingなど</h1>
+            <h1 class="text-5xl font-bold section-title">Computing</h1>
             <p class="mt-8 text-slate-500 font-light tracking-widest max-w-2xl mx-auto leading-relaxed">
-                便利やなぁって感じのもの
+                ツールやLinuxのことなどをまとめていきたい、
             </p>
         </div>
 
-        <!-- Featured Project Hero -->
-        <div class="relative group mb-20 overflow-hidden rounded-2xl shadow-2xl bg-slate-900">
-            <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80" alt="Projects" class="w-full h-[400px] object-cover opacity-60 grayscale group-hover:grayscale-0 transition-all duration-1000">
-            <div class="absolute inset-0 flex flex-col justify-end p-12 text-white bg-gradient-to-t from-blue-950/80 to-transparent">
-                <h2 class="text-3xl font-bold mb-4 tracking-tight">ツール</h2>
-                <p class="text-blue-100/70 max-w-xl">
-                    効率化するために導入しているツール群をまとめました。
-                </p>
+        <!-- Single Hero Visual (Image remains only here as a theme anchor) -->
+        <div class="relative group mb-20 overflow-hidden rounded-2xl shadow-xl bg-slate-900 h-64">
+            <img src="/mochimochino.github.io/images/programing.png" alt="Tech Background" class="w-full h-full object-cover opacity-50 grayscale group-hover:grayscale-0 transition-all duration-1000">
+            <div class="absolute inset-0 flex items-center justify-center text-white">
+                <h2 class="text-3xl font-bold tracking-widest uppercase">Tool Library</h2>
             </div>
         </div>
 
-        <!-- Tools Grid -->
-        <div class="grid md:grid-cols-1 gap-8">
+        <!-- Tools List Grid (Text Centric) -->
+        <div class="space-y-6">
             
-            <!-- Tool 1: Cluster Shell -->
-            <a href="cluster_shell/clustershell.html" class="wafu-card p-8 rounded-2xl group flex flex-col md:flex-row gap-8 items-center">
-                <div class="w-full md:w-1/3 aspect-video overflow-hidden rounded-lg">
-                    <img src="https://images.unsplash.com/photo-1518432031352-d6fc5c10da5a?auto=format&fit=crop&w=600&q=80" alt="Cluster Shell" class="img-reveal w-full h-full object-cover">
-                </div>
-                <div class="w-full md:w-2/3">
-                    <span class="text-[10px] text-blue-900/40 tracking-[0.3em] font-bold uppercase mb-2 block">Python Framework</span>
+            <!-- Tool 1 -->
+            <a href="cluster_shell/clustershell.html" class="wafu-card p-10 rounded-r-xl group flex items-start gap-10">
+                <div class="tool-index transition-colors duration-500">01</div>
+                <div>
+                    <span class="text-[9px] text-blue-900/40 tracking-[0.4em] font-bold uppercase mb-2 block">Python Framework</span>
                     <h3 class="text-2xl font-bold mb-4 text-blue-900 group-hover:text-blue-700 transition-colors">Cluster Shellのご紹介</h3>
-                    <p class="text-slate-500 text-sm leading-relaxed mb-6 font-light">
+                    <p class="text-slate-500 text-sm leading-relaxed font-light mb-6">
                         大規模クラスタ管理を効率化するPythonフレームワーク。並列コマンド実行や柔軟なノードグルーピング機能を解説します。
                     </p>
-                    <div class="flex items-center gap-2 text-blue-900 font-bold text-xs tracking-widest">
-                        READ DETAIL <span class="transform group-hover:translate-x-2 transition-transform">→</span>
+                    <div class="flex items-center gap-2 text-blue-900 font-bold text-[10px] tracking-[0.2em] opacity-40 group-hover:opacity-100 transition-all">
+                        VIEW DOCUMENTATION <span class="transform group-hover:translate-x-2 transition-transform">→</span>
                     </div>
                 </div>
             </a>
 
-            <!-- Tool 2: Grafana -->
-            <a href="grafana/grafana.html" class="wafu-card p-8 rounded-2xl group flex flex-col md:flex-row gap-8 items-center">
-                <div class="w-full md:w-1/3 aspect-video overflow-hidden rounded-lg">
-                    <img src="https://images.unsplash.com/photo-1551288049-bbbda536339a?auto=format&fit=crop&w=600&q=80" alt="Grafana" class="img-reveal w-full h-full object-cover">
-                </div>
-                <div class="w-full md:w-2/3">
-                    <span class="text-[10px] text-blue-900/40 tracking-[0.3em] font-bold uppercase mb-2 block">Monitoring System</span>
+            <!-- Tool 2 -->
+            <a href="grafana/grafana.html" class="wafu-card p-10 rounded-r-xl group flex items-start gap-10">
+                <div class="tool-index transition-colors duration-500">02</div>
+                <div>
+                    <span class="text-[9px] text-blue-900/40 tracking-[0.4em] font-bold uppercase mb-2 block">Monitoring System</span>
                     <h3 class="text-2xl font-bold mb-4 text-blue-900 group-hover:text-blue-700 transition-colors">Grafana モニタリングツールの導入</h3>
-                    <p class="text-slate-500 text-sm leading-relaxed mb-6 font-light">
+                    <p class="text-slate-500 text-sm leading-relaxed font-light mb-6">
                         Grafanaを用いたモニタリングツールの導入方法を解説。Prometheusとの連携やアラート設定など。
                     </p>
-                    <div class="flex items-center gap-2 text-blue-900 font-bold text-xs tracking-widest">
-                        READ DETAIL <span class="transform group-hover:translate-x-2 transition-transform">→</span>
+                    <div class="flex items-center gap-2 text-blue-900 font-bold text-[10px] tracking-[0.2em] opacity-40 group-hover:opacity-100 transition-all">
+                        VIEW DOCUMENTATION <span class="transform group-hover:translate-x-2 transition-transform">→</span>
                     </div>
                 </div>
             </a>
 
-            <!-- Tool 3: Ansible -->
-            <a href="ansible/ansible.html" class="wafu-card p-8 rounded-2xl group flex flex-col md:flex-row gap-8 items-center">
-                <div class="w-full md:w-1/3 aspect-video overflow-hidden rounded-lg">
-                    <img src="https://images.unsplash.com/photo-1605379399642-870262d3d051?auto=format&fit=crop&w=600&q=80" alt="Ansible" class="img-reveal w-full h-full object-cover">
-                </div>
-                <div class="w-full md:w-2/3">
-                    <span class="text-[10px] text-blue-900/40 tracking-[0.3em] font-bold uppercase mb-2 block">Infrastructure as Code</span>
+            <!-- Tool 3 -->
+            <a href="ansible/ansible.html" class="wafu-card p-10 rounded-r-xl group flex items-start gap-10">
+                <div class="tool-index transition-colors duration-500">03</div>
+                <div>
+                    <span class="text-[9px] text-blue-900/40 tracking-[0.4em] font-bold uppercase mb-2 block">Infrastructure as Code</span>
                     <h3 class="text-2xl font-bold mb-4 text-blue-900 group-hover:text-blue-700 transition-colors">Ansibleとは</h3>
-                    <p class="text-slate-500 text-sm leading-relaxed mb-6 font-light">
+                    <p class="text-slate-500 text-sm leading-relaxed font-light mb-6">
                         Ansibleを使った構成管理の基礎を紹介。Playbookの作成方法やVaultによる機密情報管理についても解説します。
                     </p>
-                    <div class="flex items-center gap-2 text-blue-900 font-bold text-xs tracking-widest">
-                        READ DETAIL <span class="transform group-hover:translate-x-2 transition-transform">→</span>
+                    <div class="flex items-center gap-2 text-blue-900 font-bold text-[10px] tracking-[0.2em] opacity-40 group-hover:opacity-100 transition-all">
+                        VIEW DOCUMENTATION <span class="transform group-hover:translate-x-2 transition-transform">→</span>
                     </div>
                 </div>
             </a>
 
         </div>
 
-        <!-- Back Link Button -->
+        <!-- Single Hero Visual (Image remains only here as a theme anchor) -->
+        <div class="relative group mb-20 overflow-hidden rounded-2xl shadow-xl bg-slate-900 h-64">
+            <img src="/mochimochino.github.io/images/programing.png" alt="Tech Background" class="w-full h-full object-cover opacity-50 grayscale group-hover:grayscale-0 transition-all duration-1000">
+            <div class="absolute inset-0 flex items-center justify-center text-white">
+                <h2 class="text-3xl font-bold tracking-widest uppercase">Linux</h2>
+            </div>
+        </div>
+
+        <!-- Tools List Grid (Text Centric) -->
+        <div class="space-y-6">
+            
+            <!-- Tool 1 -->
+            <a href="cluster_shell/clustershell.html" class="wafu-card p-10 rounded-r-xl group flex items-start gap-10">
+                <div class="tool-index transition-colors duration-500">01</div>
+                <div>
+                    <span class="text-[9px] text-blue-900/40 tracking-[0.4em] font-bold uppercase mb-2 block">Linux</span>
+                    <h3 class="text-2xl font-bold mb-4 text-blue-900 group-hover:text-blue-700 transition-colors">Linux</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed font-light mb-6">
+                        Linuxのことをまとめていきたい
+                    </p>
+                    <div class="flex items-center gap-2 text-blue-900 font-bold text-[10px] tracking-[0.2em] opacity-40 group-hover:opacity-100 transition-all">
+                        VIEW DOCUMENTATION <span class="transform group-hover:translate-x-2 transition-transform">→</span>
+                    </div>
+                </div>
+            </a>
+
+        <!-- Navigation back -->
         <div class="mt-32 text-center">
             <a href="../index.html" class="inline-flex items-center gap-6 text-[10px] tracking-[0.5em] text-blue-900 hover:text-blue-500 transition-all group">
                 <span class="w-12 h-[1px] bg-blue-900/30 group-hover:w-20 transition-all"></span>
                 RETURN TO HOME
             </a>
         </div>
+        </div>
     </main>
 
     <!-- Footer -->
-    <footer class="bg-[#050a14] text-blue-100/40 py-24">
-        <div class="max-w-5xl mx-auto px-6 text-center">
+    <footer class="bg-[#050a14] text-blue-100/40 py-20 mt-20">
+        <div class="max-w-4xl mx-auto px-6 text-center">
             <p class="text-xs tracking-widest mb-4">Takuma Matsumoto</p>
-            <p class="text-[10px] opacity-30">© 2026</p>
+            <p class="text-[10px] opacity-30">© 2026. Computing Records.</p>
         </div>
     </footer>
 
@@ -181,7 +203,7 @@
 
         document.querySelectorAll('.wafu-card, .group').forEach(el => {
             el.style.opacity = "0";
-            el.style.transform = "translateY(30px)";
+            el.style.transform = "translateY(20px)";
             el.style.transition = "all 1s cubic-bezier(0.16, 1, 0.3, 1)";
             observer.observe(el);
         });

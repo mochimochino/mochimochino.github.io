@@ -3,168 +3,306 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grafana モニタリングツールの導入</title>
+    <title>Grafana モニタリングツールの導入 | Takuma Matsumoto Docs</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&family=Noto+Serif+JP:wght@300;600&family=Inter:wght@300;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --wafu-bg: #f0f4f8; 
+            --wafu-sumi: #1a202c; 
+            --wafu-ai: #0d2a61; 
+            --code-bg: #0a192f;
+        }
         body {
-            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            font-family: 'Inter', 'Noto Serif JP', serif;
+            background-color: var(--wafu-bg);
+            color: var(--wafu-sumi);
+            scroll-behavior: smooth;
+            line-height: 1.8;
         }
-        /* Custom styles for prose content */
-        .prose h1, .prose h2, .prose h3, .prose h4 {
-            font-weight: 700;
-            color: #1f2937; /* gray-800 */
+        h1, h2, h3, h4 {
+            font-family: 'Shippori Mincho', serif;
         }
-        .prose h4 {
-            font-style: italic;
-            color: #374151; /* gray-700 */
+        .glass-nav {
+            background: rgba(240, 244, 248, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(13, 42, 97, 0.1);
         }
-        .prose pre {
-            background-color: #1f2937; /* gray-800 */
-            color: #d1d5db; /* gray-300 */
-            padding: 1rem;
-            border-radius: 0.5rem;
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--wafu-ai), transparent);
+            margin: 15px 0;
+        }
+        /* Code Container & Styling */
+        .code-block-wrapper {
+            position: relative;
+            margin: 1.5rem 0;
+        }
+        pre {
+            background-color: var(--code-bg);
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
             overflow-x: auto;
-        }
-        .prose code {
+            border-left: 4px solid var(--wafu-ai);
             font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
         }
-        .prose ol, .prose ul {
-            padding-left: 1.5rem;
+        code {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            background: rgba(13, 42, 97, 0.05);
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-size: 0.9em;
         }
-        .prose li > p {
-            margin-top: 0.5rem;
-            margin-bottom: 0.5rem;
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        /* Copy Button */
+        .copy-button {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            padding: 0.4rem 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(226, 232, 240, 0.6);
+            border: 1px solid rgba(226, 232, 240, 0.2);
+            border-radius: 0.4rem;
+            font-size: 0.7rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+            opacity: 0;
+        }
+        .code-block-wrapper:hover .copy-button {
+            opacity: 1;
+        }
+        .copy-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+        .copy-button.copied {
+            background: var(--wafu-ai);
+            color: white;
+            border-color: var(--wafu-ai);
+        }
+        /* External link card */
+        .doc-link-card {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(13, 42, 97, 0.1);
+            transition: all 0.3s ease;
+            text-decoration: none !important;
+        }
+        .doc-link-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(13, 42, 97, 0.1);
+            border-color: var(--wafu-ai);
+        }
+        /* Step badge */
+        .step-badge {
+            display: inline-block;
+            background: var(--wafu-ai);
+            color: white;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.7rem;
+            border-radius: 2rem;
+            margin-bottom: 1rem;
+            font-weight: bold;
+            letter-spacing: 0.1em;
         }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="selection:bg-blue-100">
 
-    <main class="max-w-4xl mx-auto py-16 px-4">
-        <div class="bg-white rounded-xl shadow-lg p-8 lg:p-12 prose max-w-none">
-            
-            <h1>GRAFANA</h1>
-            <h2>モニタリングツールの導入</h2>
-            <p>
-                Grafanaを用いたモニタリングツールを導入します。必要なスクリプトは以下のGitHubリポジトリにまとめてあります。
-                このREADMEを参照しながら実行することで、広島サイトではホストサーバー(grid02)から各ノードの監視を行っています。
-            </p>
+    <!-- Header Navigation -->
+    <nav class="glass-nav fixed w-full z-50 top-0">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex items-center justify-between h-20">
+                <a href="../../index.html" class="text-xl font-bold tracking-widest text-indigo-950">
+                    HOME <span class="text-xs font-normal ml-2 opacity-50 uppercase">Docs</span>
+                </a>
+                <div class="flex gap-8">
+                    <a href="../main.html" class="text-[10px] tracking-widest hover:text-blue-700 transition-colors font-bold uppercase">
+                        ← Tools List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-            <a href="https://github.com/mochimochino/setup_prometheus_grafana" target="_blank" rel="noopener noreferrer" class="block my-8 p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-shadow no-underline">
-                <div class="flex items-start space-x-4">
-                    <img src="https://github.githubassets.com/favicons/favicon.svg" alt="GitHub Favicon" class="w-6 h-6 mt-1">
+    <main class="max-w-4xl mx-auto pt-40 pb-32 px-6">
+        
+        <!-- Article Header -->
+        <article class="bg-white/40 p-8 md:p-16 rounded-3xl border border-white/50 shadow-sm">
+            <header class="mb-16">
+                <span class="text-[10px] tracking-[0.5em] text-blue-900/40 uppercase block mb-6">Monitoring & Metrics Visualizer</span>
+                <h1 class="text-4xl md:text-5xl font-bold text-blue-900 mb-4">Grafana</h1>
+                <h2 class="text-xl md:text-2xl text-slate-500 font-light tracking-widest">モニタリングツールの導入</h2>
+                <div class="w-20 h-1 bg-blue-900/20 mt-6"></div>
+            </header>
+
+            <section class="mb-16">
+                <p class="mb-8 font-light text-sm">
+                    Grafanaを用いたモニタリングツールを導入します。必要なスクリプトは以下のGitHubリポジトリにまとめてあります。
+                    このREADMEを参照しながら実行することで、ホストサーバー(grid02)から各ノードの監視が可能です。
+                </p>
+
+                <!-- External Reference (GitHub) -->
+                <a href="https://github.com/mochimochino/setup_prometheus_grafana" target="_blank" class="doc-link-card mb-12">
+                    <div class="w-12 h-12 bg-slate-900 flex items-center justify-center rounded-xl shadow-lg">
+                        <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    </div>
                     <div>
-                        <div class="font-bold text-indigo-700 text-lg">GitHub - mochimochino/setup_prometheus_grafana</div>
-                        <p class="text-gray-600 mt-1 text-base">Contribute to mochimochino/setup_prometheus_grafana development by creating an account on GitHub.</p>
-                        <div class="text-sm text-gray-500 mt-2">github.com</div>
+                        <div class="font-bold text-blue-900">Setup Prometheus & Grafana</div>
+                        <div class="text-[10px] text-slate-400 mt-1 uppercase tracking-tighter">github.com / mochimochino</div>
+                    </div>
+                </a>
+            </section>
+
+            <section class="mb-16">
+                <h2 class="text-2xl font-bold mb-8 section-title">アラートの設定</h2>
+                <p class="mb-8 font-light text-sm">Grafanaから異常を検知した際に、Gmailへアラート通知を送るための設定手順です。</p>
+                
+                <!-- Step 1 -->
+                <div class="mb-12">
+                    <span class="step-badge">STEP 01</span>
+                    <h3 class="text-lg font-bold mb-4 text-blue-900">アラートルールの作成</h3>
+                    <div class="pl-4 border-l-2 border-blue-900/10 space-y-4 text-sm font-light">
+                        <p>左メニューの <strong>Alerting → Alert rules</strong> から新規作成します。</p>
+                        <ul class="list-disc pl-6 space-y-2">
+                            <li><strong>Query (A):</strong> 監視対象（CPU使用率など）を選択。</li>
+                            <li><strong>Expression (B):</strong> しきい値を設定（例: <code>Classic condition</code> で <code>ABOVE 80</code>）。</li>
+                            <li><strong>Details:</strong> 通知件名（Summary）やチェック頻度（Evaluate every）を入力します。</li>
+                        </ul>
                     </div>
                 </div>
-            </a>
-            
-            <hr class="my-10">
 
-            <h3>アラートの設定</h3>
-            <p>Grafanaから異常を検知したときに、Gmailへアラートが飛ぶように設定を行います。</p>
-            
-            <h3>設定手順（Gmail通知）</h3>
-            <p>Grafanaのアラート設定は大きく4ステップで構成されます。</p>
-            <ol class="list-decimal space-y-2 font-semibold">
-                <li>アラートルールの作成</li>
-                <li>通知先の作成</li>
-                <li>通知ポリシーの設定</li>
-                <li>SMTP設定</li>
-            </ol>
+                <!-- Step 2 & 3 -->
+                <div class="mb-12">
+                    <span class="step-badge">STEP 02 & 03</span>
+                    <h3 class="text-lg font-bold mb-4 text-blue-900">通知先とポリシーの設定</h3>
+                    <div class="pl-4 border-l-2 border-blue-900/10 space-y-4 text-sm font-light">
+                        <p><strong>Contact points:</strong> Integrationに <code>Email</code> を選択し、宛先アドレスを登録します。</p>
+                        <p><strong>Notification policies:</strong> 作成した通知先をDefaultに設定し、アラートと宛先を紐付けます。</p>
+                    </div>
+                </div>
 
-            <h4>Step 1: アラートルールの作成</h4>
-            <p>アラートを発動させる条件を定義します。</p>
-            <ol class="list-decimal space-y-4">
-                <li>Grafanaの左側メニューから <strong>Alerting → Alert rules</strong> を開きます。</li>
-                <li><strong>New alert rule</strong> をクリックします。</li>
-                <li>
-                    <p><strong>クエリと条件の設定 (Set up queries and expressions)</strong></p>
-                    <ul class="list-disc pl-6 space-y-2">
-                        <li><strong>A (Query):</strong> 監視したいデータ（メトリクス）を選択します。 (例: サーバーのCPU使用率やディスク空き容量など)</li>
-                        <li><strong>B (Expression):</strong> アラートを発動させる「しきい値」を設定します。<code>Classic condition</code>を選択し、<code>WHEN last() OF B IS ABOVE 80</code> のように記述します。（意味：クエリBの結果が80を超えたら）</li>
-                    </ul>
-                </li>
-                <li>
-                    <p><strong>ルールの詳細設定 (Add details for your alert rule)</strong></p>
-                    <ul class="list-disc pl-6 space-y-2">
-                        <li><strong>Rule name:</strong> アラートルールの名前を入力します。（例: <code>High CPU Usage</code>）</li>
-                        <li><strong>Evaluate every:</strong> アラート条件をチェックする頻度を設定します。（例: <code>1m</code> = 1分ごと）</li>
-                        <li><strong>For:</strong> 条件が継続したらアラートを確定させる時間を設定します。（例: <code>5m</code> = 5分間継続したら）※一時的なスパイクでの誤報を防ぎます。</li>
-                        <li><strong>Summary and annotations:</strong> 通知メールの件名や本文になる内容を記述します。</li>
-                    </ul>
-                </li>
-                <li>最後に <strong>Save rule and exit</strong> をクリックして保存します。</li>
-            </ol>
-
-            <h4>Step 2: 通知先 (Contact Point) の作成</h4>
-            <p>アラート通知を送るメールアドレスを登録します。</p>
-            <ol class="list-decimal space-y-4">
-                <li><strong>Alerting → Contact points</strong> を開きます。</li>
-                <li><strong>New contact point</strong> をクリックします。</li>
-                <li><strong>Name:</strong> 通知先の名前を入力します。（例: <code>Gmail Admins</code>）</li>
-                <li><strong>Integration:</strong> <code>Email</code> を選択します。</li>
-                <li><strong>Addresses:</strong> 通知を受け取りたいアドレスを入力します。（今回は大学メールを設定しました）</li>
-                <li><strong>Save contact point</strong> をクリックします。</li>
-            </ol>
-            
-            <h4>Step 3: 通知ポリシー (Notification Policy) の設定</h4>
-            <p>どのアラートルールが発動したときに、どの通知先に連絡するかを関連付けます。（今回はすべての通知をデフォルトの通知先に送る設定です。）</p>
-             <ol class="list-decimal space-y-4">
-                <li><strong>Alerting → Notification policies</strong> を開きます。</li>
-                <li><strong>Default contact point</strong> のドロップダウンメニューから、先ほど作成した <code>Gmail Admins</code> を選択します。</li>
-                <li><strong>Save policy</strong> をクリックします。</li>
-            </ol>
-
-            <h4>Step 4: SMTP設定 (Grafanaからメールを送るための設定)</h4>
-            <p>GrafanaがGmailのサーバーを使ってメールを送信できるように設定します。（Googleアカウントを新規作成して行いました。）</p>
-             <ol class="list-decimal space-y-4">
-                <li>
-                    <p><strong>【Google側での準備】</strong></p>
-                    <ul class="list-disc pl-6 space-y-2">
-                        <li>お使いのGoogleアカウントで「2段階認証プロセス」を有効にします。</li>
-                        <li>Grafana専用の「アプリパスワード」（16桁）を生成します。（一度しか表示されないので注意）</li>
-                    </ul>
-                </li>
-                <li>
-                    <p><strong>【Grafana側での設定】</strong></p>
-                    <p>Grafanaの設定ファイル <code>/etc/grafana/grafana.ini</code> を開き、<code>[smtp]</code> セクションを以下のように編集・保存します。</p>
-                    <pre><code>[smtp]
+                <!-- Step 4 -->
+                <div class="mb-12">
+                    <span class="step-badge">STEP 04</span>
+                    <h3 class="text-lg font-bold mb-4 text-blue-900">SMTP設定（設定ファイルの編集）</h3>
+                    <p class="text-[11px] text-slate-500 mb-4 bg-blue-50 p-3 rounded-lg">
+                        ※Googleアカウント側で「2段階認証」を有効化し、「アプリパスワード（16桁）」を生成しておく必要があります。
+                    </p>
+                    <p class="text-xs font-semibold text-blue-900 mb-2 italic">/etc/grafana/grafana.ini</p>
+                    <div class="code-block-wrapper">
+                        <pre><code>[smtp]
 enabled = true
 host = smtp.gmail.com:587
 user = your-email@gmail.com
-# If the password contains # or ; you have to wrap it with triple quotes. Ex """#password;"""
+# Use the generated 16-digit App Password here
 password = abcd efgh ijkl mnop
 skip_verify = false
 from_address = your-email@gmail.com
-from_name = Grafana Alerts
-</code></pre>
-                </li>
-                <li>
-                    <p><strong>【Grafanaの再起動】</strong></p>
-                    <p>設定ファイルを保存し、Grafanaサーバーを再起動して設定を反映させます。</p>
-                    <pre><code>sudo systemctl restart grafana-server</code></pre>
-                </li>
-            </ol>
+from_name = Grafana Alerts</code></pre>
+                    </div>
 
-            <h4>Step 5: 最終テスト</h4>
-            <p>全ての設定が完了したら、動作確認を行います。</p>
-            <ol class="list-decimal space-y-4">
-                 <li><strong>Alerting → Contact points</strong> を再度開きます。</li>
-                 <li>作成した <code>Gmail Admins</code> の右側にある <strong>Test</strong> ボタンをクリックします。</li>
-                 <li>テスト通知の画面が表示されたら <strong>Send test notification</strong> をクリックします。</li>
-            </ol>
-            <p>指定したGmailアドレスに「<code>[FIRING:1] (Test notification)</code>」のような件名のテストメールが届けば成功です。</p>
+                    <p class="text-xs font-semibold text-blue-900 mt-8 mb-2 italic">Restart Service</p>
+                    <div class="code-block-wrapper">
+                        <pre><code>sudo systemctl restart grafana-server</code></pre>
+                    </div>
+                </div>
 
-            <div class="mt-16 text-center">
-                <a href="/programing/main.html" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors no-underline">
-                    ← ツール特集に戻る
+                <!-- Step 5 -->
+                <div class="mb-12">
+                    <span class="step-badge">STEP 05</span>
+                    <h3 class="text-lg font-bold mb-4 text-blue-900">最終テスト</h3>
+                    <div class="pl-4 border-l-2 border-blue-900/10 space-y-4 text-sm font-light">
+                        <p><strong>Contact points</strong> 画面の <strong>Test</strong> ボタンからテストメールを送信します。</p>
+                        <p class="text-blue-900 font-semibold italic">「[FIRING:1] (Test notification)」のメールが届けば成功です。</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Navigation back -->
+            <footer class="mt-24 pt-12 border-t border-slate-100 text-center">
+                <a href="../main.html" class="inline-flex items-center gap-6 text-[10px] tracking-[0.5em] text-blue-900 hover:text-blue-500 transition-all group">
+                    <span class="w-12 h-[1px] bg-blue-900/30 group-hover:w-20 transition-all"></span>
+                    RETURN TO LIST
                 </a>
-            </div>
-        </div>
+            </footer>
+        </article>
     </main>
 
+    <!-- Global Footer -->
+    <footer class="bg-[#050a14] text-blue-100/40 py-20">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <p class="text-xs tracking-widest mb-4">Takuma Matsumoto</p>
+            <p class="text-[10px] opacity-30 uppercase tracking-[0.2em]">© 2026</p>
+        </div>
+    </footer>
+
+    <script>
+        // Copy to clipboard function
+        document.addEventListener('DOMContentLoaded', () => {
+            const wrappers = document.querySelectorAll('.code-block-wrapper');
+            
+            wrappers.forEach(wrapper => {
+                const btn = document.createElement('button');
+                btn.className = 'copy-button';
+                btn.textContent = 'COPY';
+                wrapper.appendChild(btn);
+
+                btn.addEventListener('click', () => {
+                    const code = wrapper.querySelector('code').innerText;
+                    
+                    const textarea = document.createElement('textarea');
+                    textarea.value = code;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    try {
+                        document.execCommand('copy');
+                        btn.textContent = '写 (COPIED)';
+                        btn.classList.add('copied');
+                        setTimeout(() => {
+                            btn.textContent = 'COPY';
+                            btn.classList.remove('copied');
+                        }, 2000);
+                    } catch (err) {
+                        console.error('Copy failed', err);
+                    }
+                    document.body.removeChild(textarea);
+                });
+            });
+        });
+
+        // Smooth Reveal on Scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = "1";
+                    entry.target.style.transform = "translateY(0)";
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section, header, .doc-link-card, .code-block-wrapper, .mb-12').forEach(el => {
+            el.style.opacity = "0";
+            el.style.transform = "translateY(20px)";
+            el.style.transition = "all 0.8s cubic-bezier(0.16, 1, 0.3, 1)";
+            observer.observe(el);
+        });
+    </script>
 </body>
 </html>

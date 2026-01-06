@@ -3,172 +3,331 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cluster Shellとは</title>
+    <title>Cluster Shellとは | Takuma Matsumoto Docs</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&family=Noto+Serif+JP:wght@300;600&family=Inter:wght@300;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --wafu-bg: #f0f4f8; 
+            --wafu-sumi: #1a202c; 
+            --wafu-ai: #0d2a61; 
+            --code-bg: #0a192f;
+        }
         body {
-            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            font-family: 'Inter', 'Noto Serif JP', serif;
+            background-color: var(--wafu-bg);
+            color: var(--wafu-sumi);
+            scroll-behavior: smooth;
+            line-height: 1.8;
         }
-        /* Custom styles for prose content */
-        .prose h1, .prose h2, .prose h3 {
-            font-weight: 700;
-            color: #1f2937; /* gray-800 */
+        h1, h2, h3 {
+            font-family: 'Shippori Mincho', serif;
         }
-        .prose pre {
-            background-color: #1f2937; /* gray-800 */
-            color: #d1d5db; /* gray-300 */
-            padding: 1rem;
-            border-radius: 0.5rem;
+        .glass-nav {
+            background: rgba(240, 244, 248, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(13, 42, 97, 0.1);
+        }
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--wafu-ai), transparent);
+            margin: 15px 0;
+        }
+        /* Code Container & Styling */
+        .code-block-wrapper {
+            position: relative;
+            margin: 1.5rem 0;
+        }
+        pre {
+            background-color: var(--code-bg);
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
             overflow-x: auto;
-        }
-        .prose code {
+            border-left: 4px solid var(--wafu-ai);
             font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
         }
-        .prose table {
+        code {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            background: rgba(13, 42, 97, 0.05);
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-size: 0.9em;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        /* Copy Button */
+        .copy-button {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            padding: 0.4rem 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(226, 232, 240, 0.6);
+            border: 1px solid rgba(226, 232, 240, 0.2);
+            border-radius: 0.4rem;
+            font-size: 0.7rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+            opacity: 0;
+        }
+        .code-block-wrapper:hover .copy-button {
+            opacity: 1;
+        }
+        .copy-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+        .copy-button.copied {
+            background: var(--wafu-ai);
+            color: white;
+            border-color: var(--wafu-ai);
+        }
+
+        /* Table styling */
+        table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 2rem 0;
+            background: white;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
-        .prose th, .prose td {
-            border: 1px solid #d1d5db; /* gray-300 */
-            padding: 0.75rem 1rem;
+        th {
+            background-color: var(--wafu-ai);
+            color: white;
             text-align: left;
+            padding: 1rem;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
         }
-        .prose th {
-            background-color: #f3f4f6; /* gray-100 */
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #edf2f7;
+            font-size: 0.9rem;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        /* External link card */
+        .doc-link-card {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(13, 42, 97, 0.1);
+            transition: all 0.3s ease;
+            text-decoration: none !important;
+        }
+        .doc-link-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(13, 42, 97, 0.1);
+            border-color: var(--wafu-ai);
         }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="selection:bg-blue-100">
 
-    <main class="max-w-4xl mx-auto py-16 px-4">
-        <div class="bg-white rounded-xl shadow-lg p-8 lg:p-12 prose max-w-none">
-            
-            <h1>Cluster Shellとは</h1>
-
-            <a href="https://clustershell.readthedocs.io/en/latest/intro.html" target="_blank" rel="noopener noreferrer" class="block my-8 p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-shadow no-underline">
-                <div class="font-bold text-indigo-700 text-lg">Introduction — clustershell 1.9.3 documentation</div>
-                <div class="text-sm text-gray-500 mt-1">clustershell.readthedocs.io</div>
-            </a>
-            
-            <h2>概要</h2>
-            <p>Cluster Shellは、クラスタ管理用の軽量かつ統一されたPythonフレームワークです。大規模なクラスタを効率的に管理するために設計されており、以下の特徴を持ちます。</p>
-            <ul class="list-disc pl-6 space-y-2">
-                <li><strong>並列かつスケーラブルなコマンド実行エンジン:</strong> 数百から数千のノードに対して同時にリモートシェルコマンドを実行可能です。</li>
-                <li><strong>統一されたノードグループ構文と外部グループアクセス:</strong> <code>NodeSet</code>クラスを用いてノード群を柔軟に指定可能です。</li>
-            </ul>
-            <p>ClusterShellはフランスのCEAのHPC開発チームによって開発され、スーパーコンピュータ管理で利用されています。</p>
-
-            <h2>仕組み</h2>
-            <h3>コマンド実行エンジン</h3>
-            <ul class="list-disc pl-6 space-y-2">
-                <li><strong>並列処理:</strong> 内部でイベントループを用い、非同期I/Oにより多数ノードへの同時SSH接続を効率的に処理します。</li>
-                <li><strong>出力収集:</strong> 各ノードからの標準出力・エラーをまとめて収集し、ノード単位でグルーピングして管理者に提示します。</li>
-            </ul>
-            
-            <hr class="my-10">
-
-            <h1>導入方法 - RHEL9</h1>
-
-            <a href="https://clustershell.readthedocs.io/en/latest/install.html" target="_blank" rel="noopener noreferrer" class="block my-8 p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-shadow no-underline">
-                <div class="font-bold text-indigo-700 text-lg">Installation — clustershell 1.9.3 documentation</div>
-                <div class="text-sm text-gray-500 mt-1">clustershell.readthedocs.io</div>
-            </a>
-            <ul class="list-disc pl-6 space-y-2">
-                <li><strong>管理ノード (1台):</strong> ClusterShellをインストールして、全ノードを制御します。</li>
-                <li><strong>管理対象ノード:</strong> 必ずしもClusterShellをインストールする必要はありません。SSHでパスワード無しで接続できるようにする必要があります。</li>
-            </ul>
-            
-            <h2>EPELからのインストール方法</h2>
-            <p>EPELを有効にする (していない場合):</p>
-            <pre><code>dnf --enablerepo=extras install epel-release</code></pre>
-            <p>ClusterShellをインストール:</p>
-            <pre><code>dnf install clustershell</code></pre>
-            
-            <h2>Configuration</h2>
-            <p>基本的な設定ファイルは以下の場所にあります。</p>
-            <ul class="list-disc pl-6">
-                <li><code>/etc/clustershell/clush.conf</code></li>
-                <li><code>/etc/clustershell/groups.conf</code></li>
-                <li><code>/etc/clustershell/groups.d/cluster.yaml</code></li>
-            </ul>
-            <p><code>groups.conf</code>でグループ定義の参照先を設定し、<code>cluster.yaml</code>が実際のグループ定義ファイルとなります。<code>clush.conf</code>は<code>clush</code>コマンドの挙動を調整する設定ファイルです。</p>
-
-            <h3>clush の設定</h3>
-            <p><code>/etc/clustershell/clush.conf</code>を設定します。以下は公式ドキュメントからの引用です。</p>
-            <div class="overflow-x-auto">
-                <table>
-                    <thead>
-                        <tr><th>Key</th><th>Value</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>fanout</td><td>Size of the sliding window of connectors (eg. max number of ssh allowed to run at the same time).</td></tr>
-                        <tr><td>connect_timeout</td><td>Timeout in seconds to allow a connection to establish.</td></tr>
-                        <tr><td>command_timeout</td><td>Timeout in seconds to allow a command to complete since the connection has been established.</td></tr>
-                        <tr><td>color</td><td>Whether to use ANSI colors. Valid arguments: never, always, auto.</td></tr>
-                        <tr><td>fd_max</td><td>Maximum number of open file descriptors permitted per clush process.</td></tr>
-                        <tr><td>history_size</td><td>Maximum number of history entries saved.</td></tr>
-                        <tr><td>node_count</td><td>Should clush display additional node count information? (yes/no)</td></tr>
-                        <tr><td>maxrc</td><td>Should clush return the largest of command return codes? (yes/no)</td></tr>
-                        <tr><td>ssh_user</td><td>Set the ssh user to use for remote connection.</td></tr>
-                        <tr><td>ssh_path</td><td>Set the ssh binary path.</td></tr>
-                        <tr><td>ssh_options</td><td>Set additional options to pass to the ssh command.</td></tr>
-                        <tr><td>scp_path</td><td>Set the scp binary path.</td></tr>
-                        <tr><td>scp_options</td><td>Set additional options to pass to the scp command.</td></tr>
-                        </tbody>
-                </table>
-            </div>
-
-            <h3>groups.conf</h3>
-            <p>YAMLファイルを参照させるために<code>groups.conf</code>を編集します。</p>
-            <pre><code>cat /etc/clustershell/groups.conf
-# ClusterShell node groups main configuration file
-[Main]
-default: roles
-confdir: /etc/clustershell/groups.conf.d $CFGDIR/groups.conf.d
-autodir: /etc/clustershell/groups.d $CFGDIR/groups.d
-# ... (rest of the file)
-[local]
-map: [ -f $CFGDIR/groups ] && f=$CFGDIR/groups || f=$CFGDIR/groups.d/local.cfg; sed -n 's/^$GROUP:\(.*\)/\1/p' $f
-all: [ -f $CFGDIR/groups ] && f=$CFGDIR/groups || f=$CFGDIR/groups.d/local.cfg; sed -n 's/^all:\(.*\)/\1/p' $f
-list: [ -f $CFGDIR/groups ] && f=$CFGDIR/groups || f=$CFGDIR/groups.d/local.cfg; sed -n 's/^\([0-9A-Za-z_-]*\):.*/\1/p' $f</code></pre>
-
-            <h3>cluster.yaml</h3>
-            <pre><code>cat /etc/clustershell/groups.d/cluster.yaml
-roles:
-  group1: 'node01'
-  group2: 'wn[01-99]'   
-  gather:
-    - 'node01'
-    - 'wn[01-99]'
-
-  all: '@group1,@group2'</code></pre>
-
-            <hr class="my-10">
-
-            <h2>使用例</h2>
-            <p>定義したグループの確認:</p>
-            <pre><code>nodeset -LL</code></pre>
-            <p>コマンドが作動するか確認:</p>
-            <pre><code>clush -w @all df -h</code></pre>
-            <p>任意のグループに対してコマンドを実行:</p>
-            <pre><code>clush -w @worker_node condor_status</code></pre>
-            <p>任意のグループへ設定ファイルを配布:</p>
-            <pre><code># First, create the file on the admin server
-vi myfile.conf
-
-# Then, copy it to the destination on all nodes in the group
-clush -w @group -c myfile.conf --dest=/etc/myfile.conf</code></pre>
-            <p>特定のノードを指定してコマンドを実行:</p>
-            <pre><code>clush -w wn[02,03] "ip addr"</code></pre>
-
-            <div class="mt-16 text-center">
-                <a href="/programing/main.html" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors no-underline">
-                    ← ツール特集に戻る
+    <!-- Header Navigation -->
+    <nav class="glass-nav fixed w-full z-50 top-0">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex items-center justify-between h-20">
+                <a href="../../index.html" class="text-xl font-bold tracking-widest text-indigo-950">
+                    HOME <span class="text-xs font-normal ml-2 opacity-50 uppercase">Docs</span>
                 </a>
+                <div class="flex gap-8">
+                    <a href="../main.html" class="text-[10px] tracking-widest hover:text-blue-700 transition-colors font-bold uppercase">
+                        ← Tools List
+                    </a>
+                </div>
             </div>
         </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto pt-40 pb-32 px-6">
+        
+        <!-- Article Header -->
+        <article class="bg-white/40 p-8 md:p-16 rounded-3xl border border-white/50 shadow-sm">
+            <header class="mb-16">
+                <span class="text-[10px] tracking-[0.5em] text-blue-900/40 uppercase block mb-6">Cluster Management Tool</span>
+                <h1 class="text-4xl md:text-5xl font-bold text-blue-900 mb-4">Cluster Shellとは</h1>
+                <div class="w-20 h-1 bg-blue-900/20"></div>
+            </header>
+
+            <!-- External Reference -->
+            <a href="https://clustershell.readthedocs.io/en/latest/intro.html" target="_blank" class="doc-link-card mb-12">
+                <div class="w-12 h-12 bg-blue-50 flex items-center justify-center rounded-xl">
+                    <svg class="w-6 h-6 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332 0.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332 0.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332 0.477-4.5 1.253"></path></svg>
+                </div>
+                <div>
+                    <div class="font-bold text-blue-900">Official Introduction</div>
+                    <div class="text-xs text-slate-400 mt-1 uppercase tracking-tighter">clustershell.readthedocs.io</div>
+                </div>
+            </a>
+            
+            <section class="mb-16">
+                <h2 class="text-2xl font-bold mb-6 section-title">概要</h2>
+                <p class="mb-6 font-light text-sm">
+                    Cluster Shellは、クラスタ管理用の軽量かつ統一されたPythonフレームワークです。大規模なクラスタを効率的に管理するために設計されており、主に以下の強力な特徴を持ちます。
+                </p>
+                <ul class="space-y-4 mb-8">
+                    <li class="flex items-start gap-3">
+                        <span class="text-blue-900 mt-1">●</span>
+                        <span class="text-sm font-light"><strong>並列かつスケーラブルな実行エンジン:</strong> 数百から数千のノードに対して同時にリモートシェルコマンドを実行可能。</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="text-blue-900 mt-1">●</span>
+                        <span class="text-sm font-light"><strong>柔軟なノード指定:</strong> <code>NodeSet</code>クラスを用い、範囲指定やグループ化を直感的に行えます。</span>
+                    </li>
+                </ul>
+                <p class="text-[11px] text-slate-500 italic bg-blue-50/50 p-4 border-l-2 border-blue-900/10">
+                    ClusterShellはフランスのCEA（原子力・代替エネルギー庁）のHPC開発チームによって開発され、世界中のスーパーコンピュータ管理現場で利用されています。
+                </p>
+            </section>
+
+            <section class="mb-16">
+                <h2 class="text-2xl font-bold mb-6 section-title">導入方法 - RHEL9</h2>
+                <p class="mb-6 font-light text-sm">管理ノード1台にインストールすることで、全ノードの制御が可能になります。管理対象ノードはパスワードなしSSH設定のみで動作します。</p>
+                
+                <h3 class="text-lg font-bold mb-4 text-blue-900/80">1. EPELの有効化</h3>
+                <div class="code-block-wrapper">
+                    <pre><code>dnf --enablerepo=extras install epel-release</code></pre>
+                </div>
+                
+                <h3 class="text-lg font-bold mb-4 mt-8 text-blue-900/80">2. 本体のインストール</h3>
+                <div class="code-block-wrapper">
+                    <pre><code>dnf install clustershell</code></pre>
+                </div>
+            </section>
+
+            <section class="mb-16">
+                <h2 class="text-2xl font-bold mb-6 section-title">設定ファイル構成</h2>
+                <p class="mb-6 font-light text-sm">主要な設定は以下のパスに配置されます。</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                    <div class="p-4 bg-white border border-blue-900/5 rounded-lg">
+                        <code class="text-blue-900 text-xs">clush.conf</code>
+                        <p class="text-[10px] text-slate-400 mt-2 uppercase tracking-widest">Command Behavior</p>
+                    </div>
+                    <div class="p-4 bg-white border border-blue-900/5 rounded-lg">
+                        <code class="text-blue-900 text-xs">groups.conf</code>
+                        <p class="text-[10px] text-slate-400 mt-2 uppercase tracking-widest">Group Definitions</p>
+                    </div>
+                </div>
+
+                <h3 class="text-lg font-bold mb-4 text-blue-900/80">clush設定パラメータ抜粋</h3>
+                <table>
+                    <thead>
+                        <tr><th>Key</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>fanout</code></td><td>SSHの最大同時実行並列数。</td></tr>
+                        <tr><td><code>connect_timeout</code></td><td>接続確立までのタイムアウト（秒）。</td></tr>
+                        <tr><td><code>ssh_user</code></td><td>リモート接続に使用するユーザー名。</td></tr>
+                        <tr><td><code>ssh_options</code></td><td>SSHコマンドに渡す追加オプション。</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="mb-16">
+                <h2 class="text-2xl font-bold mb-6 section-title">使用例</h2>
+                <p class="mb-4 text-sm font-semibold text-blue-900">● グループ内の全ノードにコマンド実行</p>
+                <div class="code-block-wrapper">
+                    <pre><code>clush -w @all df -h</code></pre>
+                </div>
+
+                <p class="mb-4 mt-8 text-sm font-semibold text-blue-900">● 特定ノードへの設定ファイル配布</p>
+                <div class="code-block-wrapper">
+                    <pre><code>clush -w @group -c myfile.conf --dest=/etc/myfile.conf</code></pre>
+                </div>
+
+                <p class="mb-4 mt-8 text-sm font-semibold text-blue-900">● 範囲指定によるアドホックな実行</p>
+                <div class="code-block-wrapper">
+                    <pre><code>clush -w wn[02-05,08] "uptime"</code></pre>
+                </div>
+            </section>
+
+            <!-- Navigation back -->
+            <footer class="mt-24 pt-12 border-t border-slate-100 text-center">
+                <a href="../main.html" class="inline-flex items-center gap-6 text-[10px] tracking-[0.5em] text-blue-900 hover:text-blue-500 transition-all group">
+                    <span class="w-12 h-[1px] bg-blue-900/30 group-hover:w-20 transition-all"></span>
+                    RETURN TO LIST
+                </a>
+            </footer>
+        </article>
     </main>
 
+    <!-- Global Footer -->
+    <footer class="bg-[#050a14] text-blue-100/40 py-20">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <p class="text-xs tracking-widest mb-4">Takuma Matsumoto</p>
+            <p class="text-[10px] opacity-30 uppercase tracking-[0.2em]">© 2026</p>
+        </div>
+    </footer>
+
+    <script>
+        // Copy to clipboard function
+        document.addEventListener('DOMContentLoaded', () => {
+            const wrappers = document.querySelectorAll('.code-block-wrapper');
+            
+            wrappers.forEach(wrapper => {
+                const btn = document.createElement('button');
+                btn.className = 'copy-button';
+                btn.textContent = 'COPY';
+                wrapper.appendChild(btn);
+
+                btn.addEventListener('click', () => {
+                    const code = wrapper.querySelector('code').innerText;
+                    
+                    // Standard copy method for iframe compatibility
+                    const textarea = document.createElement('textarea');
+                    textarea.value = code;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    try {
+                        document.execCommand('copy');
+                        btn.textContent = '写 (COPIED)';
+                        btn.classList.add('copied');
+                        setTimeout(() => {
+                            btn.textContent = 'COPY';
+                            btn.classList.remove('copied');
+                        }, 2000);
+                    } catch (err) {
+                        console.error('Copy failed', err);
+                    }
+                    document.body.removeChild(textarea);
+                });
+            });
+        });
+
+        // Smooth Reveal on Scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = "1";
+                    entry.target.style.transform = "translateY(0)";
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section, header, .doc-link-card, .code-block-wrapper').forEach(el => {
+            el.style.opacity = "0";
+            el.style.transform = "translateY(20px)";
+            el.style.transition = "all 0.8s cubic-bezier(0.16, 1, 0.3, 1)";
+            observer.observe(el);
+        });
+    </script>
 </body>
 </html>
