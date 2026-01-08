@@ -190,99 +190,31 @@
                 
                 <div class="grid md:grid-cols-2 gap-6">
                     <div>
-                        <h4 class="text-xs font-bold text-blue-900/60 uppercase mb-3 tracking-widest">INI Format</h4>
+                        <h4 class="text-xs font-bold text-blue-900/60 uppercase mb-3 tracking-widest"></h4>
                         <div class="code-block-wrapper">
-                            <pre><code>[eos_mgm]
-grid04
-grid05
-
-[eos_fst]
-nfs11
-nfs12
-
-[all:vars]
-ansible_ssh_user=root</code></pre>
+                            <pre><code>sudo apt install flatpak
+</code></pre>
                         </div>
                     </div>
                     <div>
-                        <h4 class="text-xs font-bold text-blue-900/60 uppercase mb-3 tracking-widest">YAML Format</h4>
+                        <h4 class="text-xs font-bold text-blue-900/60 uppercase mb-3 tracking-widest"></h4>
                         <div class="code-block-wrapper">
-                            <pre><code>all:
-  children:
-    eos_mgm:
-      hosts:
-        grid04:
-        grid05:
-    eos_fst:
-      hosts:
-        nfs11:
-        nfs12:
-  vars:
-    ansible_ssh_user: root</code></pre>
+                            <pre><code>sudo apt install gnome-software-plugin-flatpak</code></pre>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-blue-900/60 uppercase mb-3 tracking-widest"></h4>
+                        <div class="code-block-wrapper">
+                            <pre><code>flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo</code></pre>
                         </div>
                     </div>
                 </div>
             </section>
 
             <section class="mb-16">
-                <h2 class="text-2xl font-bold mb-8 section-title">事前設定</h2>
+                <h2 class="text-2xl font-bold mb-8 section-title">ターミナルを再読込</h2>
                 
-                <div class="mb-10">
-                    <span class="step-badge">SSH CONFIG</span>
-                    <h3 class="text-lg font-bold mb-4 text-blue-900">パスワードレス接続の確立</h3>
-                    <div class="pl-4 border-l-2 border-blue-900/10 space-y-6 text-sm font-light">
-                        <div>
-                            <p class="mb-2 font-semibold">1. キーペアの生成</p>
-                            <div class="code-block-wrapper"><pre><code>ssh-keygen -t rsa -b 4096</code></pre></div>
-                        </div>
-                        <div>
-                            <p class="mb-2 font-semibold">2. Rootログインの許可（全ノード）</p>
-                            <p class="text-[10px] text-slate-400 mb-2 italic">/etc/ssh/sshd_config</p>
-                            <div class="code-block-wrapper"><pre><code>PermitRootLogin yes</code></pre></div>
-                            <div class="code-block-wrapper"><pre><code>systemctl restart sshd</code></pre></div>
-                        </div>
-                        <div>
-                            <p class="mb-2 font-semibold">3. 公開鍵の配布</p>
-                            <div class="code-block-wrapper"><pre><code>ssh-copy-id -i ~/.ssh/id_rsa.pub root@&lt;target-host&gt;</code></pre></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="mb-16">
-                <h2 class="text-2xl font-bold mb-8 section-title">実行コマンド</h2>
-                
-                <h3 class="text-lg font-bold mb-4 text-blue-900">疎通テスト</h3>
-                <div class="code-block-wrapper"><pre><code>ansible all -m ping -i inventory.yml</code></pre></div>
-
-                <h3 class="text-lg font-bold mb-4 mt-10 text-blue-900">Playbookの実行</h3>
-                <div class="grid grid-cols-1 gap-4 mt-4">
-                    <div class="p-6 bg-white border border-blue-900/5 rounded-xl">
-                        <p class="text-xs font-bold text-blue-900/40 uppercase mb-2">Syntax Check</p>
-                        <div class="code-block-wrapper"><pre><code>ansible-playbook -i inventory.yml your-playbook.yml --syntax-check</code></pre></div>
-                    </div>
-                    <div class="p-6 bg-white border border-blue-900/5 rounded-xl">
-                        <p class="text-xs font-bold text-blue-900/40 uppercase mb-2">Dry Run (Check mode)</p>
-                        <div class="code-block-wrapper"><pre><code>ansible-playbook -i inventory.yml your-playbook.yml --check --diff</code></pre></div>
-                    </div>
-                    <div class="p-6 bg-white border border-blue-900/5 rounded-xl">
-                        <p class="text-xs font-bold text-blue-900/40 uppercase mb-2">Execution</p>
-                        <div class="code-block-wrapper"><pre><code>ansible-playbook -i inventory.yml your-playbook.yml</code></pre></div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="mb-16">
-                <h2 class="text-2xl font-bold mb-8 section-title">機密情報の保護</h2>
-                <span class="step-badge">ANSIBLE VAULT</span>
-                <p class="text-sm font-light mb-6">パスワードやトークンなどの機密情報は <code>ansible-vault</code> で暗号化します。</p>
-                
-                <h3 class="text-sm font-bold text-blue-900 mb-2">暗号化の実行</h3>
-                <div class="code-block-wrapper"><pre><code>ansible-vault encrypt password-file.yml</code></pre></div>
-
-                <h3 class="text-sm font-bold text-blue-900 mt-8 mb-2">パスワードを入力して実行</h3>
-                <div class="code-block-wrapper"><pre><code>ansible-playbook -i inventory.yml pb.yml --ask-vault-pass</code></pre></div>
-            </section>
+                Flathubを使用してアプリケーションをインストールすることができる。
 
             <!-- Navigation back -->
             <footer class="mt-24 pt-12 border-t border-slate-100 text-center">
