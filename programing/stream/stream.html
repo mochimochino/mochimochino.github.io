@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streamとは | Takuma Matsumoto Docs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&family=Noto+Serif+JP:wght@300;600&family=Inter:wght@300;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --wafu-bg: #f0f4f8; 
+            --wafu-sumi: #1a202c; 
+            --wafu-ai: #0d2a61; 
+            --code-bg: #0a192f;
+        }
+        body {
+            font-family: 'Inter', 'Noto Serif JP', serif;
+            background-color: var(--wafu-bg);
+            color: var(--wafu-sumi);
+            scroll-behavior: smooth;
+            line-height: 1.8;
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Shippori Mincho', serif;
+        }
+        .glass-nav {
+            background: rgba(240, 244, 248, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(13, 42, 97, 0.1);
+        }
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--wafu-ai), transparent);
+            margin: 15px 0;
+        }
+        /* Code Container & Styling */
+        .code-block-wrapper {
+            position: relative;
+            margin: 1.5rem 0;
+        }
+        pre {
+            background-color: var(--code-bg);
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            overflow-x: auto;
+            border-left: 4px solid var(--wafu-ai);
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        code {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            background: rgba(13, 42, 97, 0.05);
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-size: 0.9em;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        /* Copy Button */
+        .copy-button {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            padding: 0.4rem 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(226, 232, 240, 0.6);
+            border: 1px solid rgba(226, 232, 240, 0.2);
+            border-radius: 0.4rem;
+            font-size: 0.7rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+            opacity: 0;
+        }
+        .code-block-wrapper:hover .copy-button {
+            opacity: 1;
+        }
+        .copy-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+        .copy-button.copied {
+            background: var(--wafu-ai);
+            color: white;
+            border-color: var(--wafu-ai);
+        }
+        /* Link Cards */
+        .doc-link-card {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(13, 42, 97, 0.1);
+            transition: all 0.3s ease;
+            text-decoration: none !important;
+        }
+        .doc-link-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(13, 42, 97, 0.1);
+            border-color: var(--wafu-ai);
+        }
+        /* Step badge */
+        .step-badge {
+            display: inline-block;
+            background: var(--wafu-ai);
+            color: white;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.7rem;
+            border-radius: 2rem;
+            margin-bottom: 1rem;
+            font-weight: bold;
+            letter-spacing: 0.1em;
+        }
+    </style>
+</head>
+<body class="selection:bg-blue-100">
+
+    <!-- Header Navigation -->
+    <nav class="glass-nav fixed w-full z-50 top-0">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex items-center justify-between h-20">
+                <a href="../../index.html" class="text-xl font-bold tracking-widest text-indigo-950">
+                    HOME <span class="text-xs font-normal ml-2 opacity-50 uppercase">Docs</span>
+                </a>
+                <div class="flex gap-8">
+                    <a href="../main.html" class="text-[10px] tracking-widest hover:text-blue-700 transition-colors font-bold uppercase">
+                        ← Tools List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto pt-40 pb-32 px-6">
+        
+        <!-- Article Header -->
+        <article class="bg-white/40 p-8 md:p-16 rounded-3xl border border-white/50 shadow-sm">
+            <header class="mb-16">
+                <span class="text-[10px] tracking-[0.5em] text-blue-900/40 uppercase block mb-6">Benchmarck tool</span>
+                <h1 class="text-4xl md:text-5xl font-bold text-blue-900 mb-4">Streamとは</h1>
+                <div class="w-20 h-1 bg-blue-900/20 mt-6"></div>
+            </header>
+
+            <section class="mb-16">
+                <p class="mb-8 font-light text-sm">
+                    LinuxPCのメモリ帯域幅測定に使用する、Streamについて少し触れていく。
+                </p>
+
+                <!-- Featured Reference -->
+                <a href="https://www.cs.virginia.edu/stream/" target="_blank" class="doc-link-card bg-blue-50/30 border-l-4 !border-l-blue-400 mb-12">
+                    <div>
+                        <div class="font-bold text-blue-900 text-lg">STREAM</div>
+                        <p class="text-slate-500 mt-1 text-sm font-light">Sustainable Memory Bandwidth in High Performance Computers</p>
+                        <div class="text-[10px] text-slate-400 mt-2 tracking-widest">cs.virginia.edu</div>
+                    </div>
+                </a>
+            </section>
+            <!--
+            <section class="mb-16">
+                <h2 class="text-2xl font-bold mb-8 section-title">参考資料</h2>
+                <div class="grid grid-cols-1 gap-4">
+                    <a href="https://zenn.dev/y_mrok/books/ansible-no-tsukaikata/viewer/chapter1" target="_blank" class="doc-link-card">
+                        <div class="font-bold text-blue-900 text-sm">はじめに｜Ansible の使い方</div>
+                        <div class="text-[10px] text-slate-400 ml-auto uppercase tracking-widest">zenn.dev</div>
+                    </a>
+                    <a href="https://www.redhat.com/ja/topics/automation/learning-ansible-tutorial" target="_blank" class="doc-link-card">
+                        <div class="font-bold text-blue-900 text-sm">Ansible の基本を学ぶ</div>
+                        <div class="text-[10px] text-slate-400 ml-auto uppercase tracking-widest">redhat.com</div>
+                    </a>
+                    <a href="https://qiita.com/tmurakam99/items/8e609f174f5804308a20" target="_blank" class="doc-link-card">
+                        <div class="font-bold text-blue-900 text-sm">よく使うモジュールまとめ</div>
+                        <div class="text-[10px] text-slate-400 ml-auto uppercase tracking-widest">qiita.com</div>
+                    </a>
+                </div>
+            </section>
+        -->
+            <section class="mb-16">
+                <h2 class="text-2xl font-bold mb-8 section-title">使用方法</h2>
+                <p class="mb-6 font-light text-sm">私はUbuntuのPCで使用してみました。</p>
+                <div class="grid grid-cols-1 gap-4">
+                    <a href="https://www.cs.virginia.edu/stream/FTP/Code/" target="_blank" class="doc-link-card">
+                        <div class="font-bold text-blue-900 text-sm">STREAMのソースコード</div>
+                        <div class="text-[10px] text-slate-400 ml-auto uppercase tracking-widest">cs.virginia.edu</div>
+                    </a>
+                </div>
+                <p class="mb-6 font-light text-sm">stream.cを持ってくる。/streamディレクトリ内に保存する。</p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-xs font-bold text-blue-900/60 uppercase mb-3 tracking-widest"></h4>
+                        <div class="code-block-wrapper">
+                            <pre><code>/stream</code></pre>
+                        </div>
+                    </div>
+                    <p class="mb-6 font-light text-sm">stream.cをコンパイルする。</p>
+                    <div>
+                        <h4 class="text-xs font-bold text-blue-900/60 uppercase mb-3 tracking-widest">bash</h4>
+                        <div class="code-block-wrapper">
+                            <pre><code>gcc -O stream.c -o streamsingle</code></pre>
+                        </div>
+                    </div>
+                    <p class="mb-6 font-light text-sm">streamsingleを実行する。</p>
+                    <div>
+                        <h4 class="text-xs font-bold text-blue-900/60 uppercase mb-3 tracking-widest">bash</h4>
+                        <div class="code-block-wrapper">
+                            <pre><code>./streamsingle</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-16">
+                <h2 class="text-2xl font-bold mb-8 section-title">出力結果</h2>
+                
+                <div class="mb-10">
+                    <span class="step-badge">CPU</span>
+                    <h3 class="text-lg font-bold mb-4 text-blue-900">CPU</h3>
+                    <div class="pl-4 border-l-2 border-blue-900/10 space-y-6 text-sm font-light">
+                        <div>
+                            
+                            <div class="code-block-wrapper"><pre><code>12th Gen Intel(R) Core(TM) i7-12650H</code></pre></div>
+                        </div>
+                        <div>
+                            <p class="mb-2 font-semibold">結果</p>
+                            <div class="code-block-wrapper"><pre><code>-------------------------------------------------------------
+STREAM version $Revision: 5.10 $
+-------------------------------------------------------------
+This system uses 8 bytes per array element.
+-------------------------------------------------------------
+Array size = 10000000 (elements), Offset = 0 (elements)
+Memory per array = 76.3 MiB (= 0.1 GiB).
+Total memory required = 228.9 MiB (= 0.2 GiB).
+Each kernel will be executed 10 times.
+ The *best* time for each kernel (excluding the first iteration)
+ will be used to compute the reported bandwidth.
+-------------------------------------------------------------
+Your clock granularity/precision appears to be 1 microseconds.
+Each test below will take on the order of 7578 microseconds.
+   (= 7578 clock ticks)
+Increase the size of the arrays if this shows that
+you are not getting at least 20 clock ticks per test.
+-------------------------------------------------------------
+WARNING -- The above is only a rough guideline.
+For best results, please be sure you know the
+precision of your system timer.
+-------------------------------------------------------------
+Function    Best Rate MB/s  Avg time     Min time     Max time
+Copy:           19230.6     0.008473     0.008320     0.008691
+Scale:          19347.0     0.008478     0.008270     0.008715
+Add:            22127.7     0.010961     0.010846     0.011134
+Triad:          22511.7     0.010853     0.010661     0.011040
+-------------------------------------------------------------
+Solution Validates: avg error less than 1.000000e-13 on all three arrays
+-------------------------------------------------------------
+</code></pre></div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </section>
+
+           
+            <!-- Navigation back -->
+            <footer class="mt-24 pt-12 border-t border-slate-100 text-center">
+                <a href="../main.html" class="inline-flex items-center gap-6 text-[10px] tracking-[0.5em] text-blue-900 hover:text-blue-500 transition-all group">
+                    <span class="w-12 h-[1px] bg-blue-900/30 group-hover:w-20 transition-all"></span>
+                    RETURN TO LIST
+                </a>
+            </footer>
+        </article>
+    </main>
+
+    <!-- Global Footer -->
+    <footer class="bg-[#050a14] text-blue-100/40 py-20">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <p class="text-xs tracking-widest mb-4">Takuma Matsumoto</p>
+            <p class="text-[10px] opacity-30 uppercase tracking-[0.2em]">© 2026</p>
+        </div>
+    </footer>
+
+    <script>
+        // Copy to clipboard function
+        document.addEventListener('DOMContentLoaded', () => {
+            const wrappers = document.querySelectorAll('.code-block-wrapper');
+            
+            wrappers.forEach(wrapper => {
+                const btn = document.createElement('button');
+                btn.className = 'copy-button';
+                btn.textContent = 'COPY';
+                wrapper.appendChild(btn);
+
+                btn.addEventListener('click', () => {
+                    const code = wrapper.querySelector('code').innerText;
+                    
+                    const textarea = document.createElement('textarea');
+                    textarea.value = code;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    try {
+                        document.execCommand('copy');
+                        btn.textContent = '写 (COPIED)';
+                        btn.classList.add('copied');
+                        setTimeout(() => {
+                            btn.textContent = 'COPY';
+                            btn.classList.remove('copied');
+                        }, 2000);
+                    } catch (err) {
+                        console.error('Copy failed', err);
+                    }
+                    document.body.removeChild(textarea);
+                });
+            });
+        });
+
+        // Smooth Reveal on Scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = "1";
+                    entry.target.style.transform = "translateY(0)";
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section, header, .doc-link-card, .code-block-wrapper, .mb-12').forEach(el => {
+            el.style.opacity = "0";
+            el.style.transform = "translateY(20px)";
+            el.style.transition = "all 0.8s cubic-bezier(0.16, 1, 0.3, 1)";
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
