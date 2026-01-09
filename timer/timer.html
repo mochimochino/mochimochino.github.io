@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学会発表用タイマー</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 50px; background-color: #f0f0f0; }
+        .timer-display { font-size: 8rem; font-weight: bold; margin: 20px 0; color: #333; }
+        .controls, .settings { margin-bottom: 20px; }
+        input { padding: 5px; font-size: 1rem; width: 60px; text-align: center; }
+        button { padding: 10px 20px; font-size: 1.2rem; cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 5px; }
+        button.stop { background-color: #dc3545; }
+        button.reset { background-color: #6c757d; }
+        
+        body.warning { background-color: #fff3cd; } /* 予鈴：黄色 */
+        body.finished { background-color: #fa0217; } /* 終了：赤 */
+    </style>
+</head>
+<body>
+
+    <h1>Presentation Timer</h1>
+
+    <div class="settings">
+        <label>発表時間: <input type="number" id="totalTime" value="10"> 分</label>
+        <label>残り時間: <input type="number" id="warningTime" value="2"> 分</label>
+    </div>
+
+    <div class="timer-display" id="display">10:00</div>
+
+    <div class="controls">
+        <button onclick="startTimer()">Start</button>
+        <button onclick="stopTimer()" class="stop">Stop</button>
+        <button onclick="resetTimer()" class="reset">Reset</button>
+    </div>
+
+    <script>
+        let timerInterval;
+        let remainingSeconds;
+        let isRunning = false;
+
+        function updateDisplay() {
+            const minutes = Math.floor(remainingSeconds / 60);
+            const seconds = remainingSeconds % 60;
+            const display = document.getElementById('display');
+            display.innerText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            
+            // 色の変化ロジック
+            const warningLimit = document.getElementById('warningTime').value * 60;
+            
+            if (remainingSeconds <= 0) {
+                document.body.className = 'finished'; // 時間切れ（赤）
+            } else if (remainingSeconds <= warningLimit) {
+                document.body.className = 'warning'; // 予鈴（黄色）
+            } else {
+                document.body.className = ''; // 通常
+            }
+        }
+
+        function startTimer() {
+            if (isRunning) return;
+            
+            // 初回スタート時のみ時間をセット
+            if (remainingSeconds === undefined) {
+                const minutes = parseInt(document.getElementById('totalTime').value);
+                remainingSeconds = minutes * 60;
+            }
+
+            isRunning = true;
+            timerInterval = setInterval(() => {
+                remainingSeconds--;
+                updateDisplay();
+
+                if (remainingSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    alert("時間終了です！"); // 簡易的なアラート
+                    isRunning = false;
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+        }
+
+        function resetTimer() {
+            stopTimer();
+            remainingSeconds = undefined;
+            document.body.className = '';
+            const minutes = parseInt(document.getElementById('totalTime').value);
+            document.getElementById('display').innerText = `${String(minutes).padStart(2, '0')}:00`;
+        }
+        
+        // 初期表示設定
+        resetTimer();
+    </script>
+</body>
+</html>
