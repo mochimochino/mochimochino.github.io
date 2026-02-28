@@ -93,9 +93,32 @@
             <span class="text-[10px] tracking-[0.5em] text-blue-900/40 uppercase block mb-4">Terminal Setup</span>
             <h1 class="text-4xl font-bold section-title">Ghostty & Zellij 構築</h1>
             <p class="mt-6 text-slate-600 font-light leading-relaxed">
-                Kubuntu上のターミナル環境として、高速な <strong>Ghostty</strong> と、ターミナルマルチプレクサの <strong>Zellij</strong> を組み合わせて使用しています。
+                Kubuntu環境の高速なターミナルとして <strong>Ghostty</strong> を導入し、マルチプレクサの <strong>Zellij</strong>
+                と組み合わせて使っている。見返すための備忘録。
             </p>
         </div>
+
+        <!-- Package Installation -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-bold border-b border-blue-900/10 pb-4 mb-8">パッケージのインストール</h2>
+            <p class="text-slate-600 font-light leading-relaxed mb-6">
+                まずは必要なパッケージやツールをインストールする。
+            </p>
+            <div class="code-block mb-6">
+                <pre><code><span class="comment"># Rustのインストール（ZellijやYaziなどRust製ツールのビルドに必要）</span>
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+source "$HOME/.cargo/env"
+
+<span class="comment"># ターミナルマルチプレクサ Zellij のインストール</span>
+cargo install zellij
+
+<span class="comment"># ファイルツリー (yazi) とその他の必須パッケージ</span>
+cargo install yazi-fm yazi-cli</code></pre>
+            </div>
+            <p class="text-slate-600 font-light leading-relaxed mb-6 border-l-4 border-blue-900/20 pl-4">
+                ※ Ghostty は現在ソースビルド環境のため、公式の手順（Zigやパッケージマネージャー経由）に従ってインストールする。
+            </p>
+        </section>
 
         <!-- Ghostty Settings -->
         <section class="mb-20">
@@ -145,38 +168,56 @@ keybind = ctrl+shift+down=resize_split:down,20
 keybind = ctrl+shift+w=close_surface</code></pre>
             </div>
             <p class="text-slate-600 font-light leading-relaxed">
-                VSCodeライクな画面分割のキーバインドを取り入れつつ、透明度やブラーを効かせたモダンな見た目に仕上げています。
+                VSCodeライクな画面分割キーバインドを取り入れつつ、適度な透明度やブラーを効かせて視認性とモダンな見た目を両立させている。
             </p>
         </section>
 
         <!-- Zellij Settings -->
         <section>
-            <h2 class="text-2xl font-bold border-b border-blue-900/10 pb-4 mb-8">Zellij インストールと起動</h2>
-            <p class="text-slate-600 font-light leading-relaxed mb-6">
-                ZellijはRust製のターミナルマルチプレクサです。<code class="bg-blue-900/5 px-2 py-1 rounded">cargo</code> を使ってインストールします。
-            </p>
+            <h2 class="text-2xl font-bold border-b border-blue-900/10 pb-4 mb-8">Zellij レイアウトと起動</h2>
             <div class="code-block mb-10">
-                <pre><code><span class="comment"># Rustのインストール</span>
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-source "$HOME/.cargo/env"
-
-<span class="comment"># Zellijのインストール</span>
-cargo install zellij
-
-<span class="comment"># レイアウトディレクトリの作成</span>
+                <pre><code><span class="comment"># レイアウトディレクトリの作成</span>
 mkdir -p ~/.config/zellij/layouts
 
 <span class="comment"># カスタムレイアウトの設定</span>
 vim ~/.config/zellij/layouts/ide.kdl</code></pre>
             </div>
 
-            <h3 class="text-xl font-bold mb-4">起動コマンド</h3>
+            <h3 class="text-xl font-bold mb-4">ide.kdl の内容（2画面構成案）</h3>
+            <p class="text-slate-600 font-light leading-relaxed mb-6">
+                左側にYazi（ファイルツリー）、右側にエディタ（Nvim/Helixなど）を配置する2画面構成（ツリー＋エディタ）のZellijレイアウト案。
+            </p>
+            <div class="code-block mb-6">
+                <pre><code>layout {
+    default_tab_template {
+        pane size=1 borderless=true {
+            plugin location="zellij:tab-bar"
+        }
+        children
+        pane size=2 borderless=true {
+            plugin location="zellij:status-bar"
+        }
+    }
+    tab name="VSCode Environment" split_direction="vertical" {
+        <span class="comment">// 左側のサイドバー領域（全体の20%の幅）</span>
+        <span class="comment">// Gitツールを外し、Yazi（ファイルツリー）に縦幅を全振りする</span>
+        pane size="20%" command="yazi"
+
+        <span class="comment">// 右側のメイン作業領域（残りの80%）</span>
+        pane focus=true {
+            <span class="comment">// ここで nvim や hx (Helix) を立ち上げて編集する</span>
+        }
+    }
+}</code></pre>
+            </div>
+
+            <h3 class="text-xl font-bold mb-4 mt-10">起動コマンド</h3>
             <div class="code-block mb-6">
                 <pre><code>zellij --layout ide</code></pre>
             </div>
             <p class="text-slate-600 font-light leading-relaxed">
                 作成した独自のIDEレイアウト（<code
-                    class="bg-blue-900/5 px-2 py-1 rounded">ide.kdl</code>）を指定して起動することで、すぐに作業環境が立ち上がります。
+                    class="bg-blue-900/5 px-2 py-1 rounded">ide.kdl</code>）を指定して起動し、即座に作業環境を立ち上げられるようにしている。
             </p>
         </section>
 
