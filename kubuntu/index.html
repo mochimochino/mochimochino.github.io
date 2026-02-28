@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kubuntu Environment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&family=Noto+Serif+JP:wght@300;600&family=Inter:wght@300;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --wafu-bg: #f0f4f8;
+            --wafu-sumi: #1b2538;
+            --wafu-ai: #103374;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Serif JP', serif;
+            background-color: var(--wafu-bg);
+            color: var(--wafu-sumi);
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Shippori Mincho', serif;
+        }
+
+        .glass-nav {
+            background: rgba(240, 244, 248, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(13, 42, 97, 0.1);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--wafu-ai), transparent);
+            margin: 15px auto;
+        }
+
+        .wafu-card {
+            transition: all 0.6s cubic-bezier(0.2, 1, 0.3, 1);
+            border: 1px solid transparent;
+        }
+
+        .wafu-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(13, 42, 97, 0.15);
+            box-shadow: 0 15px 30px -10px rgba(13, 42, 97, 0.1);
+        }
+    </style>
+</head>
+
+<body class="selection:bg-blue-100">
+    <nav class="glass-nav fixed w-full z-50 top-0">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex items-center justify-between h-20">
+                <a href="../index.html" class="text-xl font-bold tracking-widest text-indigo-950">
+                    松本 拓磨
+                </a>
+                <a href="../index.html" class="text-xs tracking-widest hover:text-blue-700 font-semibold">HOME</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-6 pt-32 pb-48">
+        <div class="mb-8">
+            <a href="../index.html#hobbies" class="text-sm text-blue-900 font-semibold tracking-widest hover:underline">
+                &larr; BACK TO HOBBIES
+            </a>
+        </div>
+
+        <div class="text-center mb-16">
+            <span class="text-[10px] tracking-[0.5em] text-blue-900/40 uppercase block mb-4">My linux setup</span>
+            <h1 class="text-4xl font-bold section-title">Kubuntu Environment</h1>
+            <p class="mt-8 text-slate-600 font-light leading-relaxed max-w-2xl mx-auto">
+                普段使用している開発環境（Kubuntu）のデスクトップテーマや、ターミナルの設定についてまとめています。
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-10">
+            <a href="desktop.html" class="wafu-card bg-white/50 p-8 rounded-xl block cursor-pointer">
+                <div class="text-3xl mb-4">🎨</div>
+                <h2 class="text-2xl font-bold mb-4">Desktop Style</h2>
+                <p class="text-slate-500 text-sm leading-relaxed font-light mb-6">
+                    KDEのカスタマイズ、My Styleの適用など。
+                </p>
+                <span class="text-xs font-bold tracking-widest text-blue-900">VIEW DETAILS &rarr;</span>
+            </a>
+            <a href="terminal.html" class="wafu-card bg-white/50 p-8 rounded-xl block cursor-pointer">
+                <div class="text-3xl mb-4">💻</div>
+                <h2 class="text-2xl font-bold mb-4">Terminal Setup</h2>
+                <p class="text-slate-500 text-sm leading-relaxed font-light mb-6">
+                    Ghosttyの設定とZellijを用いた画面分割設定等。
+                </p>
+                <span class="text-xs font-bold tracking-widest text-blue-900">VIEW DETAILS &rarr;</span>
+            </a>
+        </div>
+    </main>
+
+    <footer class="bg-[#050a14] text-blue-100/40 py-12 mt-20 text-center">
+        <p class="text-xs tracking-widest">©
+            <script>document.write(new Date().getFullYear())</script> Takuma Matsumoto
+        </p>
+    </footer>
+</body>
+
+</html>

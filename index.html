@@ -1,47 +1,68 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Takuma Matsumoto</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&family=Noto+Serif+JP:wght@300;600&family=Inter:wght@300;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&family=Noto+Serif+JP:wght@300;600&family=Inter:wght@300;600&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             /* 和風の色　https://ja.wikipedia.org/wiki/%E6%97%A5%E6%9C%AC%E3%81%AE%E8%89%B2%E3%81%AE%E4%B8%80%E8%A6%A7 */
-            --wafu-bg: #f0f4f8; /* 白藍（しらあい）風の淡い青 */
-            --wafu-sumi: #1b2538; /* 墨色（青みを含ませた黒） */
-            --wafu-ai: #103374; /* 群青（ぐんじょう） */
-            --wafu-nando: #2b5f8e; /* 縹色（はなだいろ） */
+            --wafu-bg: #f0f4f8;
+            /* 白藍（しらあい）風の淡い青 */
+            --wafu-sumi: #1b2538;
+            /* 墨色（青みを含ませた黒） */
+            --wafu-ai: #103374;
+            /* 群青（ぐんじょう） */
+            --wafu-nando: #2b5f8e;
+            /* 縹色（はなだいろ） */
         }
+
         body {
             font-family: 'Inter', 'Noto Serif JP', serif;
             background-color: var(--wafu-bg);
             color: var(--wafu-sumi);
             scroll-behavior: smooth;
         }
-        h1, h2, h3 {
+
+        h1,
+        h2,
+        h3 {
             font-family: 'Shippori Mincho', serif;
         }
+
         /* Navigation with blue-glass effect */
         .glass-nav {
             background: rgba(240, 244, 248, 0.85);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(13, 42, 97, 0.1);
         }
+
         /* Ken Burns Effect (Moving Image) */
         .ken-burns {
             animation: move-bg 30s infinite alternate ease-in-out;
         }
+
         @keyframes move-bg {
-            0% { transform: scale(1.0); }
-            100% { transform: scale(1.1); }
+            0% {
+                transform: scale(1.0);
+            }
+
+            100% {
+                transform: scale(1.1);
+            }
         }
+
         /* Decorative vertical elements */
         .vertical-text {
             writing-mode: vertical-rl;
             text-orientation: mixed;
         }
+
         /* Section title with blue gradient line */
         .section-title::after {
             content: '';
@@ -51,27 +72,32 @@
             background: linear-gradient(to right, transparent, var(--wafu-ai), transparent);
             margin: 15px auto;
         }
+
         /* Wafu Card with Blue Shadow hover */
         .wafu-card {
             transition: all 0.6s cubic-bezier(0.2, 1, 0.3, 1);
             border: 1px solid transparent;
         }
+
         .wafu-card:hover {
             transform: translateY(-10px);
             border-color: rgba(13, 42, 97, 0.15);
             box-shadow: 0 25px 50px -12px rgba(13, 42, 97, 0.1);
         }
+
         /* Grayscale to Color Transition */
         .img-reveal {
             filter: grayscale(100%);
             transition: filter 0.8s ease, transform 0.8s ease;
         }
-        .wafu-card:hover .img-reveal, 
+
+        .wafu-card:hover .img-reveal,
         .hover-reveal:hover .img-reveal {
             filter: grayscale(0%);
         }
     </style>
 </head>
+
 <body class="selection:bg-blue-100">
 
     <!-- Navigation -->
@@ -82,10 +108,14 @@
                     松本 拓磨 <span class="text-xs font-normal ml-2 opacity-50 tracking-tighter">Master Student</span>
                 </a>
                 <div class="hidden md:flex space-x-12 items-center">
-                    <a href="#about" class="text-xs tracking-widest hover:text-blue-700 transition-colors font-semibold">ABOUT</a>
-                    <a href="#hobbies" class="text-xs tracking-widest hover:text-blue-700 transition-colors font-semibold">HOBBIES</a>
-                    <a href="#restaurants" class="text-xs tracking-widest hover:text-blue-700 transition-colors font-semibold">GOURMET</a>
-                    <a href="mailto:matsumoto@quark.hiroshima-u.ac.jp" class="bg-indigo-950 text-white px-6 py-2 rounded-full text-[10px] tracking-widest hover:bg-blue-800 transition-all shadow-lg shadow-blue-900/20">CONTACT</a>
+                    <a href="#about"
+                        class="text-xs tracking-widest hover:text-blue-700 transition-colors font-semibold">ABOUT</a>
+                    <a href="#hobbies"
+                        class="text-xs tracking-widest hover:text-blue-700 transition-colors font-semibold">HOBBIES</a>
+                    <a href="#restaurants"
+                        class="text-xs tracking-widest hover:text-blue-700 transition-colors font-semibold">GOURMET</a>
+                    <a href="mailto:matsumoto@quark.hiroshima-u.ac.jp"
+                        class="bg-indigo-950 text-white px-6 py-2 rounded-full text-[10px] tracking-widest hover:bg-blue-800 transition-all shadow-lg shadow-blue-900/20">CONTACT</a>
                 </div>
             </div>
         </div>
@@ -94,11 +124,10 @@
     <!-- Hero Section -->
     <section id="home" class="relative h-screen overflow-hidden flex items-center justify-center bg-[#050a14]">
         <div class="absolute inset-0 z-0">
-            <img src="photo/image/orion.png" 
-                 alt="Blue Cosmos" class="w-full h-full object-cover opacity-60 ken-burns">
+            <img src="photo/image/orion.png" alt="Blue Cosmos" class="w-full h-full object-cover opacity-60 ken-burns">
             <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#050a14]/40 to-[#050a14]"></div>
         </div>
-        
+
         <div class="relative z-10 text-center text-white px-4">
             <div class="inline-block border-l border-r border-white/20 px-8 py-2 mb-10">
                 <p class="text-[10px] tracking-[0.6em] uppercase font-light">Welcome</p>
@@ -109,7 +138,8 @@
             <p class="text-base md:text-lg font-light text-blue-100/70 max-w-2xl mx-auto mb-16 tracking-[0.3em]">
                 ようこそ
             </p>
-            <a href="#about" class="inline-flex items-center gap-6 text-[10px] tracking-[0.5em] hover:text-blue-300 transition-all group">
+            <a href="#about"
+                class="inline-flex items-center gap-6 text-[10px] tracking-[0.5em] hover:text-blue-300 transition-all group">
                 SCROLL TO EXPLORE
                 <span class="w-20 h-[1px] bg-blue-500/50 group-hover:w-32 transition-all"></span>
             </a>
@@ -118,14 +148,17 @@
 
     <!-- Main Content -->
     <main class="max-w-6xl mx-auto px-6">
-        
+
         <!-- About Section -->
         <section id="about" class="py-48">
             <div class="relative grid md:grid-cols-12 gap-16 items-center">
                 <div class="md:col-span-5 relative group hover-reveal">
                     <div class="absolute -top-8 -left-8 w-32 h-32 border-t-2 border-l-2 border-blue-900/20 z-0"></div>
-                    <img src="images/intro.png" alt="Takuma Matsumoto" class="img-reveal relative z-10 w-full rounded-sm shadow-2xl">
-                    <div class="absolute -bottom-4 -right-4 text-[8px] tracking-widest text-blue-900/30 uppercase vertical-text">Takuma Matsumoto</div>
+                    <img src="images/intro.png" alt="Takuma Matsumoto"
+                        class="img-reveal relative z-10 w-full rounded-sm shadow-2xl">
+                    <div
+                        class="absolute -bottom-4 -right-4 text-[8px] tracking-widest text-blue-900/30 uppercase vertical-text">
+                        Takuma Matsumoto</div>
                 </div>
                 <div class="md:col-span-7 md:pl-16">
                     <span class="text-[10px] tracking-[0.5em] text-blue-900/40 uppercase block mb-6">Introduction</span>
@@ -143,9 +176,14 @@
                         </p>
                     </div>
                     <div class="mt-16 flex gap-12 items-center">
-                        <a href="https://www.quark.hiroshima-u.ac.jp/" target="_blank" class="group flex items-center gap-3 text-xs font-bold tracking-widest text-blue-900">
+                        <a href="https://www.quark.hiroshima-u.ac.jp/" target="_blank"
+                            class="group flex items-center gap-3 text-xs font-bold tracking-widest text-blue-900">
                             VIEW LAB SITE
-                            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
                         </a>
                     </div>
                 </div>
@@ -155,7 +193,8 @@
         <!-- Hobbies Section -->
         <section id="hobbies" class="py-48 border-t border-blue-900/5">
             <div class="text-center mb-32">
-                <span class="text-[10px] tracking-[0.5em] text-blue-900/40 uppercase block mb-6">Fields of Interest</span>
+                <span class="text-[10px] tracking-[0.5em] text-blue-900/40 uppercase block mb-6">Fields of
+                    Interest</span>
                 <h2 class="text-5xl font-bold section-title">趣 味</h2>
             </div>
             <div class="grid md:grid-cols-3 gap-12">
@@ -167,10 +206,23 @@
                     <h3 class="text-xl font-bold mb-4 px-2">ツール・Linux・Computing</h3>
                     <p class="text-slate-500 text-sm leading-relaxed font-light px-2">便利なものや、まとめたことを</p>
                 </a>
+                <!-- Kubuntu Item -->
+                <a href="kubuntu/index.html" class="wafu-card group cursor-pointer bg-white/50 p-4 rounded-xl">
+                    <div
+                        class="relative aspect-[4/5] overflow-hidden rounded-lg mb-8 bg-gradient-to-br from-[#103374] to-[#1b2538]">
+                        <div
+                            class="absolute inset-0 flex items-center justify-center text-blue-100/30 font-bold tracking-[0.3em] text-sm img-reveal">
+                            KUBUNTU ENV
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 px-2">Kubuntu 環境構築</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed font-light px-2">KDEカスタマイズやGhostty+Zellij設定</p>
+                </a>
                 <!-- Hobby Item 2 -->
                 <a href="photo/main.html" class="wafu-card group cursor-pointer bg-white/50 p-4 rounded-xl">
                     <div class="relative aspect-[4/5] overflow-hidden rounded-lg mb-8">
-                        <img src="images/camera.png" alt="Astrophotography" class="img-reveal w-full h-full object-cover">
+                        <img src="images/camera.png" alt="Astrophotography"
+                            class="img-reveal w-full h-full object-cover">
                     </div>
                     <h3 class="text-xl font-bold mb-4 px-2">天体・風景撮影</h3>
                     <p class="text-slate-500 text-sm leading-relaxed font-light px-2">趣味の天体撮影</p>
@@ -207,10 +259,11 @@
                     <h3 class="text-xl font-bold mb-4 px-2">ゼルダ</h3>
                     <p class="text-slate-500 text-sm leading-relaxed font-light px-2">まだ、作ってない、、、、、、</p>
                 </div>
-                 <!-- Hobby Item 7 -->
+                <!-- Hobby Item 7 -->
                 <a href="building/building.html" class="wafu-card group cursor-pointer bg-white/50 p-4 rounded-xl">
                     <div class="relative aspect-[4/5] overflow-hidden rounded-lg mb-8">
-                        <img src="building/image/building.png" alt="Nature" class="img-reveal w-full h-full object-cover">
+                        <img src="building/image/building.png" alt="Nature"
+                            class="img-reveal w-full h-full object-cover">
                     </div>
                     <h3 class="text-xl font-bold mb-4 px-2">建築</h3>
                     <p class="text-slate-500 text-sm leading-relaxed font-light px-2">建築物</p>
@@ -225,10 +278,12 @@
                     <span class="text-[10px] tracking-[0.5em] text-blue-900/40 uppercase block mb-6">Food Records</span>
                     <h2 class="text-5xl font-bold section-title">おいしいもの</h2>
                 </div>
-                <div class="bg-white/40 p-3 rounded-2xl border border-blue-900/5 shadow-sm group hover-reveal cursor-pointer">
+                <div
+                    class="bg-white/40 p-3 rounded-2xl border border-blue-900/5 shadow-sm group hover-reveal cursor-pointer">
                     <div class="relative overflow-hidden rounded-xl">
                         <img src="images/orion.png" alt="Sweets" class="img-reveal w-full h-[500px] object-cover">
-                        <div class="absolute inset-0 flex flex-col items-center justify-center text-white bg-blue-950/40 opacity-0 group-hover:opacity-100 transition-all duration-700">
+                        <div
+                            class="absolute inset-0 flex flex-col items-center justify-center text-white bg-blue-950/40 opacity-0 group-hover:opacity-100 transition-all duration-700">
                             <p class="tracking-[1em] text-[10px] mb-6 font-bold">RECORDS PREPARING</p>
                             <h3 class="text-4xl font-bold italic">Coming Soon</h3>
                         </div>
@@ -251,7 +306,8 @@
                     </p>
                 </div>
                 <div class="text-left md:text-right">
-                    <a href="mailto:matsumoto@quark.hiroshima-u.ac.jp" class="text-xl md:text-3xl font-light text-white hover:text-blue-400 transition-colors mb-8 block">
+                    <a href="mailto:matsumoto@quark.hiroshima-u.ac.jp"
+                        class="text-xl md:text-3xl font-light text-white hover:text-blue-400 transition-colors mb-8 block">
                         matsumoto@quark.hiroshima-u.ac.jp
                     </a>
                     <div class="flex gap-8 md:justify-end text-[10px] tracking-[0.3em]">
@@ -265,7 +321,7 @@
 
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
-        
+
         // Intersection Observer for Smooth Reveal
         const options = { threshold: 0.15 };
         const observer = new IntersectionObserver((entries) => {
@@ -285,4 +341,5 @@
         });
     </script>
 </body>
+
 </html>

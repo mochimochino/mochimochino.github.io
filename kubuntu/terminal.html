@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal Setup - Kubuntu Environment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&family=Noto+Serif+JP:wght@300;600&family=Inter:wght@300;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --wafu-bg: #f0f4f8;
+            --wafu-sumi: #1b2538;
+            --wafu-ai: #103374;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Serif JP', serif;
+            background-color: var(--wafu-bg);
+            color: var(--wafu-sumi);
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Shippori Mincho', serif;
+        }
+
+        .glass-nav {
+            background: rgba(240, 244, 248, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(13, 42, 97, 0.1);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--wafu-ai), transparent);
+            margin: 15px 0;
+        }
+
+        .code-block {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            overflow-x: auto;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        .comment {
+            color: #8b949e;
+        }
+
+        .keyword {
+            color: #ff7b72;
+        }
+
+        .string {
+            color: #a5d6ff;
+        }
+    </style>
+</head>
+
+<body class="selection:bg-blue-100">
+    <nav class="glass-nav fixed w-full z-50 top-0">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex items-center justify-between h-20">
+                <a href="../index.html" class="text-xl font-bold tracking-widest text-indigo-950">
+                    松本 拓磨
+                </a>
+                <a href="index.html" class="text-xs tracking-widest hover:text-blue-700 font-semibold">KUBUNTU ENV</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-6 pt-32 pb-48">
+        <div class="mb-10">
+            <a href="index.html" class="text-sm text-blue-900 font-semibold tracking-widest hover:underline">
+                &larr; BACK TO KUBUNTU ENV
+            </a>
+        </div>
+
+        <div class="mb-16">
+            <span class="text-[10px] tracking-[0.5em] text-blue-900/40 uppercase block mb-4">Terminal Setup</span>
+            <h1 class="text-4xl font-bold section-title">Ghostty & Zellij 構築</h1>
+            <p class="mt-6 text-slate-600 font-light leading-relaxed">
+                Kubuntu上のターミナル環境として、高速な <strong>Ghostty</strong> と、ターミナルマルチプレクサの <strong>Zellij</strong> を組み合わせて使用しています。
+            </p>
+        </div>
+
+        <!-- Ghostty Settings -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-bold border-b border-blue-900/10 pb-4 mb-8">Ghostty 設定 (<code
+                    class="text-sm bg-blue-900/5 px-2 py-1 rounded">.config/ghostty/config</code>)</h2>
+            <div class="code-block mb-6">
+                <pre><code><span class="comment"># --- 見た目・フォント ---</span>
+font-size = 14
+adjust-cell-height = 10%
+<span class="comment"># ツリー表示ツール（filetreeやyazi）のアイコンを表示するためNerd Fontを明示</span>
+font-family = <span class="string">"Hack Nerd Font"</span>
+theme = Moonfly
+
+<span class="comment"># --- ウィンドウ・透明度 ---</span>
+background-opacity = 0.90
+background-blur-radius = 20
+window-padding-x = 10
+window-padding-y = 10
+window-padding-balance = true
+
+<span class="comment"># --- 操作性 ---</span>
+mouse-hide-while-typing = true
+copy-on-select = true
+clipboard-read = allow
+clipboard-write = allow
+
+<span class="comment"># --- キーバインド設定（Kubuntu向け画面分割スペシャル） ---</span>
+<span class="comment"># Ctrl+Shift+D で「右に」分割（VSCodeや標準的なLinuxターミナルで馴染みのある配置）</span>
+keybind = ctrl+shift+d=new_split:right
+
+<span class="comment"># Ctrl+Shift+Enter で「下に」分割</span>
+keybind = ctrl+shift+enter=new_split:down
+
+<span class="comment"># Alt + 矢印キー で分割した画面を「移動」</span>
+keybind = alt+left=goto_split:left
+keybind = alt+right=goto_split:right
+keybind = alt+up=goto_split:top
+keybind = alt+down=goto_split:bottom
+
+<span class="comment"># Ctrl + Shift + 矢印キー で分割サイズを「調整」</span>
+keybind = ctrl+shift+left=resize_split:left,20
+keybind = ctrl+shift+right=resize_split:right,20
+keybind = ctrl+shift+up=resize_split:up,20
+keybind = ctrl+shift+down=resize_split:down,20
+
+<span class="comment"># Ctrl+Shift+W で現在の「ペイン（分割）」を閉じる</span>
+keybind = ctrl+shift+w=close_surface</code></pre>
+            </div>
+            <p class="text-slate-600 font-light leading-relaxed">
+                VSCodeライクな画面分割のキーバインドを取り入れつつ、透明度やブラーを効かせたモダンな見た目に仕上げています。
+            </p>
+        </section>
+
+        <!-- Zellij Settings -->
+        <section>
+            <h2 class="text-2xl font-bold border-b border-blue-900/10 pb-4 mb-8">Zellij インストールと起動</h2>
+            <p class="text-slate-600 font-light leading-relaxed mb-6">
+                ZellijはRust製のターミナルマルチプレクサです。<code class="bg-blue-900/5 px-2 py-1 rounded">cargo</code> を使ってインストールします。
+            </p>
+            <div class="code-block mb-10">
+                <pre><code><span class="comment"># Rustのインストール</span>
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+source "$HOME/.cargo/env"
+
+<span class="comment"># Zellijのインストール</span>
+cargo install zellij
+
+<span class="comment"># レイアウトディレクトリの作成</span>
+mkdir -p ~/.config/zellij/layouts
+
+<span class="comment"># カスタムレイアウトの設定</span>
+vim ~/.config/zellij/layouts/ide.kdl</code></pre>
+            </div>
+
+            <h3 class="text-xl font-bold mb-4">起動コマンド</h3>
+            <div class="code-block mb-6">
+                <pre><code>zellij --layout ide</code></pre>
+            </div>
+            <p class="text-slate-600 font-light leading-relaxed">
+                作成した独自のIDEレイアウト（<code
+                    class="bg-blue-900/5 px-2 py-1 rounded">ide.kdl</code>）を指定して起動することで、すぐに作業環境が立ち上がります。
+            </p>
+        </section>
+
+    </main>
+
+    <footer class="bg-[#050a14] text-blue-100/40 py-12 mt-20 text-center">
+        <p class="text-xs tracking-widest">©
+            <script>document.write(new Date().getFullYear())</script> Takuma Matsumoto
+        </p>
+    </footer>
+</body>
+
+</html>
