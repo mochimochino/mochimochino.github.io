@@ -196,6 +196,41 @@ root [0] .q</code></pre>
             </p>
         </section>
 
+        <!-- Using Dockerfile -->
+        <section class="mt-20">
+            <h2 class="text-2xl font-bold border-b border-blue-900/10 pb-4 mb-8">Dockerfile の利用</h2>
+            <p class="text-slate-600 font-light leading-relaxed mb-6">
+                <code>Dockerfile</code>を使用して、公式ROOTイメージにエディタなどの追加ツールをインストールしたカスタムイメージを作成・実行する手順。
+            </p>
+            <h3 class="text-xl font-bold mb-4">Dockerfile の作成</h3>
+            <div class="code-block mb-6">
+                <pre><code>FROM rootproject/root:6.34.00-ubuntu24.04
+
+USER root
+RUN apt-get update && \
+    apt-get install -y software-properties-common vim nano less && \
+    add-apt-repository -y ppa:maveonair/helix-editor && \
+    apt-get update && \
+    apt-get install -y helix && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /userhome
+
+CMD ["/bin/bash"]</code></pre>
+            </div>
+
+            <h3 class="text-xl font-bold mb-4">イメージのビルドと実行</h3>
+            <div class="code-block mb-6">
+                <pre><code><span class="comment"># イメージのビルド</span>
+sudo docker build -t my-root-env .</code></pre>
+            </div>
+
+            <div class="code-block mb-6">
+                <pre><code><span class="comment"># コンテナの起動</span>
+sudo docker run --rm -it -v ~:/userhome --user $(id -u) my-root-env</code></pre>
+            </div>
+        </section>
+
     </main>
 
     <footer class="bg-[#050a14] text-blue-100/40 py-12 mt-20 text-center">
