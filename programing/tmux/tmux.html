@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tmux - ターミナル管理術</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&family=Noto+Serif+JP:wght@300;600&family=Inter:wght@300;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --wafu-bg: #f0f4f8;
+            --wafu-sumi: #1b2538;
+            --wafu-ai: #103374;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Serif JP', serif;
+            background-color: var(--wafu-bg);
+            color: var(--wafu-sumi);
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Shippori Mincho', serif;
+        }
+
+        .glass-nav {
+            background: rgba(240, 244, 248, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(13, 42, 97, 0.1);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--wafu-ai), transparent);
+            margin: 15px 0;
+        }
+
+        .code-block {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            overflow-x: auto;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        .comment {
+            color: #8b949e;
+        }
+
+        .keyword {
+            color: #ff7b72;
+        }
+
+        .string {
+            color: #a5d6ff;
+        }
+    </style>
+</head>
+
+<body class="selection:bg-blue-100">
+    <nav class="glass-nav fixed w-full z-50 top-0">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex items-center justify-between h-20">
+                <a href="../../index.html" class="text-xl font-bold tracking-widest text-indigo-950">
+                    松本 拓磨
+                </a>
+                <a href="../main.html" class="text-xs tracking-widest hover:text-blue-700 font-semibold">COMPUTING</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-6 pt-32 pb-48">
+        <div class="mb-10">
+            <a href="../main.html" class="text-sm text-blue-900 font-semibold tracking-widest hover:underline">
+                &larr; BACK TO COMPUTING
+            </a>
+        </div>
+
+        <div class="mb-16">
+            <span class="text-[10px] tracking-[0.5em] text-blue-900/40 uppercase block mb-4">Terminal Multiplexer</span>
+            <h1 class="text-4xl font-bold section-title">Tmux ターミナル管理術</h1>
+            <p class="mt-6 text-slate-600 font-light leading-relaxed">
+                SSH接続が切れてもプログラムを実行し続けたい場合や、1つのターミナルで複数の作業領域を分割・管理したい場合に必須となるツール「Tmux」の基本的な備忘録。
+            </p>
+        </div>
+
+        <!-- 1. 新規セッションと処理の実行 -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-bold border-b border-blue-900/10 pb-4 mb-8">セッションの作成とビルドログの記録</h2>
+            <p class="text-slate-600 font-light leading-relaxed mb-6">
+                時間のかかるビルド作業などは、名前をつけた専用のセッションを立ち上げて実行するのが効率的です。
+            </p>
+
+            <div class="code-block mb-6">
+                <pre><code><span class="comment"># "alibuild" という名前で新しいセッションを開始</span>
+tmux new -s alibuild</code></pre>
+            </div>
+
+            <p class="text-slate-600 font-light leading-relaxed mb-6">
+                セッションに入ったら、重い処理（例: <code>aliBuild</code>）を実行します。<br>
+                この際、<code>tee</code> コマンドを使って画面への出力とファイルへのログ記録を同時に行うと便利です。
+            </p>
+
+            <div class="code-block mb-6">
+                <pre><code><span class="comment"># 標準エラー出力(2)も標準出力(1)にまとめつつ、build.log に保存</span>
+aliBuild build O2Physics --defaults o2 -w . 2>&1 | tee build.log</code></pre>
+            </div>
+        </section>
+
+        <!-- 2. セッションから抜ける・復帰する -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-bold border-b border-blue-900/10 pb-4 mb-8">デタッチ (抜ける) と アタッチ (復帰)</h2>
+            <p class="text-slate-600 font-light leading-relaxed mb-6">
+                重い処理を走らせたまま、そのセッションをバックグラウンドに置いて元のターミナルに戻る（抜ける）操作を「デタッチ（Detach）」と呼びます。キーボードショートカットで行います。
+            </p>
+
+            <div class="bg-blue-50/50 border border-blue-100 p-6 rounded-lg mb-8">
+                <p class="font-bold text-slate-800 mb-2">セッションから抜ける (Detach)</p>
+                <div class="flex items-center gap-4 text-xl">
+                    <kbd
+                        class="bg-white border border-slate-300 shadow-sm rounded px-3 py-1 font-mono text-blue-900 text-lg">Ctrl</kbd>
+                    +
+                    <kbd
+                        class="bg-white border border-slate-300 shadow-sm rounded px-3 py-1 font-mono text-blue-900 text-lg">b</kbd>
+                    <span class="mx-2 text-slate-400">を押してから</span>
+                    <kbd
+                        class="bg-white border border-slate-300 shadow-sm rounded px-3 py-1 font-mono text-blue-900 text-lg">d</kbd>
+                </div>
+            </div>
+
+            <p class="text-slate-600 font-light leading-relaxed mb-6">
+                現在バックグラウンドで動いているセッションの一覧は <code>tmux ls</code> で確認できます。
+            </p>
+            <div class="code-block mb-8">
+                <pre><code><span class="comment"># 開いているセッションの一覧表示</span>
+tmux ls</code></pre>
+            </div>
+
+            <p class="text-slate-600 font-light leading-relaxed mb-6">
+                先ほどの「alibuild」セッションに再び戻って（復帰して）ログの流れる様子を見たくなったら、<code>attach</code> を使います。
+            </p>
+            <div class="code-block mb-6">
+                <pre><code><span class="comment"># "alibuild" セッションへの復帰 (Attach)</span>
+tmux attach -t alibuild</code></pre>
+            </div>
+        </section>
+
+        <!-- 3. スクロールモード -->
+        <section>
+            <h2 class="text-2xl font-bold border-b border-blue-900/10 pb-4 mb-8">スクロールモードの利用</h2>
+            <p class="text-slate-600 font-light leading-relaxed mb-6">
+                Tmux内ではマウスホイールや普通の上スクロールがそのままでは効きません。過去のログを遡って見るには「スクロールモード」に入ります。
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-blue-50/50 border border-blue-100 p-6 rounded-lg flex flex-col justify-center">
+                    <p class="font-bold text-slate-800 mb-4">モードに入る (履歴を遡る)</p>
+                    <div class="flex items-center gap-3">
+                        <kbd
+                            class="bg-white border border-slate-300 shadow-sm rounded px-3 py-1 font-mono text-blue-900 text-sm">Ctrl</kbd>
+                        +
+                        <kbd
+                            class="bg-white border border-slate-300 shadow-sm rounded px-3 py-1 font-mono text-blue-900 text-sm">b</kbd>
+                        <span class="mx-1 text-slate-400">の後</span>
+                        <kbd
+                            class="bg-white border border-slate-300 shadow-sm rounded px-3 py-1 font-mono text-blue-900 text-sm">[</kbd>
+                    </div>
+                </div>
+
+                <div class="bg-rose-50/50 border border-rose-100 p-6 rounded-lg flex flex-col justify-center">
+                    <p class="font-bold text-slate-800 mb-4">モードから抜ける (通常に戻る)</p>
+                    <div class="flex items-center gap-3">
+                        <kbd
+                            class="bg-white border border-slate-300 shadow-sm rounded px-3 py-1 font-mono text-rose-900 text-sm">q</kbd>
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-slate-600 font-light leading-relaxed mt-6 text-sm">
+                スクロールモードに入った後は、上下の矢印キーや PageUp/PageDown でターミナルの履歴を自由に確認できます。
+            </p>
+        </section>
+
+    </main>
+
+    <footer class="bg-[#050a14] text-blue-100/40 py-12 mt-20 text-center">
+        <p class="text-xs tracking-widest">©
+            <script>document.write(new Date().getFullYear())</script> Takuma Matsumoto
+        </p>
+    </footer>
+</body>
+
+</html>
