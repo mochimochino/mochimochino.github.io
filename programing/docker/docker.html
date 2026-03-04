@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker - ROOT Environment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&family=Noto+Serif+JP:wght@300;600&family=Inter:wght@300;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --wafu-bg: #f0f4f8;
+            --wafu-sumi: #1b2538;
+            --wafu-ai: #103374;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Serif JP', serif;
+            background-color: var(--wafu-bg);
+            color: var(--wafu-sumi);
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Shippori Mincho', serif;
+        }
+
+        .glass-nav {
+            background: rgba(240, 244, 248, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(13, 42, 97, 0.1);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--wafu-ai), transparent);
+            margin: 15px 0;
+        }
+
+        .code-block {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            overflow-x: auto;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        .comment {
+            color: #8b949e;
+        }
+
+        .keyword {
+            color: #ff7b72;
+        }
+
+        .string {
+            color: #a5d6ff;
+        }
+    </style>
+</head>
+
+<body class="selection:bg-blue-100">
+    <nav class="glass-nav fixed w-full z-50 top-0">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex items-center justify-between h-20">
+                <a href="../../index.html" class="text-xl font-bold tracking-widest text-indigo-950">
+                    松本 拓磨
+                </a>
+                <a href="../main.html" class="text-xs tracking-widest hover:text-blue-700 font-semibold">COMPUTING</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-6 pt-32 pb-48">
+        <div class="mb-10">
+            <a href="../main.html" class="text-sm text-blue-900 font-semibold tracking-widest hover:underline">
+                &larr; BACK TO COMPUTING
+            </a>
+        </div>
+
+        <div class="mb-16">
+            <span class="text-[10px] tracking-[0.5em] text-blue-900/40 uppercase block mb-4">Container Platform</span>
+            <h1 class="text-4xl font-bold section-title">Docker 環境構築と ROOT 導入</h1>
+            <p class="mt-6 text-slate-600 font-light leading-relaxed">
+                研究用途等でCERNのROOTを使用する際、Dockerを利用して環境を構築する手順。公式のUbuntu向けDockerインストール手順から、<code>rootproject/root</code>コンテナの起動・マウントまで。
+            </p>
+            <p class="mt-4 text-xs tracking-widest text-slate-400">
+                参考: <a href="https://hub.docker.com/r/rootproject/root" class="text-blue-500 hover:underline"
+                    target="_blank">Docker Hub - rootproject/root</a> | <a
+                    href="https://docs.docker.com/engine/install/ubuntu/" class="text-blue-500 hover:underline"
+                    target="_blank">Docker Install Ubuntu</a>
+            </p>
+        </div>
+
+        <!-- Docker Packages Removal -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-bold border-b border-blue-900/10 pb-4 mb-8">旧バージョンの削除</h2>
+            <p class="text-slate-600 font-light leading-relaxed mb-6">
+                まずは競合を避けるために、古いバージョンのDocker関連パッケージが存在する場合は削除しておく。
+            </p>
+            <div class="code-block mb-6">
+                <pre><code><span class="comment"># 古いDockerパッケージをまとめてアンインストール</span>
+sudo apt remove $(dpkg --get-selections docker.io docker-compose docker-compose-v2 docker-doc podman-docker containerd runc | cut -f1)</code></pre>
+            </div>
+        </section>
+
+        <!-- Docker Install -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-bold border-b border-blue-900/10 pb-4 mb-8">Dockerエンジンのインストール</h2>
+            <p class="text-slate-600 font-light leading-relaxed mb-6">
+                aptリポジトリを利用して最新のDockerをインストールする。GPGキーの追加からソースリストの設定まで。
+            </p>
+            <div class="code-block mb-6">
+                <pre><code><span class="comment"># Add Docker's official GPG key:</span>
+sudo apt update
+sudo apt install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+<span class="comment"># Add the repository to Apt sources:</span>
+sudo tee /etc/apt/sources.list.d/docker.sources &lt;&lt;EOF
+Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: $(. /etc/os-release &amp;&amp; echo "$<span class="keyword">{UBUNTU_CODENAME:-$VERSION_CODENAME}</span>")
+Components: stable
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
+
+sudo apt update</code></pre>
+            </div>
+
+            <h3 class="text-xl font-bold mb-4 mt-10">インストール実行</h3>
+            <div class="code-block mb-6">
+                <pre><code>sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</code></pre>
+            </div>
+
+            <h3 class="text-xl font-bold mb-4 mt-10">動作確認</h3>
+            <p class="text-slate-600 font-light leading-relaxed mb-6">
+                インストール後、サービスの状態とテストコンテナで正常に動くか確認する。
+            </p>
+            <div class="code-block mb-6">
+                <pre><code><span class="comment"># サービスの状態確認</span>
+sudo systemctl status docker
+
+<span class="comment"># 動作確認のHello World</span>
+sudo docker run hello-world</code></pre>
+            </div>
+            <p class="text-slate-600 font-light leading-relaxed mb-6 border-l-4 border-blue-900/20 pl-4">
+                以下のメッセージが出力されたらOK！！<br>
+                <code>Hello from Docker!<br>This message shows that your installation appears to be working correctly.</code>
+            </p>
+        </section>
+
+        <!-- ROOT container -->
+        <section>
+            <h2 class="text-2xl font-bold border-b border-blue-900/10 pb-4 mb-8">ROOT コンテナの起動</h2>
+            <p class="text-slate-600 font-light leading-relaxed mb-6">
+                ホストマシンのディレクトリ（今のディレクトリ）をコンテナ内にマウントしつつ、権限を揃えるためにユーザーIDを指定して ROOT を起動する。
+            </p>
+            <div class="code-block mb-10">
+                <pre><code><span class="comment"># ホストのホームディレクトリ(~)をコンテナの/userhomeにマウント</span>
+<span class="comment"># --rm : コンテナ終了時に自動削除</span>
+<span class="comment"># -it : インタラクティブモード</span>
+sudo docker run --rm -it -v ~:/userhome --user $(id -u) rootproject/root</code></pre>
+            </div>
+
+            <h3 class="text-xl font-bold mb-4">起動後の画面</h3>
+            <div class="code-block mb-6">
+                <pre><code>$ sudo docker run --rm -it -v ~:/userhome --user $(id -u) rootproject/root
+
+   ------------------------------------------------------------------
+  | Welcome to ROOT 6.38.00                        https://root.cern |
+  | (c) 1995-2025, The ROOT Team; conception: R. Brun, F. Rademakers |
+  | Built for linuxx8664gcc on Nov 27 2025, 09:05:19                 |
+  | From tags/v6-38-00@v6-38-00                                      |
+  | With c++ (Ubuntu 15.2.0-4ubuntu4) 15.2.0 std202302               |
+  | Try '.help'/'.?', '.demo', '.license', '.credits', '.quit'/'.q'  |
+   ------------------------------------------------------------------
+
+root [0] .q</code></pre>
+            </div>
+            <p class="text-slate-600 font-light leading-relaxed">
+                無事にROOTプロンプトが立ち上がれば成功。終了する時は <code>.q</code> で抜けられる。
+            </p>
+        </section>
+
+    </main>
+
+    <footer class="bg-[#050a14] text-blue-100/40 py-12 mt-20 text-center">
+        <p class="text-xs tracking-widest">©
+            <script>document.write(new Date().getFullYear())</script> Takuma Matsumoto
+        </p>
+    </footer>
+</body>
+
+</html>
