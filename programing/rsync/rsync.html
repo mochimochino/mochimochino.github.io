@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rsync - 高速ファイル同期・転送</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&family=Noto+Serif+JP:wght@300;600&family=Inter:wght@300;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --wafu-bg: #f0f4f8;
+            --wafu-sumi: #1b2538;
+            --wafu-ai: #103374;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Serif JP', serif;
+            background-color: var(--wafu-bg);
+            color: var(--wafu-sumi);
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Shippori Mincho', serif;
+        }
+
+        .glass-nav {
+            background: rgba(240, 244, 248, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(13, 42, 97, 0.1);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--wafu-ai), transparent);
+            margin: 15px 0;
+        }
+
+        .code-block {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            overflow-x: auto;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        .comment {
+            color: #8b949e;
+        }
+
+        .keyword {
+            color: #ff7b72;
+        }
+
+        .string {
+            color: #a5d6ff;
+        }
+
+        .option-badge {
+            display: inline-block;
+            background: rgba(16, 51, 116, 0.1);
+            color: var(--wafu-ai);
+            font-family: monospace;
+            font-weight: bold;
+            font-size: 1.1em;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+
+<body class="selection:bg-blue-100">
+    <nav class="glass-nav fixed w-full z-50 top-0">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex items-center justify-between h-20">
+                <a href="../../index.html" class="text-xl font-bold tracking-widest text-indigo-950">
+                    松本 拓磨
+                </a>
+                <a href="../main.html" class="text-xs tracking-widest hover:text-blue-700 font-semibold">COMPUTING</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-6 pt-32 pb-48">
+        <div class="mb-10">
+            <a href="../main.html" class="text-sm text-blue-900 font-semibold tracking-widest hover:underline">
+                &larr; BACK TO COMPUTING
+            </a>
+        </div>
+
+        <div class="mb-16">
+            <span class="text-[10px] tracking-[0.5em] text-blue-900/40 uppercase block mb-4">File Transfer Tool</span>
+            <h1 class="text-4xl font-bold section-title">rsync 高速ファイル同期</h1>
+            <p class="mt-6 text-slate-600 font-light leading-relaxed">
+                ローカル間やリモート間でファイルやディレクトリを効率的に同期（コピー）するための強力なコマンド <code>rsync</code> の備忘録。<br>
+                単なるコピーコマンド（cp）と異なり、変更された差分だけを転送するため、非常に高速でネットワークの負荷も抑えられます。
+            </p>
+        </div>
+
+        <!-- 1. 基本となる最強オプション -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-bold border-b border-blue-900/10 pb-4 mb-8">よく使う最強の組み合わせ： <code>-avzP</code></h2>
+            <p class="text-slate-600 font-light leading-relaxed mb-6">
+                日常的によく使うオプションの組み合わせです。これさえ覚えておけば、大抵のディレクトリ同期やバックアップは安全かつ分かりやすく実行できます。
+            </p>
+
+            <div class="code-block mb-10">
+                <pre><code><span class="comment"># ローカルディレクトリからリモートへの同期例</span>
+rsync -avzP /path/to/source/ user@remote:/path/to/destination/</code></pre>
+            </div>
+
+            <h3 class="text-xl font-bold mb-6 text-blue-900">オプションの解説</h3>
+            <div class="bg-white p-8 rounded-xl border border-blue-900/5 shadow-sm space-y-6">
+
+                <div>
+                    <div class="flex items-center mb-2">
+                        <span class="option-badge">-a</span>
+                        <span class="font-bold text-slate-800">(--archive)</span>
+                    </div>
+                    <p class="text-slate-600 font-light text-sm leading-relaxed pl-12 border-l-2 border-blue-100">
+                        アーカイブモード。ディレクトリを再帰的にコピーし、シンボリックリンク、パーミッション、所有者情報、タイムスタンプをすべてそのまま保持します。バックアップの基本です。
+                    </p>
+                </div>
+
+                <div>
+                    <div class="flex items-center mb-2">
+                        <span class="option-badge">-v</span>
+                        <span class="font-bold text-slate-800">(--verbose)</span>
+                    </div>
+                    <p class="text-slate-600 font-light text-sm leading-relaxed pl-12 border-l-2 border-blue-100">
+                        実行中の詳細な情報を画面に表示します。何がコピーされているか視覚的に確認できます。
+                    </p>
+                </div>
+
+                <div>
+                    <div class="flex items-center mb-2">
+                        <span class="option-badge">-z</span>
+                        <span class="font-bold text-slate-800">(--compress)</span>
+                    </div>
+                    <p class="text-slate-600 font-light text-sm leading-relaxed pl-12 border-l-2 border-blue-100">
+                        転送中にデータを圧縮します。ネットワーク経由の通信（リモートサーバーへの転送など）において、転送量を減らし高速化に貢献します。
+                    </p>
+                </div>
+
+                <div>
+                    <div class="flex items-center mb-2">
+                        <span class="option-badge">-P</span>
+                        <span class="font-bold text-slate-800">(--partial --progress)</span>
+                    </div>
+                    <p class="text-slate-600 font-light text-sm leading-relaxed pl-12 border-l-2 border-blue-100">
+                        このオプションは2つの機能を持っています。1つは <code>--progress</code> で、転送中のファイルのプログレスバー（進捗状況）を表示します。もう1つは
+                        <code>--partial</code> で、通信が途切れて転送が中断した場合でも、途中まで送ったファイルを消さずに保持し、次回そこから再開（レジューム）できるようにします。
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 2. 注意点: スラッシュの有無 -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-bold border-b border-blue-900/10 pb-4 mb-8">ディレクトリ指定時の「/」の注意点</h2>
+            <p class="text-slate-600 font-light leading-relaxed mb-6">
+                rsyncを使用する際、転送元（Source）のディレクトリの末尾にスラッシュ <code>/</code> を付けるかどうかで挙動が大きく変わります。ここは非常に間違えやすいポイントです。
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-rose-50 border border-rose-100 p-6 rounded-xl">
+                    <p class="font-bold text-rose-900 mb-3 border-b border-rose-200 pb-2">❌ スラッシュなし: <span>dir</span>
+                    </p>
+                    <div class="code-block mb-3 p-3">
+                        <pre style="margin:0; padding:0;"><code>rsync -avzP src dest/</code></pre>
+                    </div>
+                    <p class="text-sm text-slate-600 font-light">
+                        <code>src</code> というディレクトリ<strong>そのものを</strong> <code>dest/</code> の中にコピーします。<br>
+                        結果: <code>dest/src/ファイルたち</code> になります。
+                    </p>
+                </div>
+
+                <div class="bg-blue-50 border border-blue-100 p-6 rounded-xl">
+                    <p class="font-bold text-blue-900 mb-3 border-b border-blue-200 pb-2">✅ スラッシュあり: <span>dir/</span>
+                    </p>
+                    <div class="code-block mb-3 p-3">
+                        <pre style="margin:0; padding:0;"><code>rsync -avzP src/ dest/</code></pre>
+                    </div>
+                    <p class="text-sm text-slate-600 font-light">
+                        <code>src</code> ディレクトリの<strong>中身を</strong> <code>dest/</code> の中にコピーします（中身をぶちまけるイメージ）。<br>
+                        結果: <code>dest/ファイルたち</code> になります。
+                    </p>
+                </div>
+            </div>
+
+            <p class="text-slate-600 font-light leading-relaxed mt-6 border-l-4 border-blue-900/20 pl-4">
+                特定のフォルダをまるごと同期させたい場合は、転送先のディレクトリ指定にも注意しつつ、「中身を送るのか」「外枠ごと送るのか」を意識してスラッシュを使い分けます。
+            </p>
+        </section>
+
+    </main>
+
+    <footer class="bg-[#050a14] text-blue-100/40 py-12 mt-20 text-center">
+        <p class="text-xs tracking-widest">©
+            <script>document.write(new Date().getFullYear())</script> Takuma Matsumoto
+        </p>
+    </footer>
+</body>
+
+</html>
