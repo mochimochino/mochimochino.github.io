@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker Tutorial | Takuma Matsumoto</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&family=Noto+Serif+JP:wght@300;600&family=Inter:wght@300;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="scroll_theme.css">
+</head>
+
+<body>
+
+    <a href="../main.html" class="home-link">← 戻る</a>
+    <div class="page-indicator" id="pageIndicator">第一巻</div>
+
+    <div class="makimono-container" id="makimono">
+
+        <!-- Page 1: Title & Introduction -->
+        <section class="makimono-page">
+            <div class="page-content">
+                <h1 class="makimono-title">Docker 完全入門</h1>
+                <p class="mt-8 text-xl font-bold" style="color: var(--wafu-ai);">第一章：基盤構築</p>
+
+                <div class="mt-8">
+                    <p>Docker はアプリケーションを「コンテナ」と呼ばれる独立した環境でパッケージ化し、どこでも同じように動かすことができるプラットフォームです。</p>
+                    <p>開発環境の統一や、インフラ構築の自動化など、現代のソフトウェア開発において欠かせない技術となっています。</p>
+                </div>
+
+                <div class="mt-12 p-6"
+                    style="background: rgba(16, 51, 116, 0.05); border-left: 4px solid var(--wafu-ai);">
+                    <p class="font-bold" style="color: var(--wafu-ai); margin-bottom: 0.5rem;">このチュートリアルの目的</p>
+                    <ul style="margin-bottom: 0;">
+                        <li>強力なコンテナ環境を正しく Ubuntu に導入する手順を理解する</li>
+                        <li>公式の手順に沿った安全なインストール方法を身につける</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Page 2: Preparation -->
+        <section class="makimono-page">
+            <div class="page-content">
+                <h2 class="makimono-title">1. 古いパッケージの削除</h2>
+                <p>競合を防ぐため、システムに古い Docker 関連のパッケージ（<code>docker.io</code> や <code>docker-compose</code>
+                    など）が存在する場合は、最初に削除しておくことを推奨します。</p>
+
+                <pre><code># 古いDockerパッケージのアンインストール
+for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do
+    sudo apt-get remove $pkg; 
+done</code></pre>
+
+                <p style="margin-top: 2rem;">もし <code>E: Unable to locate package</code>
+                    というエラーが出たとしても、それは「最初から入っていなかっただけ」なので問題ありません。次に進みましょう。</p>
+            </div>
+        </section>
+
+        <!-- Page 3: Installation -->
+        <section class="makimono-page">
+            <div class="page-content">
+                <h2 class="makimono-title">2. GPGキーとリポジトリの追加</h2>
+                <p>公式の Docker パッケージを安全に取得するために、Docker の公式 GPG キーを追加し、APT ソースを設定します。</p>
+
+                <pre><code># 必要な証明書ツールをインストール
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+
+# Docker の公式 GPG キーを追加
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# 公式リポジトリの設定
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+sudo apt-get update</code></pre>
+            </div>
+        </section>
+
+        <!-- Page 4: Engine Install -->
+        <section class="makimono-page">
+            <div class="page-content">
+                <h2 class="makimono-title">3. Docker エンジンの導入</h2>
+                <p>準備が整ったら、ついに Docker Engine 本体と必要なプラグインをインストールします。</p>
+
+                <pre><code># 最新バージョンのインストール
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</code></pre>
+
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--wafu-ai);">動作確認</h3>
+                <p>インストールが成功したかを確認するために、公式の <code>hello-world</code> コンテナを動かしてみましょう。</p>
+                <pre><code>sudo docker run hello-world</code></pre>
+
+                <p>コンソールに <strong>Hello from Docker!</strong> というメッセージと、動作確認の説明が表示されれば、環境構築は完璧です！</p>
+            </div>
+        </section>
+
+        <!-- Page 5: Coming Soon -->
+        <section class="makimono-page">
+            <div class="page-content"
+                style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+                <h2 class="makimono-title" style="border: none;">次巻へ続く...</h2>
+                <p style="margin-top: 2rem;">第二章は Docker コンテナの基本操作とイメージの管理についてです。</p>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="nav-controls">
+        <button id="prevBtn" class="nav-btn" disabled>前へ</button>
+        <button id="nextBtn" class="nav-btn">次へ</button>
+    </div>
+
+    <script>
+        const container = document.getElementById('makimono');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const indicator = document.getElementById('pageIndicator');
+        const pages = document.querySelectorAll('.makimono-page');
+
+        let currentPage = 0;
+        const kanjiNumbers = ['第一巻', '第二巻', '第三巻', '第四巻', '第五巻', '第六巻'];
+
+        function updateControls() {
+            prevBtn.disabled = currentPage === 0;
+            nextBtn.disabled = currentPage === pages.length - 1;
+            indicator.textContent = kanjiNumbers[currentPage] || `第${currentPage + 1}巻`;
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentPage < pages.length - 1) {
+                currentPage++;
+                pages[currentPage].scrollIntoView({ behavior: 'smooth' });
+                updateControls();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentPage > 0) {
+                currentPage--;
+                pages[currentPage].scrollIntoView({ behavior: 'smooth' });
+                updateControls();
+            }
+        });
+
+        // Update on manual scroll
+        let isScrolling;
+        container.addEventListener('scroll', () => {
+            window.clearTimeout(isScrolling);
+            isScrolling = setTimeout(function () {
+                const scrollPosition = container.scrollLeft;
+                const pageWidth = window.innerWidth;
+                currentPage = Math.round((scrollPosition + (pageWidth / 2)) / pageWidth); // Fixed rounding for wider pages
+                if (currentPage >= pages.length) currentPage = pages.length - 1;
+                updateControls();
+            }, 100);
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Takuma's PC Build</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&family=Noto+Serif+JP:wght@300;600&family=Inter:wght@300;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --wafu-bg: #f0f4f8;
+            --wafu-sumi: #1a202c;
+            --wafu-ai: #0d2a61;
+            --wafu-kin: #d3b16e;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Serif JP', serif;
+            background-color: var(--wafu-bg);
+            color: var(--wafu-sumi);
+            scroll-behavior: smooth;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Shippori Mincho', serif;
+        }
+
+        .glass-nav {
+            background: rgba(240, 244, 248, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(13, 42, 97, 0.1);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--wafu-ai), transparent);
+            margin: 15px 0;
+        }
+
+        .pc-part-box {
+            background: rgba(255, 255, 255, 0.6);
+            border-left: 3px solid var(--wafu-ai);
+            transition: all 0.3s ease;
+        }
+
+        .pc-part-box:hover {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 20px rgba(13, 42, 97, 0.05);
+            transform: translateX(5px);
+        }
+
+        .note-box {
+            background: rgba(13, 42, 97, 0.03);
+            border: 1px solid rgba(13, 42, 97, 0.1);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body class="selection:bg-blue-100">
+
+    <!-- Navigation -->
+    <nav class="glass-nav fixed w-full z-50 top-0">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex items-center justify-between h-20">
+                <a href="../index.html" class="text-xl font-bold tracking-widest text-indigo-950">
+                    松本 拓磨
+                </a>
+                <a href="main.html"
+                    class="text-xs tracking-widest hover:text-blue-700 transition-colors font-semibold uppercase">
+                    ← COMPUTING
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto pt-40 pb-32 px-6">
+
+        <!-- Header -->
+        <div class="mb-20 text-left">
+            <span class="text-[10px] tracking-[0.5em] text-blue-900/40 uppercase block mb-4">Hardware</span>
+            <h1 class="text-5xl font-bold section-title">自作PC 構成の記録</h1>
+            <p class="mt-6 text-slate-500 font-light leading-relaxed">
+                研究用途や計算・学習などの作業基盤として構築した自作マシンのスペックをまとめています。<br>
+                構成の検討にあたっては「<a
+                    href="https://2tom.jp/diy/?a=9000&b=1&c=2&d=16&e=&f=&g=1.8&st.cpu=0&st.Auto_mode=0&st.gpu=0&st.size=1&st.chipset=0&st.hashOK=true&st.color=0&h="
+                    target="_blank"
+                    class="text-blue-600 font-semibold hover:underline border-b border-blue-200 pb-0.5">自作PC構成見積もりツール・じさこ（jisaku.com）</a>」を活用しました。互換性チェック機能が非常に便利でした。
+            </p>
+        </div>
+
+        <!-- System Overview -->
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold mb-8">システム概要</h2>
+            <div class="bg-indigo-950 text-white rounded-xl p-8 shadow-lg relative overflow-hidden">
+                <div class="absolute -right-10 -top-10 opacity-10">
+                    <svg class="w-64 h-64" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M9 21H15V23H9V21ZM5 19H19V21H5V19ZM3 17H21V19H3V17ZM1 5H23V15H1V5ZM3 7V13H21V7H3ZM9 1H15V3H9V1ZM5 3H19V5H5V3Z" />
+                    </svg>
+                </div>
+                <div class="relative z-10">
+                    <p class="text-[10px] tracking-[0.3em] text-blue-300 font-bold mb-4">Ryzen 9 9900X SYSTEM</p>
+                    <ul class="space-y-4 font-light tracking-wide">
+                        <li class="flex items-center gap-4"><span class="w-20 text-blue-300/60 text-sm">CPU</span> <span
+                                class="font-bold text-lg">Ryzen 9 9900X</span> (12コア / 24スレッド)</li>
+                        <li class="flex items-center gap-4"><span class="w-20 text-blue-300/60 text-sm">MEMORY</span>
+                            <span class="font-bold text-lg">64GB</span> (32GB × 2) DDR5
+                        </li>
+                        <li class="flex items-center gap-4"><span class="w-20 text-blue-300/60 text-sm">STORAGE</span>
+                            <span class="font-bold text-lg">1TB SSD + 4TB HDD</span>
+                        </li>
+                        <li class="flex items-center gap-4"><span class="w-20 text-blue-300/60 text-sm">POWER</span>
+                            <span class="font-bold text-lg">550W</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Components Details -->
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold mb-8">パーツ構成詳細</h2>
+            <div class="space-y-4">
+
+                <div class="pc-part-box p-6 rounded shadow-sm flex flex-col md:flex-row gap-4">
+                    <div class="w-32"><span
+                            class="text-xs tracking-widest text-slate-400 font-bold bg-white px-2 py-1 rounded">CPU</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">AMD Ryzen 9 9900X</h3>
+                        <p class="text-sm text-slate-500 mb-2 tracking-wide">Socket AM5 | TDP: 120W | 12コア 24スレッド</p>
+                        <p class="text-xs text-slate-400">PassMark: 54,465 (1スレッド: 4,676) / Radeon Graphics内蔵</p>
+                    </div>
+                </div>
+
+                <div class="pc-part-box p-6 rounded shadow-sm flex flex-col md:flex-row gap-4">
+                    <div class="w-32"><span
+                            class="text-xs tracking-widest text-slate-400 font-bold bg-white px-2 py-1 rounded">COOLER</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">MONTECH HyperFlow ARGB 240</h3>
+                        <p class="text-sm text-slate-500 mb-2 tracking-wide">240mm 水冷型 | ノイズレベル: 29.1dB(A)</p>
+                    </div>
+                </div>
+
+                <div class="pc-part-box p-6 rounded shadow-sm flex flex-col md:flex-row gap-4">
+                    <div class="w-32"><span
+                            class="text-xs tracking-widest text-slate-400 font-bold bg-white px-2 py-1 rounded">MOTHER</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">ASUS TUF GAMING B650E-E WIFI</h3>
+                        <p class="text-sm text-slate-500 mb-2 tracking-wide">AMD B650E チップセット | ATX | VRM: 8+2+1</p>
+                    </div>
+                </div>
+
+                <div class="pc-part-box p-6 rounded shadow-sm flex flex-col md:flex-row gap-4">
+                    <div class="w-32"><span
+                            class="text-xs tracking-widest text-slate-400 font-bold bg-white px-2 py-1 rounded">MEMORY</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">Crucial DDR5 5600MHz (32GB × 2)</h3>
+                        <p class="text-sm text-slate-500 mb-2 tracking-wide">合計 64GB (PC5-44800)</p>
+                    </div>
+                </div>
+
+                <div class="pc-part-box p-6 rounded shadow-sm flex flex-col md:flex-row gap-4">
+                    <div class="w-32"><span
+                            class="text-xs tracking-widest text-slate-400 font-bold bg-white px-2 py-1 rounded">STORAGE</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">Hanye M.2 SSD 1TB & WD 4TB HDD</h3>
+                        <p class="text-sm text-slate-500 mb-2 tracking-wide">NVMe SSD 1TB (Type2280) + WD40EZZX 4TB SATA
+                            (5400rpm)</p>
+                    </div>
+                </div>
+
+                <div class="pc-part-box p-6 rounded shadow-sm flex flex-col md:flex-row gap-4">
+                    <div class="w-32"><span
+                            class="text-xs tracking-widest text-slate-400 font-bold bg-white px-2 py-1 rounded">CASE</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">MSI MAG FORGE 130A AIRFLOW</h3>
+                        <p class="text-sm text-slate-500 mb-2 tracking-wide">ATX 対応 / 内容積: 210x498x411.6mm</p>
+                        <p class="text-xs text-slate-400">GPUサイズ: 最大330mm | CPUクーラー: 最大160mm</p>
+                    </div>
+                </div>
+
+                <div class="pc-part-box p-6 rounded shadow-sm flex flex-col md:flex-row gap-4">
+                    <div class="w-32"><span
+                            class="text-xs tracking-widest text-slate-400 font-bold bg-white px-2 py-1 rounded">POWER</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">ANTEC CSK550DC (550W)</h3>
+                        <p class="text-sm text-slate-500 mb-2 tracking-wide">80PLUS BRONZE 認証 | ATX12V 2.52</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Review & Points to Consider -->
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold mb-8">所感と注意ポイント</h2>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Pros -->
+                <div class="note-box p-8 border-l-4 border-l-blue-600">
+                    <span
+                        class="text-[10px] tracking-widest font-bold text-blue-600 bg-blue-100/50 px-2 py-1 rounded uppercase mb-4 inline-block">Pros
+                        / 良い点</span>
+                    <h3 class="text-xl font-bold text-slate-800 mb-4">強力な演算リソースの確保</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Ryzen 9
+                        9900X（12コア/24スレッド）と64GBの潤沢なDDR5メモリを搭載したことで、<strong>マルチスレッド演算や大規模な並列処理に非常に強い構成</strong>となりました。<br><br>
+                        内蔵グラフィックス (Radeon Graphics)
+                        が搭載されているため、専用のグラフィックボード（dGPU）が無くても画面出力が行え、コンパイルやデータ解析といった純粋なCPU作業ベースの用途であれば現状でかなり快適なパフォーマンスを発揮します。
+                    </p>
+                </div>
+
+                <!-- Cons/Caveats -->
+                <div class="note-box p-8 border-l-4 border-l-rose-500">
+                    <span
+                        class="text-[10px] tracking-widest font-bold text-rose-500 bg-rose-100/50 px-2 py-1 rounded uppercase mb-4 inline-block">Points
+                        to Consider / 注意点</span>
+                    <h3 class="text-xl font-bold text-slate-800 mb-4">将来のGPU増設時のハードル</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        将来的にディープラーニングなどのために高性能なGPU（例: RTX 4000番台クラス）を追加する場合、構成上2つの課題があります。<br><br>
+                        <strong>1. ケースの制約：</strong><br>
+                        使用している MSI 製のケース（MAG FORGE
+                        130A）は思いのほかコンパクトであり、最大330mmまでのグラボに対応と書かれていますが、分厚いハイエンドGPUは干渉や冷却面でかなり厳しい可能性があります。<br><br>
+                        <strong>2. 電源容量：</strong><br>
+                        現状の 550W 電源ではハイエンドな外部GPUを駆動させるには全く足りません。GPUを搭載するタイミングで、電源ユニット（1000Wクラス等）の換装が必須になります。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Back Link -->
+        <div class="mt-24 text-center">
+            <a href="main.html"
+                class="inline-flex items-center gap-6 text-[10px] tracking-[0.5em] text-blue-900 border border-blue-900/10 hover:bg-blue-900/5 px-6 py-3 rounded-full transition-all group">
+                <span class="w-8 h-[1px] bg-blue-900/30 group-hover:w-16 transition-all"></span>
+                BACK TO COMPUTING
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#050a14] text-blue-100/40 py-12 mt-20 text-center">
+        <p class="text-xs tracking-widest">©
+            <script>document.write(new Date().getFullYear())</script> Takuma Matsumoto
+        </p>
+    </footer>
+
+</body>
+
+</html>

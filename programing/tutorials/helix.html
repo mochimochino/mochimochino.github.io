@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Helix Editor Tutorial | Takuma Matsumoto</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&family=Noto+Serif+JP:wght@300;600&family=Inter:wght@300;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="scroll_theme.css">
+</head>
+
+<body>
+
+    <a href="../main.html" class="home-link">← 戻る</a>
+    <div class="page-indicator" id="pageIndicator">第一巻</div>
+
+    <div class="makimono-container" id="makimono">
+
+        <!-- Page 1: Title & Introduction -->
+        <section class="makimono-page bg-grid">
+            <div class="page-content">
+                <h1 class="makimono-title">Helix エディタ入門</h1>
+                <p class="mt-8 text-xl font-bold" style="color: var(--wafu-ai);">第一章：環境構築と導入</p>
+
+                <div class="mt-8">
+                    <p>Helix は Rust で書かれた、モダンで高速なターミナルベースのテキストエディタです。Vim や Neovim
+                        に似ていますが、設定なし（Zero-config）でリッチな機能が使えることや、「複数選択」をベースにした効率的な編集体験が特徴です。</p>
+                    <p>このチュートリアルでは、Helix のインストールから基本的な使い方までをステップ・バイ・ステップで解説します。</p>
+                </div>
+
+                <div class="mt-12 p-6"
+                    style="background: rgba(201, 58, 64, 0.05); border-left: 4px solid var(--wafu-shu);">
+                    <p class="font-bold" style="color: var(--wafu-shu); margin-bottom: 0.5rem;">前提条件</p>
+                    <ul style="margin-bottom: 0;">
+                        <li>Ubuntu または Debian 系の Linux 環境</li>
+                        <li>ターミナルの基本的な操作が行えること</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Page 2: Installation -->
+        <section class="makimono-page">
+            <div class="page-content">
+                <h2 class="makimono-title">ソフトウェアのダウンロード</h2>
+                <p>Ubuntu や Debian では、PPA（Personal Package Archive）を追加することで簡単に最新版の Helix をインストールできます。</p>
+
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--wafu-ai);">1. PPAの追加とインストール</h3>
+                <p>ターミナルを開き、以下のコマンドを順番に実行します。</p>
+
+                <pre><code># 必要なパッケージのインストール
+sudo apt-get update
+sudo apt-get install software-properties-common
+
+# HelixのPPAを追加
+sudo add-apt-repository ppa:maveonair/helix-editor
+sudo apt-get update
+
+# Helix本体のインストール
+sudo apt-get install helix</code></pre>
+
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--wafu-ai);">2. インストールの確認</h3>
+                <p>インストールが完了したら、バージョンを確認して正常に入っているか確かめます。</p>
+                <pre><code>hx --version</code></pre>
+                <p><code>helix 23.10</code> のようにバージョン番号が表示されればインストール完了です。</p>
+            </div>
+        </section>
+
+        <!-- Page 3: Coming Soon -->
+        <section class="makimono-page">
+            <div class="page-content"
+                style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+                <h2 class="makimono-title" style="border: none;">次巻へ続く...</h2>
+                <p style="margin-top: 2rem;">第二章の基本操作編は現在執筆中です。</p>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="nav-controls">
+        <button id="prevBtn" class="nav-btn" disabled>前へ</button>
+        <button id="nextBtn" class="nav-btn">次へ</button>
+    </div>
+
+    <script>
+        const container = document.getElementById('makimono');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const indicator = document.getElementById('pageIndicator');
+        const pages = document.querySelectorAll('.makimono-page');
+
+        let currentPage = 0;
+        const kanjiNumbers = ['第一巻', '第二巻', '第三巻', '第四巻', '第五巻'];
+
+        function updateControls() {
+            prevBtn.disabled = currentPage === 0;
+            nextBtn.disabled = currentPage === pages.length - 1;
+            indicator.textContent = kanjiNumbers[currentPage] || `第${currentPage + 1}巻`;
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentPage < pages.length - 1) {
+                currentPage++;
+                pages[currentPage].scrollIntoView({ behavior: 'smooth' });
+                updateControls();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentPage > 0) {
+                currentPage--;
+                pages[currentPage].scrollIntoView({ behavior: 'smooth' });
+                updateControls();
+            }
+        });
+
+        // Update on manual scroll
+        let isScrolling;
+        container.addEventListener('scroll', () => {
+            window.clearTimeout(isScrolling);
+            isScrolling = setTimeout(function () {
+                const scrollPosition = container.scrollLeft;
+                const pageWidth = window.innerWidth;
+                currentPage = Math.round(scrollPosition / pageWidth);
+                updateControls();
+            }, 100);
+        });
+    </script>
+</body>
+
+</html>

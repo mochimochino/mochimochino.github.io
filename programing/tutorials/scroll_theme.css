@@ -1,0 +1,236 @@
+/* 
+    Wafu Scroll Theme (Makimono Style)
+    Used for interactive tutorials 
+*/
+
+:root {
+    --wafu-bg: #f9f5ed;           /* 和紙のような柔らかな背景 */
+    --wafu-paper: #ffffff;        /* コンテンツの紙色 */
+    --wafu-sumi: #2b2b2b;         /* 墨色（文字色） */
+    --wafu-ai: #103374;           /* 藍色（アクセント） */
+    --wafu-shu: #c93a40;          /* 朱色（アクセント・注意） */
+    --wafu-kin: #d3b16e;          /* 金色（装飾） */
+    --wafu-border: #e2d9c3;       /* ボーダーや区切りの色 */
+}
+
+body {
+    font-family: 'Inter', 'Noto Serif JP', serif;
+    background-color: var(--wafu-bg);
+    color: var(--wafu-sumi);
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* 横スクロールベースなので縦スクロールを隠す */
+}
+
+h1, h2, h3, h4, h5 {
+    font-family: 'Shippori Mincho', serif;
+}
+
+/* Scroll Container (Makimono) */
+.makimono-container {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    width: 100vw;
+    height: 100vh;
+    /* 背景に和紙っぽいテクスチャをつけるならここで */
+}
+
+/* Custom Scrollbar for the horizontal scroll */
+.makimono-container::-webkit-scrollbar {
+    height: 8px;
+}
+.makimono-container::-webkit-scrollbar-track {
+    background: var(--wafu-bg);
+}
+.makimono-container::-webkit-scrollbar-thumb {
+    background: var(--wafu-border);
+    border-radius: 4px;
+}
+
+/* Individual Page/Section */
+.makimono-page {
+    /* 1画面にぴったり収める */
+    scroll-snap-align: start;
+    flex: 0 0 100vw;
+    height: 100vh;
+    padding: 2rem;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    border-right: 1px solid var(--wafu-border); /* 巻物の継ぎ目 */
+}
+
+/* Content Area inside the page */
+.page-content {
+    background: var(--wafu-paper);
+    width: 100%;
+    max-width: 900px;
+    height: 85vh;
+    padding: 3rem 4rem;
+    box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05);
+    border-radius: 4px;
+    overflow-y: auto; /* コンテンツが長い場合は縦スクロール可能に */
+    position: relative;
+    box-sizing: border-box;
+    /* 巻物の芯のような装飾 */
+    border-left: 4px solid var(--wafu-kin);
+}
+
+.page-content::-webkit-scrollbar {
+    width: 6px;
+}
+.page-content::-webkit-scrollbar-thumb {
+    background: var(--wafu-border);
+    border-radius: 3px;
+}
+
+/* Section Title Decoration */
+.makimono-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px dashed var(--wafu-border);
+    position: relative;
+    display: inline-block;
+}
+
+.makimono-title::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background: var(--wafu-shu);
+}
+
+/* Navigation Controls (Floating) */
+.nav-controls {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 1rem;
+    z-index: 50;
+}
+
+.nav-btn {
+    background: var(--wafu-paper);
+    color: var(--wafu-sumi);
+    border: 1px solid var(--wafu-border);
+    padding: 0.75rem 2rem;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    letter-spacing: 0.2em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.nav-btn:hover {
+    background: var(--wafu-ai);
+    color: white;
+    border-color: var(--wafu-ai);
+    transform: translateY(-2px);
+}
+
+.nav-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: var(--wafu-bg);
+    color: var(--wafu-sumi);
+    border-color: transparent;
+    box-shadow: none;
+    transform: none;
+}
+
+/* Markdown-like Content Styling inside page */
+.page-content p {
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    color: #4a5568;
+}
+
+.page-content pre {
+    background: #1a202c;
+    color: #e2e8f0;
+    padding: 1.5rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+    border: 1px solid #2d3748;
+}
+
+.page-content code {
+    background: #edf2f7;
+    color: var(--wafu-shu);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.9em;
+}
+
+.page-content pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+}
+
+.page-content ul, .page-content ol {
+    margin-bottom: 1.5rem;
+    padding-left: 1.5rem;
+    color: #4a5568;
+    line-height: 1.8;
+}
+
+.page-content li {
+    margin-bottom: 0.5rem;
+}
+
+/* Home Link */
+.home-link {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    color: var(--wafu-ai);
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    font-weight: bold;
+    z-index: 100;
+    background: rgba(255,255,255,0.8);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
+    transition: all 0.3s ease;
+}
+
+.home-link:hover {
+    background: var(--wafu-ai);
+    color: white;
+}
+
+/* Page Indicator */
+.page-indicator {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    font-family: 'Shippori Mincho', serif;
+    font-size: 1.2rem;
+    color: var(--wafu-sumi);
+    letter-spacing: 0.2em;
+    z-index: 100;
+    opacity: 0.5;
+    writing-mode: vertical-rl;
+}
