@@ -1,0 +1,301 @@
+:root {
+    --bg-color: #0f172a;
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --accent-color: #38bdf8;
+    --accent-glow: rgba(56, 189, 248, 0.5);
+
+    /* Tetromino colors */
+    --color-i: #06b6d4;
+    /* cyan */
+    --color-j: #3b82f6;
+    /* blue */
+    --color-l: #f97316;
+    /* orange */
+    --color-o: #eab308;
+    /* yellow */
+    --color-s: #22c55e;
+    /* green */
+    --color-t: #a855f7;
+    /* purple */
+    --color-z: #ef4444;
+    /* red */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+    position: relative;
+    user-select: none;
+}
+
+/* Dynamic Animated Background */
+.background-animation {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 40%, #000000 100%);
+    z-index: -1;
+    animation: rotateBg 40s linear infinite;
+}
+
+.background-animation::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        radial-gradient(circle at 20% 30%, rgba(56, 189, 248, 0.15) 0%, transparent 20%),
+        radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.15) 0%, transparent 20%);
+    z-index: 0;
+}
+
+@keyframes rotateBg {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Layout Containers */
+.game-container {
+    display: flex;
+    gap: 30px;
+    padding: 40px;
+    z-index: 1;
+    align-items: flex-start;
+}
+
+.panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 200px;
+}
+
+/* Glassmorphism Styling */
+.glass-box {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 24px 20px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    text-align: center;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.glass-box:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+h2 {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    letter-spacing: 3px;
+    font-weight: 700;
+}
+
+#score,
+#level,
+#lines {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--text-primary);
+    text-shadow: 0 0 15px var(--accent-glow);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Central Board */
+.game-board-wrapper {
+    position: relative;
+    padding: 20px;
+    border-radius: 24px;
+}
+
+canvas#gameCanvas {
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 12px;
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.9);
+    display: block;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+canvas#nextCanvas,
+canvas#holdCanvas {
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 12px;
+    display: block;
+    margin: 0 auto;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Overlays (Start/Game Over) */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(8px);
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    opacity: 1;
+    transition: opacity 0.4s ease, visibility 0.4s;
+}
+
+.overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.floating-pause {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 100;
+}
+
+.title-text {
+    font-size: 4rem;
+    color: var(--text-primary);
+    margin-bottom: 5px;
+    text-shadow: 0 0 25px rgba(56, 189, 248, 0.8), 0 0 10px rgba(255, 255, 255, 0.8);
+    letter-spacing: 5px;
+}
+
+.subtitle {
+    color: var(--accent-color);
+    letter-spacing: 4px;
+    font-size: 0.9rem;
+    margin-bottom: 40px;
+    font-weight: 700;
+}
+
+.glitch-text {
+    font-size: 3.5rem;
+    color: #ef4444;
+    text-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+    margin-bottom: 10px;
+}
+
+.final-score-display {
+    font-size: 1.5rem;
+    margin-bottom: 40px;
+    color: var(--text-secondary);
+}
+
+.final-score-display span {
+    color: var(--text-primary);
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+/* Modern Button */
+button {
+    background: linear-gradient(135deg, var(--accent-color), #2563eb);
+    color: white;
+    border: none;
+    padding: 16px 48px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.5s ease;
+}
+
+button:hover::before {
+    left: 150%;
+}
+
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.6);
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+/* Controls List */
+.controls-box {
+    text-align: left;
+}
+
+.controls-box h2 {
+    text-align: center;
+}
+
+.controls-box ul {
+    list-style: none;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-top: 15px;
+}
+
+.controls-box li {
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.controls-box span {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}

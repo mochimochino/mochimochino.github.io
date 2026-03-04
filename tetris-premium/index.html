@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Tetris</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Google Fonts for Modern Appearance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="background-animation"></div>
+    <div class="game-container">
+        <!-- Left Panel: Stats and Hold -->
+        <div class="panel left-panel">
+            <div class="glass-box hold-box">
+                <h2>HOLD</h2>
+                <canvas id="holdCanvas" width="120" height="120"></canvas>
+            </div>
+            <div class="glass-box score-box">
+                <h2>SCORE</h2>
+                <div id="score">0</div>
+            </div>
+            <div class="glass-box level-box">
+                <h2>LEVEL</h2>
+                <div id="level">1</div>
+            </div>
+            <div class="glass-box lines-box">
+                <h2>LINES</h2>
+                <div id="lines">0</div>
+            </div>
+        </div>
+
+        <!-- Game Board -->
+        <div class="game-board-wrapper glass-box">
+            <canvas id="gameCanvas" width="300" height="600"></canvas>
+
+            <!-- Overlays -->
+            <div id="gameOverScreen" class="overlay hidden">
+                <h2 class="glitch-text" data-text="GAME OVER">GAME OVER</h2>
+                <div class="final-score-display">Score: <span id="finalScore">0</span></div>
+                <button id="restartBtn">TRY AGAIN</button>
+            </div>
+
+            <div id="startScreen" class="overlay">
+                <h2 class="title-text">TETRIS</h2>
+                <p class="subtitle">PREMIUM EXPERIENCE</p>
+                <button id="startBtn">START GAME</button>
+            </div>
+        </div>
+
+        <!-- Right Panel: Info -->
+        <div class="panel right-panel">
+            <div class="glass-box next-box">
+                <h2>NEXT</h2>
+                <canvas id="nextCanvas" width="120" height="120"></canvas>
+            </div>
+            <div class="glass-box controls-box">
+                <h2>CONTROLS</h2>
+                <ul>
+                    <li><span>← / →</span> Move</li>
+                    <li><span>↑</span> Hard Drop</li>
+                    <li><span>↓</span> Soft Drop</li>
+                    <li><span>Q / W</span> Rotate</li>
+                    <li><span>Space/C</span> Hold</li>
+                    <li><span>P</span> Pause</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="pauseScreen" class="overlay hidden floating-pause">
+        <h2>PAUSED</h2>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
