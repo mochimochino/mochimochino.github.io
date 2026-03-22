@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arch Linux on KVM - インストールメモ | Takuma Matsumoto</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&family=Noto+Serif+JP:wght@300;600&family=Inter:wght@300;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --wafu-bg: #f0f4f8;
+            --wafu-sumi: #1b2538;
+            --wafu-ai: #103374;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Serif JP', serif;
+            background-color: var(--wafu-bg);
+            color: var(--wafu-sumi);
+        }
+
+        h1, h2, h3 {
+            font-family: 'Shippori Mincho', serif;
+        }
+
+        .glass-nav {
+            background: rgba(240, 244, 248, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(13, 42, 97, 0.1);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--wafu-ai), transparent);
+            margin: 15px 0;
+        }
+
+        .code-block {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            overflow-x: auto;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .comment { color: #8b949e; }
+        .keyword { color: #ff7b72; }
+        .string  { color: #a5d6ff; }
+        .prompt  { color: #3fb950; user-select: none; }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 9999px;
+            background: var(--wafu-ai);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(16, 51, 116, 0.08);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(16, 51, 116, 0.1);
+        }
+
+        .note-box {
+            background: rgba(16, 51, 116, 0.05);
+            border-left: 3px solid var(--wafu-ai);
+            padding: 1rem 1.25rem;
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+
+        .warn-box {
+            background: rgba(253, 186, 116, 0.15);
+            border-left: 3px solid #f59e0b;
+            padding: 1rem 1.25rem;
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+    </style>
+</head>
+
+<body class="selection:bg-blue-100">
+    <!-- Navigation -->
+    <nav class="glass-nav fixed w-full z-50 top-0">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex items-center justify-between h-20">
+                <a href="../../../../index.html" class="text-xl font-bold tracking-widest text-indigo-950">
+                    松本 拓磨
+                </a>
+                <a href="../../../main.html" class="text-xs tracking-widest hover:text-blue-700 font-semibold transition-colors">COMPUTING</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-6 pt-32 pb-48">
+
+        <!-- Back Link -->
+        <div class="mb-10">
+            <a href="../../../main.html" class="text-sm text-blue-900 font-semibold tracking-widest hover:underline">
+                &larr; BACK TO COMPUTING
+            </a>
+        </div>
+
+        <!-- Page Header -->
+        <div class="mb-16">
+            <span class="text-[10px] tracking-[0.5em] text-blue-900/40 uppercase block mb-4">Linux / Virtual Machine</span>
+            <h1 class="text-4xl font-bold section-title">Arch Linux on KVM</h1>
+            <p class="mt-6 text-slate-600 font-light leading-relaxed">
+                KVM（Kernel-based Virtual Machine）上にArch Linuxをインストールするまでの手順とメモ。<br>
+                ゼロからの環境構築を通じて、Linuxの仕組みを深く理解することを目指します。
+            </p>
+        </div>
+
+        <!-- Why Arch Linux -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-bold border-b border-blue-900/10 pb-4 mb-8">なぜ Arch Linux なのか</h2>
+            <p class="text-slate-600 font-light leading-relaxed mb-8">
+                Arch Linux は他のディストリビューションと一線を画す哲学を持っています。初心者向けの自動設定ツールをあえて排除し、
+                すべてを自分の手で組み上げることで、Linuxそのものへの理解が深まります。
+            </p>
+
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+                <div class="feature-card">
+                    <div class="text-3xl mb-3">⚡</div>
+                    <h3 class="text-base font-bold text-blue-900 mb-2">軽量・高速</h3>
+                    <p class="text-sm text-slate-500 font-light leading-relaxed">
+                        不要なパッケージが一切ない、必要最小限の構成から始まります。余分なデーモンやサービスが走らないため、リソース消費が極めて小さく、レスポンスが俊敏です。
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="text-3xl mb-3">🔧</div>
+                    <h3 class="text-base font-bold text-blue-900 mb-2">高いカスタマイズ性</h3>
+                    <p class="text-sm text-slate-500 font-light leading-relaxed">
+                        インストール直後は本当に最小限のシステムだけです。デスクトップ環境からカーネルパラメータまで、すべてを自分好みに構築できます。「自分だけのOS」を作れるのが最大の魅力です。
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="text-3xl mb-3">📦</div>
+                    <h3 class="text-base font-bold text-blue-900 mb-2">ローリングリリース</h3>
+                    <p class="text-sm text-slate-500 font-light leading-relaxed">
+                        Ubuntu のようなバージョン区切りがなく、常に最新のソフトウェアを使い続けられます。pacman と AUR（Arch User Repository）により、膨大なパッケージを管理できます。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 0: KVM Setup -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-bold border-b border-blue-900/10 pb-4 mb-8">① KVM の準備</h2>
+            <p class="text-slate-600 font-light leading-relaxed mb-6">
+                KVM（Kernel-based Virtual Machine）はLinuxカーネルに組み込まれた仮想化技術です。
+                ハードウェアに近いレイヤーで動作するため、VirtualBoxなどと比較して高いパフォーマンスが得られます。
+            </p>
+
+            <h3 class="text-lg font-bold text-blue-900 mb-4">仮想化サポートの確認</h3>
+            <p class="text-slate-600 font-light text-sm mb-3">
+                まず、CPUがハードウェア仮想化（Intel VT-x / AMD-V）に対応しているか確認します。1以上の数値が表示されれば対応しています。
+            </p>
+            <div class="code-block mb-8">
+                <pre><code><span class="prompt">$ </span>egrep -c '(vmx|svm)' /proc/cpuinfo</code></pre>
+            </div>
+
+            <h3 class="text-lg font-bold text-blue-900 mb-4">KVM 関連パッケージのインストール</h3>
+            <p class="text-slate-600 font-light text-sm mb-3">
+                QEMU（仮想化エミュレータ本体）、libvirt（仮想マシン管理デーモン）、virt-manager（GUIツール）などをインストールします。
+            </p>
+            <div class="code-block mb-8">
+                <pre><code><span class="prompt">$ </span>sudo apt update
+<span class="prompt">$ </span>sudo apt install -y qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils virt-manager</code></pre>
+            </div>
+
+            <h3 class="text-lg font-bold text-blue-900 mb-4">ユーザーをグループに追加</h3>
+            <p class="text-slate-600 font-light text-sm mb-3">
+                自分のユーザーを <code class="text-blue-900 bg-blue-50 px-1 rounded">libvirt</code> グループと <code class="text-blue-900 bg-blue-50 px-1 rounded">kvm</code> グループに追加します。これにより、<code>sudo</code> なしで仮想マシンを操作できるようになります。<strong>変更を反映するには一度ログアウトが必要です。</strong>
+            </p>
+            <div class="code-block mb-8">
+                <pre><code><span class="prompt">$ </span>sudo adduser $USER libvirt
+<span class="prompt">$ </span>sudo adduser $USER kvm</code></pre>
+            </div>
+
+            <h3 class="text-lg font-bold text-blue-900 mb-4">仮想ネットワークの起動</h3>
+            <p class="text-slate-600 font-light text-sm mb-3">
+                仮想マシンがインターネットに繋がるためのデフォルトネットワーク（NAT）を起動・自動起動設定します。
+            </p>
+            <div class="code-block mb-4">
+                <pre><code><span class="prompt">$ </span>sudo virsh net-start default
+<span class="prompt">$ </span>sudo virsh net-autostart default
+<span class="comment"># 確認: Stateが "active" になっていればOK</span>
+<span class="prompt">$ </span>sudo virsh net-list --all</code></pre>
+            </div>
+        </section>
+
+        <!-- Step 1: VM Creation -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-bold border-b border-blue-900/10 pb-4 mb-8">② 仮想マシンの作成（Virt-manager）</h2>
+            <p class="text-slate-600 font-light leading-relaxed mb-6">
+                <a href="https://archlinux.org/download/" class="text-blue-700 hover:underline" target="_blank">Arch Linux 公式サイト</a> から最新の ISO イメージをダウンロードし、Virt-manager で仮想マシンを作成します。
+            </p>
+
+            <h3 class="text-lg font-bold text-blue-900 mb-4">推奨リソース割り当て</h3>
+            <div class="bg-white rounded-xl border border-blue-900/5 shadow-sm overflow-hidden mb-8">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="bg-blue-900/5 border-b border-blue-900/10">
+                            <th class="text-left px-6 py-3 font-bold text-blue-900">項目</th>
+                            <th class="text-left px-6 py-3 font-bold text-blue-900">推奨値</th>
+                            <th class="text-left px-6 py-3 font-bold text-blue-900 hidden md:table-cell">備考</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-blue-900/5">
+                        <tr>
+                            <td class="px-6 py-3 font-medium">メモリ</td>
+                            <td class="px-6 py-3 text-slate-600">2048 MiB 以上</td>
+                            <td class="px-6 py-3 text-slate-500 hidden md:table-cell">最低限 2GB。デスクトップ環境を入れるなら 4GB 推奨</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-3 font-medium">CPU</td>
+                            <td class="px-6 py-3 text-slate-600">2 コア以上</td>
+                            <td class="px-6 py-3 text-slate-500 hidden md:table-cell">パッケージのコンパイル時間が大幅に短縮される</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-3 font-medium">ディスク</td>
+                            <td class="px-6 py-3 text-slate-600">20 GiB 以上</td>
+                            <td class="px-6 py-3 text-slate-500 hidden md:table-cell">最低 20GB。余裕を持たせるなら 40GB 程度</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-3 font-medium">ファームウェア</td>
+                            <td class="px-6 py-3 text-slate-600">UEFI</td>
+                            <td class="px-6 py-3 text-slate-500 hidden md:table-cell">現代の標準。GRUB の EFI インストールに必要</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Step 2: Initial Setup in ISO -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-bold border-b border-blue-900/10 pb-4 mb-8">③ インストーラーの初期設定</h2>
+            <p class="text-slate-600 font-light leading-relaxed mb-6">
+                ISOから起動すると、ライブ環境のBashシェルが立ち上がります。インストール開始前にキーボードとネットワークを確認します。
+            </p>
+
+            <h3 class="text-lg font-bold text-blue-900 mb-4">キーボードレイアウトの設定</h3>
+            <p class="text-slate-600 font-light text-sm mb-3">
+                日本語配列キーボードを使用している場合、デフォルトのUS配列だと記号の位置がずれて入力ミスの原因になります。
+                以下のコマンドで日本語配列（JIS 106/109 キー）に切り替えます。
+            </p>
+            <div class="code-block mb-8">
+                <pre><code><span class="prompt">$ </span>loadkeys jp106</code></pre>
+            </div>
+
+            <h3 class="text-lg font-bold text-blue-900 mb-4">ネットワーク疎通確認</h3>
+            <p class="text-slate-600 font-light text-sm mb-3">
+                KVM のデフォルト仮想ネットワーク（NAT）経由でインターネットに接続できるかを確認します。
+                <code>pacstrap</code> でパッケージをダウンロードするために、ネットワーク接続は必須です。
+            </p>
+            <div class="code-block mb-4">
+                <pre><code><span class="prompt">$ </span>ping -c 3 google.com</code></pre>
+            </div>
+        </section>
+
+        <!-- Step 3: Disk Partitioning -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-bold border-b border-blue-900/10 pb-4 mb-8">④ ディスクのパーティション設定</h2>
+            <p class="text-slate-600 font-light leading-relaxed mb-6">
+                UEFI で作成した KVM 仮想マシンでは、ディスク名は <code class="text-blue-900 bg-blue-50 px-1 rounded">/dev/vda</code> になります（物理マシンの <code>/dev/sda</code> に相当）。
+                <code>cfdisk</code> という対話型ツールでパーティションを切ります。
+            </p>
+
+            <div class="flex flex-col gap-6 mb-8">
+                <div class="flex gap-4 items-start">
+                    <div class="step-number">1</div>
+                    <div class="flex-1">
+                        <p class="font-semibold text-slate-800 mb-1">cfdisk を起動して GPT を選択</p>
+                        <p class="text-sm text-slate-500 font-light mb-3">UEFI環境では GPT（GUID Partition Table）を使います。起動後に選択画面が出るので <code>gpt</code> を選択します。</p>
+                        <div class="code-block">
+                            <pre><code><span class="prompt">$ </span>cfdisk /dev/vda</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-4 items-start">
+                    <div class="step-number">2</div>
+                    <div class="flex-1">
+                        <p class="font-semibold text-slate-800 mb-1">EFI パーティションを作成</p>
+                        <p class="text-sm text-slate-500 font-light">「New」で <strong>512 MiB</strong> を作成し、「Type」を <strong>EFI System</strong> に変更します。UEFIブートに必要なブートローダーファイルがここに置かれます。</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 items-start">
+                    <div class="step-number">3</div>
+                    <div class="flex-1">
+                        <p class="font-semibold text-slate-800 mb-1">Root パーティションを作成</p>
+                        <p class="text-sm text-slate-500 font-light">残り全容量で「New」し、「Type」を <strong>Linux root (x86-64)</strong> にします。OSそのものがここにインストールされます。</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 items-start">
+                    <div class="step-number">4</div>
+                    <div class="flex-1">
+                        <p class="font-semibold text-slate-800 mb-1">「Write」で書き込んで「Quit」</p>
+                        <p class="text-sm text-slate-500 font-light">変更はこの時点まで実際には適用されていません。必ず「Write」を選択してからツールを終了してください。</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="text-lg font-bold text-blue-900 mb-4">ファイルシステムの作成（フォーマット）</h3>
+            <p class="text-slate-600 font-light text-sm mb-3">
+                パーティションを作っただけでは使えません。各パーティションをフォーマット（ファイルシステムを書き込む）します。
+                EFIパーティションは FAT32、ルートパーティションは ext4 が標準的です。
+            </p>
+            <div class="code-block mb-8">
+                <pre><code><span class="comment"># EFIパーティション（/dev/vda1）をFAT32でフォーマット</span>
+<span class="prompt">$ </span>mkfs.fat -F 32 /dev/vda1
+
+<span class="comment"># ルートパーティション（/dev/vda2）をext4でフォーマット</span>
+<span class="prompt">$ </span>mkfs.ext4 /dev/vda2</code></pre>
+            </div>
+
+            <h3 class="text-lg font-bold text-blue-900 mb-4">パーティションのマウント</h3>
+            <p class="text-slate-600 font-light text-sm mb-3">
+                フォーマットしたパーティションをインストール先としてマウントします。
+                <code>/mnt</code> がルートになり、その中の <code>/mnt/boot</code> に EFI パーティションをマウントします。
+            </p>
+            <div class="code-block mb-4">
+                <pre><code><span class="comment"># ルートパーティションを /mnt にマウント</span>
+<span class="prompt">$ </span>mount /dev/vda2 /mnt
+
+<span class="comment"># EFIパーティションを /mnt/boot にマウント（--mkdirで自動作成）</span>
+<span class="prompt">$ </span>mount --mkdir /dev/vda1 /mnt/boot</code></pre>
+            </div>
+        </section>
+
+        <!-- Step 4: System Install -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-bold border-b border-blue-900/10 pb-4 mb-8">⑤ ベースシステムのインストール</h2>
+            <p class="text-slate-600 font-light leading-relaxed mb-6">
+                <code class="text-blue-900 bg-blue-50 px-1 rounded">pacstrap</code> はArch Linux独自のインストールスクリプトです。
+                指定したマウントポイントに、必要なパッケージをネットからダウンロードしてインストールします。
+            </p>
+
+            <div class="code-block mb-6">
+                <pre><code><span class="comment"># base: 最小限のシステム、linux: カーネル本体、linux-firmware: ドライバ集、nano: テキストエディタ</span>
+<span class="prompt">$ </span>pacstrap -K /mnt base linux linux-firmware nano</code></pre>
+            </div>
+
+            <h3 class="text-lg font-bold text-blue-900 mb-4">fstab の生成と chroot</h3>
+            <p class="text-slate-600 font-light text-sm mb-3">
+                <code>fstab</code> は起動時にどのパーティションをどこにマウントするかを記述したファイルです。
+                <code>genfstab</code> コマンドで自動生成し、<code>arch-chroot</code> で新しいシステムに「入り込みます」。
+            </p>
+            <div class="code-block mb-6">
+                <pre><code><span class="comment"># UUIDベースでfstabを生成して保存</span>
+<span class="prompt">$ </span>genfstab -U /mnt >> /mnt/etc/fstab
+
+<span class="comment"># 新システムのルートに切り替え（ここからは新Arch環境のコマンドになる）</span>
+<span class="prompt">$ </span>arch-chroot /mnt</code></pre>
+            </div>
+
+            <div class="note-box">
+                <p class="text-sm text-slate-700 font-light">
+                    <strong>インストール確認：</strong> <code>pacman -Q qemu-guest-agent</code> を実行し、バージョン番号が表示されればディスクへの書き込みは成功しています。
+                </p>
+            </div>
+        </section>
+
+        <!-- Step 5: System Config -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-bold border-b border-blue-900/10 pb-4 mb-8">⑥ chroot 内での基本設定</h2>
+            <p class="text-slate-600 font-light leading-relaxed mb-6">
+                <code>arch-chroot</code> で入った後に行う設定です。これらを忘れると再起動後に Arch Linux が正常に立ち上がりません。
+            </p>
+
+            <div class="space-y-10">
+
+                <!-- Timezone -->
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-xs font-bold tracking-widest text-blue-900/60 bg-blue-100/60 px-2 py-1 rounded uppercase">Step A</span>
+                        <h3 class="text-lg font-bold text-blue-900">タイムゾーンと時計の設定</h3>
+                    </div>
+                    <p class="text-slate-600 font-light text-sm mb-3">
+                        システムクロックを日本時間（Asia/Tokyo、UTC+9）に設定します。<code>hwclock</code> でハードウェアクロックも同期させます。
+                    </p>
+                    <div class="code-block">
+                        <pre><code><span class="prompt">$ </span>ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+<span class="prompt">$ </span>hwclock --systohc</code></pre>
+                    </div>
+                </div>
+
+                <!-- Locale -->
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-xs font-bold tracking-widest text-blue-900/60 bg-blue-100/60 px-2 py-1 rounded uppercase">Step B</span>
+                        <h3 class="text-lg font-bold text-blue-900">ロケール（言語）の設定</h3>
+                    </div>
+                    <p class="text-slate-600 font-light text-sm mb-3">
+                        システムの言語・文字エンコードを設定します。英語UTF-8を有効にすることで、ほとんどのツールが正しく動作します。
+                    </p>
+                    <div class="code-block">
+                        <pre><code><span class="comment"># locale.gen を編集して "en_US.UTF-8 UTF-8" の行頭の # を削除して保存</span>
+<span class="prompt">$ </span>nano /etc/locale.gen
+
+<span class="comment"># ロケールを生成</span>
+<span class="prompt">$ </span>locale-gen
+
+<span class="comment"># デフォルトロケールとして設定</span>
+<span class="prompt">$ </span>echo "LANG=en_US.UTF-8" > /etc/locale.conf</code></pre>
+                    </div>
+                </div>
+
+                <!-- Hostname -->
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-xs font-bold tracking-widest text-blue-900/60 bg-blue-100/60 px-2 py-1 rounded uppercase">Step C</span>
+                        <h3 class="text-lg font-bold text-blue-900">ホスト名の設定</h3>
+                    </div>
+                    <p class="text-slate-600 font-light text-sm mb-3">
+                        ネットワーク上でこのマシンを識別するための名前（ホスト名）を設定します。好きな名前に変更して構いません。
+                    </p>
+                    <div class="code-block">
+                        <pre><code><span class="prompt">$ </span>echo "my-arch-linux" > /etc/hostname</code></pre>
+                    </div>
+                </div>
+
+                <!-- Root password -->
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-xs font-bold tracking-widest text-blue-900/60 bg-blue-100/60 px-2 py-1 rounded uppercase">Step D</span>
+                        <h3 class="text-lg font-bold text-blue-900">root パスワードの設定</h3>
+                    </div>
+                    <p class="text-slate-600 font-light text-sm mb-3">
+                        これを忘れると再起動後にログインできなくなります。必ず設定してください。
+                    </p>
+                    <div class="code-block">
+                        <pre><code><span class="prompt">$ </span>passwd</code></pre>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Step 6: Bootloader -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-bold border-b border-blue-900/10 pb-4 mb-8">⑦ ブートローダー（GRUB）の設定</h2>
+            <p class="text-slate-600 font-light leading-relaxed mb-6">
+                コンピュータを起動するとき、OSを呼び出す役割を担うのがブートローダーです。ここでは最も広く使われている <strong>GRUB</strong> を使います。
+            </p>
+
+            <div class="space-y-8">
+
+                <div>
+                    <h3 class="text-lg font-bold text-blue-900 mb-3">必要パッケージのインストール</h3>
+                    <p class="text-slate-600 font-light text-sm mb-3">
+                        GRUB 本体、UEFI起動メニューを書き換える <code>efibootmgr</code>、
+                        そして再起動後にインターネットへ繋がるための <code>networkmanager</code> をまとめてインストールします。
+                    </p>
+                    <div class="code-block">
+                        <pre><code><span class="prompt">$ </span>pacman -S grub efibootmgr networkmanager</code></pre>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold text-blue-900 mb-3">GRUB のインストール（EFIパーティションへ書き込み）</h3>
+                    <p class="text-slate-600 font-light text-sm mb-3">
+                        仮想マシンのEFIパーティション（<code>/boot</code>）にブートファイルを書き込み、UEFIファームウェアに「このファイルで起動して」と登録します。
+                    </p>
+                    <div class="code-block">
+                        <pre><code><span class="prompt">$ </span>grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB</code></pre>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold text-blue-900 mb-3">GRUB 設定ファイルの生成</h3>
+                    <p class="text-slate-600 font-light text-sm mb-3">
+                        GRUBにLinuxカーネルの場所を教えるための設定ファイルを生成します。
+                        <code class="text-blue-900 bg-blue-50 px-1 rounded">Found linux image: /boot/vmlinuz-linux</code> と表示されれば成功です。
+                    </p>
+                    <div class="code-block">
+                        <pre><code><span class="prompt">$ </span>grub-mkconfig -o /boot/grub/grub.cfg</code></pre>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Step 7: Reboot -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-bold border-b border-blue-900/10 pb-4 mb-8">⑧ 再起動と仕上げ</h2>
+            <p class="text-slate-600 font-light leading-relaxed mb-6">
+                すべての設定が完了しました。新しいシステムを起動させるために環境から脱出し、再起動します。
+            </p>
+
+            <div class="code-block mb-8">
+                <pre><code><span class="comment"># 再起動後にネットワークが自動で繋がるようにする</span>
+<span class="prompt">$ </span>systemctl enable NetworkManager
+
+<span class="comment"># chroot環境から抜け出す</span>
+<span class="prompt">$ </span>exit
+
+<span class="comment"># マウントを解除してから再起動</span>
+<span class="prompt">$ </span>umount -R /mnt
+<span class="prompt">$ </span>reboot</code></pre>
+            </div>
+
+            <div class="warn-box">
+                <p class="text-sm text-amber-900 font-light leading-relaxed">
+                    <strong>⚠️ 重要：</strong> 再起動の際、Virt-manager の設定から <strong>Arch Linux の ISO ファイル（仮想CD）を取り外す</strong> のを忘れないでください。
+                    ISO が挿さったままだと、また自動でインストーラーが起動してしまいます。
+                </p>
+            </div>
+        </section>
+
+        <!-- Back Navigation -->
+        <div class="mt-20 text-center">
+            <a href="../../../main.html"
+                class="inline-flex items-center gap-6 text-[10px] tracking-[0.5em] text-blue-900 hover:text-blue-500 transition-all group">
+                <span class="w-12 h-[1px] bg-blue-900/30 group-hover:w-20 transition-all"></span>
+                RETURN TO COMPUTING
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#050a14] text-blue-100/40 py-12 mt-20 text-center">
+        <p class="text-xs tracking-widest">©
+            <script>document.write(new Date().getFullYear())</script> Takuma Matsumoto
+        </p>
+    </footer>
+
+</body>
+
+</html>
