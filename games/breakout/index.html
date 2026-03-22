@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breakout | ブロック崩し</title>
+    <meta name="description" content="ブラウザで遊べるブロック崩しゲーム。物理演算と衝突判定を実装したCanvas製ゲーム。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Shippori+Mincho:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <a href="../index.html" class="back-btn">← GAMES</a>
+
+    <div class="game-wrapper">
+        <!-- Left Panel -->
+        <div class="side-panel left-panel">
+            <div class="glass-card info-card">
+                <div class="label">SCORE</div>
+                <div class="value" id="score">0</div>
+            </div>
+            <div class="glass-card info-card">
+                <div class="label">LIVES</div>
+                <div class="value lives-display" id="lives">
+                    <span class="life">●</span>
+                    <span class="life">●</span>
+                    <span class="life">●</span>
+                </div>
+            </div>
+            <div class="glass-card info-card">
+                <div class="label">LEVEL</div>
+                <div class="value" id="level">1</div>
+            </div>
+        </div>
+
+        <!-- Canvas Area -->
+        <div class="canvas-wrapper glass-card">
+            <canvas id="gameCanvas" width="480" height="600"></canvas>
+
+            <!-- Start Screen -->
+            <div id="startScreen" class="overlay">
+                <div class="overlay-content">
+                    <p class="overlay-sub">CANVAS PHYSICS</p>
+                    <h1 class="overlay-title">BREAKOUT</h1>
+                    <p class="overlay-sub">ブロック崩し</p>
+                    <div class="overlay-divider"></div>
+                    <button id="startBtn" class="action-btn">START GAME</button>
+                </div>
+            </div>
+
+            <!-- Clear Screen -->
+            <div id="clearScreen" class="overlay hidden">
+                <div class="overlay-content">
+                    <p class="overlay-sub">STAGE CLEAR!</p>
+                    <h1 class="overlay-title glow-text">CLEAR</h1>
+                    <div class="final-score">SCORE: <span id="clearScore">0</span></div>
+                    <button id="nextLevelBtn" class="action-btn">NEXT LEVEL</button>
+                </div>
+            </div>
+
+            <!-- Game Over Screen -->
+            <div id="gameOverScreen" class="overlay hidden">
+                <div class="overlay-content">
+                    <p class="overlay-sub">GAME OVER</p>
+                    <h1 class="overlay-title glitch" data-text="OVER">OVER</h1>
+                    <div class="final-score">SCORE: <span id="overScore">0</span></div>
+                    <button id="retryBtn" class="action-btn">RETRY</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="side-panel right-panel">
+            <div class="glass-card controls-card">
+                <div class="label">CONTROLS</div>
+                <ul class="controls-list">
+                    <li><span class="key">← →</span><span>パドル移動</span></li>
+                    <li><span class="key">A / D</span><span>パドル移動</span></li>
+                    <li><span class="key">Space</span><span>ポーズ</span></li>
+                </ul>
+            </div>
+            <div class="glass-card info-card">
+                <div class="label">HIGH SCORE</div>
+                <div class="value" id="highScore">0</div>
+            </div>
+            <div class="glass-card dev-card">
+                <div class="label">LEARNING</div>
+                <p class="dev-note">物理演算と衝突判定の実装。座標管理と反射ベクトルの計算。</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

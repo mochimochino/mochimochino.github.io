@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minesweeper | マインスイーパー</title>
+    <meta name="description" content="ブラウザで遊べるマインスイーパー。データ構造の設計と再帰処理を実装したゲーム。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <a href="../index.html" class="back-btn">← GAMES</a>
+
+    <div class="game-wrapper">
+        <!-- Main Board Area -->
+        <div class="main-panel glass-card">
+            
+            <div class="header-bar">
+                <div class="counter-box" title="残り地雷数">
+                    <span class="icon">💣</span>
+                    <span id="mineCount" class="lcd-text">000</span>
+                </div>
+                
+                <button id="resetBtn" class="smiley-btn">🙂</button>
+                
+                <div class="counter-box" title="経過時間">
+                    <span class="icon">⏱</span>
+                    <span id="timer" class="lcd-text">000</span>
+                </div>
+            </div>
+
+            <!-- Board Container -->
+            <div id="boardContainer" class="board-container">
+                <div id="grid" class="grid"></div>
+            </div>
+
+            <!-- Overlays -->
+            <div id="resultScreen" class="overlay hidden">
+                <div class="overlay-content">
+                    <h1 id="resultTitle" class="overlay-title">CLEAR</h1>
+                    <div class="final-stats">
+                        <p>TIME: <span id="finalTime">000</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel (Controls & Info) -->
+        <div class="side-panel right-panel">
+            <div class="glass-card controls-card">
+                <div class="label">DIFFICULTY</div>
+                <div class="diff-buttons">
+                    <button class="diff-btn active" data-diff="easy">EASY</button>
+                    <button class="diff-btn" data-diff="normal">NORMAL</button>
+                    <button class="diff-btn" data-diff="hard">HARD</button>
+                </div>
+                <div class="diff-info">
+                    <span id="diffDesc">9×9, 10 Mines</span>
+                </div>
+            </div>
+
+            <div class="glass-card controls-card mt-4">
+                <div class="label">CONTROLS</div>
+                <ul class="controls-list">
+                    <li><span class="key">Left Click</span><span>Open</span></li>
+                    <li><span class="key">Right Click</span><span>Flag 🚩</span></li>
+                </ul>
+            </div>
+
+            <div class="glass-card dev-card mt-4">
+                <div class="label">LEARNING</div>
+                <p class="dev-note">二次元配列による盤面データ管理と、空白マス開放時の再帰的（Recursive）な探索アルゴリズムの実装。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- コンテキストメニューの無効化 -->
+    <script>
+        document.addEventListener('contextmenu', event => event.preventDefault());
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

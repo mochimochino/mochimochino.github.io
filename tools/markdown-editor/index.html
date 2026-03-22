@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Editor | Planning</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;900&display=swap" rel="stylesheet">
+</head>
+<body class="bg-[#050a14] text-gray-300 font-['Inter'] min-h-screen flex items-center justify-center p-8">
+    <div class="max-w-3xl w-full border border-white/10 bg-white/5 backdrop-blur-md rounded-2xl p-10 shadow-2xl relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-1 bg-blue-500 h-full"></div>
+        
+        <a href="../../games/index.html" class="text-xs tracking-widest text-blue-400 hover:text-white mb-10 inline-block">← BACK</a>
+        
+        <div class="mb-10">
+            <span class="px-3 py-1 bg-blue-500/20 text-blue-400 text-[10px] font-bold tracking-widest rounded-full">COMING SOON</span>
+            <h1 class="text-4xl font-black text-white mt-4 mb-2">Realtime Markdown Editor</h1>
+            <p class="text-gray-400 text-sm">データの流れと状態保存を学ぶ実践プラン</p>
+        </div>
+
+        <div class="space-y-8 text-sm font-light leading-relaxed text-gray-300">
+            <div class="bg-black/30 p-6 rounded-xl border border-white/5">
+                <h3 class="text-blue-400 font-bold tracking-widest mb-4">■ Step 1: 2ペインUIの構築</h3>
+                <p>画面を左右に分割し、左側にテキスト入力用の <code class="bg-white/10 px-1 rounded">textarea</code>、右側にプレビュー表示用の <code class="bg-white/10 px-1 rounded">div</code> を配置します。</p>
+            </div>
+
+            <div class="bg-black/30 p-6 rounded-xl border border-white/5">
+                <h3 class="text-blue-400 font-bold tracking-widest mb-4">■ Step 2: リアルタイム変換機能</h3>
+                <p>入力イベントを監視し、入力されるたびにMarkdownをHTMLにパースしてプレビュー領域に出力します。（初期は正規表現の自作、または marked.js を使用）</p>
+            </div>
+
+            <div class="bg-black/30 p-6 rounded-xl border border-white/5">
+                <h3 class="text-blue-400 font-bold tracking-widest mb-4">■ Step 3: LocalStorage 保存</h3>
+                <p>Web Storage API の <code class="bg-white/10 px-1 rounded">localStorage</code> を用い、入力内容を自動保存。リロード時にもデータが復元されるようにします。</p>
+            </div>
+            
+            <div class="mt-8 border-t border-white/10 pt-8">
+                <h3 class="text-white font-bold mb-2">プランの理由:</h3>
+                <p class="text-gray-400 italic">「打った文字が変換されて見える」というデータのI/O（入出力）を先に確立し、その後に保存機能などのユーザビリティを後付けすることで、実用的なアプリ開発のセオリーを学びます。</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

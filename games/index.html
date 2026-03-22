@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Takuma's Web Tools | 制作物一覧</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;900&family=Shippori+Mincho:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050a14;
+            color: #e2eaf8;
+            overflow-x: hidden;
+        }
+        .bg-glow {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(77, 159, 255, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.08) 0%, transparent 40%);
+            animation: pulse 8s ease-in-out infinite alternate;
+        }
+        @keyframes pulse { from { opacity: 0.6; } to { opacity: 1; } }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(100, 160, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+        .glass-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(77, 159, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(77, 159, 255, 0.1);
+        }
+        
+        .section-title {
+            font-family: 'Shippori Mincho', serif;
+            position: relative;
+            display: inline-block;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -8px;
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, #4d9fff, transparent);
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen">
+    <div class="bg-glow"></div>
+
+    <nav class="p-8">
+        <a href="../index.html" class="text-sm tracking-widest text-[#4d9fff] hover:text-white transition-colors">
+            ← BACK TO HOME
+        </a>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-8 py-12">
+        <header class="mb-24">
+            <h1 class="text-[10px] tracking-[0.4em] text-[#4d9fff]/60 mb-4 uppercase">Web Applications</h1>
+            <h2 class="text-6xl font-black tracking-tight bg-gradient-to-r from-white to-gray-500 bg-clip-text text-transparent">
+                GAMES & TOOLS
+            </h2>
+            <p class="mt-6 text-gray-400 font-light max-w-2xl leading-relaxed">
+                ブラウザ上で動くゲームやツールの制作記録。物理演算、アルゴリズム、データの流れを学ぶための実装例です。
+            </p>
+        </header>
+
+        <section class="mb-24">
+            <h3 class="section-title text-3xl font-bold mb-12">Games</h3>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Tetris -->
+                <a href="../tetris-premium/index.html" class="glass-card rounded-2xl overflow-hidden group block">
+                    <div class="h-48 bg-gradient-to-br from-[#1b2538] to-[#050a14] relative flex items-center justify-center">
+                        <span class="text-2xl font-black tracking-widest text-white/20 group-hover:text-[#4d9fff]/40 transition-colors">TETRIS</span>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-bold mb-2">Tetris</h4>
+                        <p class="text-sm text-gray-400 font-light">プレミアムデザインのテトリス</p>
+                    </div>
+                </a>
+
+                <!-- Breakout -->
+                <a href="breakout/index.html" class="glass-card rounded-2xl overflow-hidden group block">
+                    <div class="h-48 bg-gradient-to-br from-[#051412] to-[#0a1a30] relative flex items-center justify-center overflow-hidden">
+                        <div class="absolute inset-0 opacity-20 group-hover:opacity-40 transition-opacity" style="background-image: radial-gradient(#4d9fff 1px, transparent 1px); background-size: 20px 20px;"></div>
+                        <span class="text-2xl font-black tracking-widest text-[#4d9fff]/30 group-hover:text-[#4d9fff] transition-colors relative z-10">BREAKOUT</span>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-bold mb-2">ブロック崩し</h4>
+                        <p class="text-sm text-gray-400 font-light">物理演算と衝突判定の基礎</p>
+                    </div>
+                </a>
+
+                <!-- Minesweeper -->
+                <a href="minesweeper/index.html" class="glass-card rounded-2xl overflow-hidden group block">
+                    <div class="h-48 bg-gradient-to-br from-[#2a0808] to-[#1a0505] relative flex items-center justify-center overflow-hidden">
+                        <div class="grid grid-cols-4 gap-1 absolute inset-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <div class="bg-red-500 rounded"></div><div class="bg-gray-500 rounded"></div><div class="bg-gray-500 rounded"></div><div class="bg-red-500 rounded"></div>
+                        </div>
+                        <span class="text-2xl font-black tracking-widest text-red-500/30 group-hover:text-red-500 transition-colors relative z-10">MINESWEEPER</span>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-bold mb-2">マインスイーパー</h4>
+                        <p class="text-sm text-gray-400 font-light">データ構造と再帰処理アルゴリズム</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <section class="mb-24">
+            <h3 class="section-title text-3xl font-bold mb-12">Tools <span class="text-sm text-gray-500 ml-4 font-sans font-normal">(Coming Soon)</span></h3>
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Markdown Editor -->
+                <a href="../tools/markdown-editor/index.html" class="glass-card rounded-2xl p-8 group block border-dashed">
+                    <div class="flex items-start justify-between mb-4">
+                        <h4 class="text-xl font-bold">Markdown Editor</h4>
+                        <span class="text-[10px] px-2 py-1 bg-white/5 rounded text-gray-400 tracking-wider">PLANNING</span>
+                    </div>
+                    <p class="text-sm text-gray-400 font-light leading-relaxed">
+                        リアルタイムMarkdown変換エディタ。入力→変換→出力のデータの流れと、LocalStorageによる状態保存を学ぶプラン。
+                    </p>
+                </a>
+
+                <!-- Paint Tool -->
+                <a href="../tools/paint-tool/index.html" class="glass-card rounded-2xl p-8 group block border-dashed">
+                    <div class="flex items-start justify-between mb-4">
+                        <h4 class="text-xl font-bold">Paint Tool</h4>
+                        <span class="text-[10px] px-2 py-1 bg-white/5 rounded text-gray-400 tracking-wider">PLANNING</span>
+                    </div>
+                    <p class="text-sm text-gray-400 font-light leading-relaxed">
+                        ブラウザペイントツール。Canvas上の高度なマウスイベント追跡と、描画状態のフラグ管理を学ぶプラン。
+                    </p>
+                </a>
+            </div>
+        </section>
+
+    </main>
+</body>
+</html>

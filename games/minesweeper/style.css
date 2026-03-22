@@ -1,0 +1,355 @@
+:root {
+    --bg: #050a14;
+    --surface: rgba(255, 255, 255, 0.04);
+    --border: rgba(100, 160, 255, 0.12);
+    --accent: #4d9fff;
+    --accent-glow: rgba(77, 159, 255, 0.4);
+    --text: #e2eaf8;
+    --text-dim: rgba(226, 234, 248, 0.4);
+    
+    --cell-bg: rgba(255, 255, 255, 0.08);
+    --cell-border-tl: rgba(255, 255, 255, 0.2);
+    --cell-border-br: rgba(0, 0, 0, 0.5);
+    
+    --cell-open-bg: rgba(5, 10, 20, 0.6);
+    --cell-open-border: rgba(255, 255, 255, 0.05);
+
+    /* Text Colors for Numbers 1-8 */
+    --c1: #4d9fff; /* Blue */
+    --c2: #4ade80; /* Green */
+    --c3: #f87171; /* Red */
+    --c4: #a855f7; /* Purple */
+    --c5: #fbbf24; /* Yellow */
+    --c6: #2dd4bf; /* Teal */
+    --c7: #f472b6; /* Pink */
+    --c8: #9ca3af; /* Gray */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* ── Background ── */
+.bg-animation {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background:
+        radial-gradient(circle at 70% 30%, rgba(77, 159, 255, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 30% 70%, rgba(168, 85, 247, 0.05) 0%, transparent 50%);
+    animation: pulse 10s ease-in-out infinite alternate;
+}
+@keyframes pulse {
+    0%   { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+.back-btn {
+    position: fixed;
+    top: 1.5rem;
+    left: 1.5rem;
+    z-index: 100;
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+.back-btn:hover { color: var(--accent); }
+
+/* ── Layout ── */
+.game-wrapper {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    padding: 1rem;
+}
+
+.glass-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.main-panel {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: relative;
+}
+
+/* ── Header Bar ── */
+.header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    border: 1px solid var(--cell-open-border);
+}
+
+.counter-box {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #000;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    border: inset 2px #333;
+}
+
+.icon {
+    font-size: 1.2rem;
+    filter: drop-shadow(0 0 4px rgba(255,255,255,0.2));
+}
+
+.lcd-text {
+    font-family: 'JetBrains Mono', monospace;
+    color: #f87171;
+    font-size: 1.5rem;
+    text-shadow: 0 0 8px rgba(248, 113, 113, 0.6);
+    line-height: 1;
+    width: 3ch;
+    text-align: right;
+}
+
+.smiley-btn {
+    font-size: 1.8rem;
+    background: var(--cell-bg);
+    border-top: 2px solid var(--cell-border-tl);
+    border-left: 2px solid var(--cell-border-tl);
+    border-bottom: 2px solid var(--cell-border-br);
+    border-right: 2px solid var(--cell-border-br);
+    border-radius: 4px;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: filter 0.1s;
+}
+.smiley-btn:active {
+    border: inset 2px var(--cell-border-br);
+    background: var(--cell-open-bg);
+}
+.smiley-btn:hover {
+    filter: brightness(1.2);
+}
+
+/* ── Board ── */
+.board-container {
+    background: #000;
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: inset 3px #333;
+}
+
+.grid {
+    display: grid;
+    gap: 1px;
+    background: #444; /* gap color */
+}
+
+.cell {
+    width: 2rem;
+    height: 2rem;
+    background: var(--cell-bg);
+    border-top: 2px solid var(--cell-border-tl);
+    border-left: 2px solid var(--cell-border-tl);
+    border-bottom: 2px solid var(--cell-border-br);
+    border-right: 2px solid var(--cell-border-br);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.cell.open {
+    background: var(--cell-open-bg);
+    border: 1px solid var(--cell-open-border);
+    cursor: default;
+}
+
+.cell.flag {
+    /* Flag icon managed via JS textContent */
+}
+
+.cell.mine {
+    background: #f87171 !important;
+    border-color: #f87171 !important;
+}
+.cell.mine.exploded {
+    background: #dc2626 !important;
+    box-shadow: 0 0 15px rgba(220, 38, 38, 0.8);
+}
+.cell.false-flag {
+    background: #fca5a5;
+}
+
+/* Colors for numbers */
+.val-1 { color: var(--c1); text-shadow: 0 0 6px var(--c1); }
+.val-2 { color: var(--c2); text-shadow: 0 0 6px var(--c2); }
+.val-3 { color: var(--c3); text-shadow: 0 0 6px var(--c3); }
+.val-4 { color: var(--c4); text-shadow: 0 0 6px var(--c4); }
+.val-5 { color: var(--c5); text-shadow: 0 0 6px var(--c5); }
+.val-6 { color: var(--c6); text-shadow: 0 0 6px var(--c6); }
+.val-7 { color: var(--c7); text-shadow: 0 0 6px var(--c7); }
+.val-8 { color: var(--c8); text-shadow: 0 0 6px var(--c8); }
+
+/* ── Side Panel ── */
+.side-panel {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+}
+.mt-4 { margin-top: 1rem; }
+
+.controls-card, .dev-card {
+    padding: 1.2rem 1rem;
+}
+
+.label {
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    color: var(--text-dim);
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.diff-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.diff-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.6rem;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.diff-btn:hover {
+    background: rgba(255,255,255,0.1);
+}
+.diff-btn.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+    box-shadow: 0 0 15px var(--accent-glow);
+}
+
+.diff-info {
+    text-align: center;
+    margin-top: 0.8rem;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.controls-list {
+    list-style: none;
+}
+.controls-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.6rem;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+}
+.key {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 0.65rem;
+    color: var(--accent);
+}
+
+.dev-note {
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+}
+
+/* ── Overlays ── */
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(5, 10, 20, 0.85);
+    backdrop-filter: blur(4px);
+    border-radius: 16px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s;
+}
+.overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.overlay-content {
+    text-align: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 2rem 3rem;
+    border-radius: 16px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.5);
+}
+
+.overlay-title {
+    font-size: 2.5rem;
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    margin-bottom: 1rem;
+    color: #fff;
+}
+.title-clear {
+    color: var(--accent);
+    text-shadow: 0 0 20px var(--accent-glow);
+}
+.title-over {
+    color: #f87171;
+    text-shadow: 0 0 20px rgba(248, 113, 113, 0.4);
+}
+
+.final-stats {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-dim);
+    font-size: 1.2rem;
+}

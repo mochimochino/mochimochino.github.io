@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser Paint | Planning</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;900&display=swap" rel="stylesheet">
+</head>
+<body class="bg-[#050a14] text-gray-300 font-['Inter'] min-h-screen flex items-center justify-center p-8">
+    <div class="max-w-3xl w-full border border-white/10 bg-white/5 backdrop-blur-md rounded-2xl p-10 shadow-2xl relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-1 bg-purple-500 h-full"></div>
+        
+        <a href="../../games/index.html" class="text-xs tracking-widest text-purple-400 hover:text-white mb-10 inline-block">← BACK</a>
+        
+        <div class="mb-10">
+            <span class="px-3 py-1 bg-purple-500/20 text-purple-400 text-[10px] font-bold tracking-widest rounded-full">COMING SOON</span>
+            <h1 class="text-4xl font-black text-white mt-4 mb-2">Browser Paint Tool</h1>
+            <p class="text-gray-400 text-sm">マウスイベントと高度な描画を学ぶ実践プラン</p>
+        </div>
+
+        <div class="space-y-8 text-sm font-light leading-relaxed text-gray-300">
+            <div class="bg-black/30 p-6 rounded-xl border border-white/5">
+                <h3 class="text-purple-400 font-bold tracking-widest mb-4">■ Step 1: イベントの基礎</h3>
+                <p>Canvasを配置し、<code class="bg-white/10 px-1 rounded">mousedown</code>、<code class="bg-white/10 px-1 rounded">mousemove</code>、<code class="bg-white/10 px-1 rounded">mouseup</code> というマウスイベントリスナーを設定します。</p>
+            </div>
+
+            <div class="bg-black/30 p-6 rounded-xl border border-white/5">
+                <h3 class="text-purple-400 font-bold tracking-widest mb-4">■ Step 2: 線の描画ロジック</h3>
+                <p>「描画中かどうか」を判定するフラグを用意。起点を記憶し、マウスを動かすたびに <code class="bg-white/10 px-1 rounded">lineTo</code> と <code class="bg-white/10 px-1 rounded">stroke</code> メソッドで線を引きます。</p>
+            </div>
+
+            <div class="bg-black/30 p-6 rounded-xl border border-white/5">
+                <h3 class="text-purple-400 font-bold tracking-widest mb-4">■ Step 3 & 4: ツールの拡張と保存</h3>
+                <p>選んだ値で色や太さを動的に変更可能に。さらに、クリアボタンの実装や、Canvasの内容をPNG画像としてダウンロードする機能を追加します。</p>
+            </div>
+            
+            <div class="mt-8 border-t border-white/10 pt-8">
+                <h3 class="text-white font-bold mb-2">プランの理由:</h3>
+                <p class="text-gray-400 italic">「マウスの軌跡に合わせて線を引く」というコア機能が完成しなければ、色や太さのテストができないため、依存関係の強い機能から順番に作成することが不可欠です。</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
