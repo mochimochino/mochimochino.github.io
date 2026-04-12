@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baseball Pitch 3D Simulator | Takuma's Tools</title>
+    <!-- Add Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&family=Shippori+Mincho:wght@700&display=swap" rel="stylesheet">
+    <!-- Add Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050a14;
+            color: #e2eaf8;
+            overflow: hidden; /* App takes full screen like a tool */
+            margin: 0;
+            padding: 0;
+        }
+        .bg-glow {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(77, 159, 255, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.08) 0%, transparent 40%);
+            animation: pulse 8s ease-in-out infinite alternate;
+        }
+        @keyframes pulse { from { opacity: 0.6; } to { opacity: 1; } }
+
+        /* Navigation overlay */
+        .wafu-nav {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            padding: 1.5rem 2rem;
+            z-index: 50;
+        }
+
+        /* Glassmorphism Panel styles for dark mode */
+        .glass-panel {
+            background: rgba(16, 25, 45, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(100, 160, 255, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+            padding: 5rem 1.5rem 1.5rem 1.5rem; /* space for nav */
+            gap: 1.5rem;
+            box-sizing: border-box;
+        }
+
+        .sidebar {
+            width: 380px;
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex-shrink: 0;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(77, 159, 255, 0.3) transparent;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(77, 159, 255, 0.3);
+            border-radius: 3px;
+        }
+
+        .sidebar-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .sidebar-header h1 {
+            font-family: 'Shippori Mincho', serif;
+            font-size: 1.7rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #e2eaf8, #4d9fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-header p {
+            font-size: 0.8rem;
+            color: rgba(226, 234, 248, 0.6);
+            letter-spacing: 0.1em;
+        }
+
+        .control-group {
+            margin-bottom: 2rem;
+        }
+        .control-group h3 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(226, 234, 248, 0.5);
+            margin-bottom: 1.2rem;
+            border-bottom: 1px solid rgba(100, 160, 255, 0.1);
+            padding-bottom: 0.5rem;
+        }
+
+        .control {
+            margin-bottom: 1.25rem;
+        }
+
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .control-label label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #b0c4de;
+        }
+
+        .control-label small {
+            font-size: 0.65rem;
+            color: rgba(226, 234, 248, 0.4);
+            display: block;
+            margin-top: 0.2rem;
+            font-weight: 300;
+        }
+
+        .value-display {
+            background: rgba(77, 159, 255, 0.1);
+            border: 1px solid rgba(77, 159, 255, 0.2);
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-variant-numeric: tabular-nums;
+            font-size: 0.85rem;
+            color: #4d9fff;
+            font-weight: 600;
+            min-width: 3.5rem;
+            text-align: center;
+        }
+
+        /* Range sliders */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #4d9fff;
+            cursor: pointer;
+            margin-top: -6px;
+            box-shadow: 0 0 10px rgba(77, 159, 255, 0.5);
+            transition: transform 0.1s ease;
+        }
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            background: #60a5fa;
+            box-shadow: 0 0 15px rgba(77, 159, 255, 0.8);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+        }
+
+        /* Dynamic Angle Visualizers */
+        .angle-visualizer {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1px solid rgba(100, 160, 255, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.2);
+            flex-shrink: 0;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .angle-arrow {
+            font-size: 14px;
+            font-weight: 900;
+            color: #4d9fff;
+            line-height: 1;
+        }
+
+        /* Buttons */
+        .simulate-btn {
+            background: rgba(77, 159, 255, 0.1);
+            border: 1px solid rgba(77, 159, 255, 0.3);
+            color: #e2eaf8;
+            padding: 0.8rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 1rem;
+        }
+        .simulate-btn:hover {
+            background: rgba(77, 159, 255, 0.2);
+            border-color: #4d9fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(77, 159, 255, 0.2);
+        }
+        #animateBtn {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #10b981;
+        }
+        #animateBtn:hover {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: #10b981;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+            color: #34d399;
+        }
+
+        .stats-output {
+            margin-top: 1.5rem;
+            font-size: 0.8rem;
+            color: #a78bfa;
+            text-align: center;
+            min-height: 20px;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            line-height: 1.4;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(100, 160, 255, 0.1);
+        }
+
+        #plot-container {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* Plotly styling overrides for dark mode blending */
+        .js-plotly-plot .plotly .modebar-btn path {
+            fill: rgba(226, 234, 248, 0.5) !important;
+        }
+        .js-plotly-plot .plotly .modebar-btn:hover path {
+            fill: #4d9fff !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+
+    <nav class="wafu-nav flex items-center justify-between">
+        <a href="../index.html" class="text-xs tracking-[0.2em] text-[#4d9fff] hover:text-white transition-colors">
+            ← BACK TO GAMES
+        </a>
+    </nav>
+
+    <div class="app-container">
+        <!-- Sidebar Controls -->
+        <aside class="sidebar glass-panel">
+            <div class="sidebar-header">
+                <h1>Pitch Simulator</h1>
+                <p>3D Trajectory & Aerodynamics</p>
+            </div>
+
+            <div class="control-group">
+                <h3>Vitals</h3>
+                <div class="control">
+                    <div class="control-label">
+                        <label for="speed">Speed [km/h]</label>
+                        <span id="speed-val" class="value-display">145</span>
+                    </div>
+                    <input type="range" id="speed" min="80" max="170" value="145" step="1">
+                </div>
+                <div class="control">
+                    <div class="control-label">
+                        <label for="spinRate">Spin Rate [RPM]</label>
+                        <span id="spinRate-val" class="value-display">2200</span>
+                    </div>
+                    <input type="range" id="spinRate" min="0.0" max="4000" value="2200" step="50">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3>Spin Axis</h3>
+                <div class="control">
+                    <div class="control-label">
+                        <label for="tiltAngle">Tilt Angle [deg]<br><small>(0=Backspin, 90=Side, 180=Topspin)</small></label>
+                        <span id="tiltAngle-val" class="value-display">0</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div class="angle-visualizer"><div id="tiltAngle-vis" class="angle-arrow">↑</div></div>
+                        <input type="range" id="tiltAngle" min="-180" max="180" value="0" step="5" style="flex:1;">
+                    </div>
+                </div>
+                <div class="control">
+                    <div class="control-label">
+                        <label for="gyroAngle">Gyro Angle [deg]<br><small>(0=True Spin, 90=Rifle Spin)</small></label>
+                        <span id="gyroAngle-val" class="value-display">0</span>
+                    </div>
+                     <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div class="angle-visualizer"><div id="gyroAngle-vis" class="angle-arrow">◎</div></div>
+                        <input type="range" id="gyroAngle" min="-90" max="90" value="0" step="5" style="flex:1;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3>Release Point</h3>
+                <div class="control">
+                    <div class="control-label">
+                        <label for="releaseY">Y offset [m]</label>
+                        <span id="releaseY-val" class="value-display">0.5</span>
+                    </div>
+                    <input type="range" id="releaseY" min="-1.5" max="1.5" value="0.5" step="0.1">
+                </div>
+                <div class="control">
+                    <div class="control-label">
+                        <label for="releaseZ">Height [m]</label>
+                        <span id="releaseZ-val" class="value-display">1.8</span>
+                    </div>
+                    <input type="range" id="releaseZ" min="1.0" max="2.5" value="1.8" step="0.05">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3>Release Angle (Aim)</h3>
+                <div class="control">
+                    <div class="control-label">
+                        <label for="releaseAngleV">上/下 (Vertical) [deg]</label>
+                        <span id="releaseAngleV-val" class="value-display">-2.8</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div class="angle-visualizer"><div id="releaseAngleV-vis" class="angle-arrow">→</div></div>
+                        <input type="range" id="releaseAngleV" min="-10" max="10" value="-2.8" step="0.1" style="flex:1;">
+                    </div>
+                </div>
+                <div class="control">
+                    <div class="control-label">
+                        <label for="releaseAngleH">左/右 (Horizontal) [deg]</label>
+                        <span id="releaseAngleH-val" class="value-display">0.0</span>
+                    </div>
+                     <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div class="angle-visualizer"><div id="releaseAngleH-vis" class="angle-arrow">↑</div></div>
+                        <input type="range" id="releaseAngleH" min="-10" max="10" value="0.0" step="0.1" style="flex:1;">
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem;">
+                <button id="simulateBtn" class="simulate-btn" style="flex: 1;">軌道予測 (Simulate)</button>
+                <button id="animateBtn" class="simulate-btn" style="flex: 1;">スロー再生 (Animate)</button>
+            </div>
+            <p class="stats-output" id="statsOutput"></p>
+        </aside>
+
+        <!-- Main Visualization Area -->
+        <main class="main-content glass-panel">
+            <div id="plot-container"></div>
+        </main>
+    </div>
+
+    <script src="physics.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
