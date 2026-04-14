@@ -183,9 +183,9 @@ mkdir -p ~/.config/zellij/layouts
 vim ~/.config/zellij/layouts/ide.kdl</code></pre>
             </div>
 
-            <h3 class="text-xl font-bold mb-4">ide.kdl の内容（2画面構成案）</h3>
+            <h3 class="text-xl font-bold mb-4">ide.kdl の内容（3カラム・VSCode風構成案）</h3>
             <p class="text-slate-600 font-light leading-relaxed mb-6">
-                左側にYazi（ファイルツリー）、右側にエディタ（Nvim/Helixなど）を配置する2画面構成（ツリー＋エディタ）のZellijレイアウト案。
+                左側にエクスプローラーとGit、中央にエディタとターミナルパネル、右側にAIアシスタント（Gemini）を配置した、VSCodeに近い高機能な3カラム構成。
             </p>
             <div class="code-block mb-6">
                 <pre><code>layout {
@@ -198,15 +198,34 @@ vim ~/.config/zellij/layouts/ide.kdl</code></pre>
             plugin location="zellij:status-bar"
         }
     }
-    tab name="VSCode Environment" split_direction="vertical" {
-        <span class="comment">// 左側のサイドバー領域（全体の20%の幅）</span>
-        <span class="comment">// Gitツールを外し、Yazi（ファイルツリー）に縦幅を全振りする</span>
-        pane size="20%" command="yazi"
 
-        <span class="comment">// 右側のメイン作業領域（残りの80%）</span>
-        pane focus=true {
-            <span class="comment">// ここで nvim や hx (Helix) を立ち上げて編集する</span>
+    tab name="VSCode Environment" split_direction="vertical" {
+        <span class="comment">// 左側のサイドバー領域（幅20%）</span>
+        pane size="20%" split_direction="horizontal" {
+            <span class="comment">// 上部：ファイルエクスプローラー (VSCodeのエクスプローラーパネル)</span>
+            pane name="Explorer" command="yazi" size="60%"
+            <span class="comment">// 下部：Gitクライアント (VSCodeのソース管理パネル)</span>
+            pane name="Git" command="gitui" size="40%"
         }
+
+        <span class="comment">// 中央のメイン領域（幅60%）</span>
+        pane size="60%" split_direction="horizontal" {
+            <span class="comment">// 上部：エディタ領域 (VSCodeのメインエディタ)</span>
+            pane name="Editor" focus=true size="75%" {
+                <span class="comment">// ここでHelixやNvimを使用</span>
+            }
+
+            <span class="comment">// 下部：ターミナル・モニタ領域 (VSCodeの下部パネル)</span>
+            pane name="Panel" split_direction="vertical" size="25%" {
+                <span class="comment">// 左側：汎用ターミナル（ビルドやコマンド実行用）</span>
+                pane name="Terminal"
+                <span class="comment">// 右側：リソースモニター（バックグラウンド処理の監視用）</span>
+                pane name="Monitor" command="btm"
+            }
+        }
+
+        <span class="comment">// 右側のGemini領域（幅20%）</span>
+        pane name="Gemini" size="20%" command="gemini"
     }
 }</code></pre>
             </div>
