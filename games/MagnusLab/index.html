@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magnus Lab | Takuma's Tools</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&family=Shippori+Mincho:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050a14;
+            color: #e2eaf8;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        .bg-glow {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(77, 159, 255, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.08) 0%, transparent 40%);
+            animation: pulse 8s ease-in-out infinite alternate;
+        }
+        @keyframes pulse { from { opacity: 0.6; } to { opacity: 1; } }
+
+        .wafu-nav {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            padding: 1.5rem 2rem;
+            z-index: 50;
+        }
+
+        .glass-panel {
+            background: rgba(16, 25, 45, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(100, 160, 255, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+            padding: 5rem 1.5rem 1.5rem 1.5rem;
+            gap: 1.5rem;
+            box-sizing: border-box;
+        }
+
+        .sidebar {
+            width: 380px;
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex-shrink: 0;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(77, 159, 255, 0.3) transparent;
+        }
+        .sidebar::-webkit-scrollbar { width: 6px; }
+        .sidebar::-webkit-scrollbar-thumb { background: rgba(77, 159, 255, 0.3); border-radius: 3px; }
+
+        .sidebar-header { margin-bottom: 1.5rem; text-align: center; }
+        .sidebar-header h1 {
+            font-family: 'Shippori Mincho', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #e2eaf8, #4d9fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.4rem;
+        }
+        .sidebar-header p { font-size: 0.75rem; color: rgba(226, 234, 248, 0.6); letter-spacing: 0.08em; }
+
+        .control-group { margin-bottom: 1.6rem; }
+        .control-group h3 {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(226, 234, 248, 0.5);
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(100, 160, 255, 0.1);
+            padding-bottom: 0.5rem;
+        }
+        .control { margin-bottom: 1.1rem; }
+        .control-label { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem; }
+        .control-label label { font-size: 0.78rem; font-weight: 600; color: #b0c4de; }
+        .control-label small { font-size: 0.63rem; color: rgba(226, 234, 248, 0.4); display: block; margin-top: 0.15rem; font-weight: 300; }
+        .value-display {
+            background: rgba(77, 159, 255, 0.1);
+            border: 1px solid rgba(77, 159, 255, 0.2);
+            padding: 0.2rem 0.45rem;
+            border-radius: 6px;
+            font-variant-numeric: tabular-nums;
+            font-size: 0.8rem;
+            color: #4d9fff;
+            font-weight: 600;
+            min-width: 3.2rem;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; outline: none; }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px; width: 16px;
+            border-radius: 50%;
+            background: #4d9fff;
+            cursor: pointer;
+            margin-top: -6px;
+            box-shadow: 0 0 10px rgba(77, 159, 255, 0.5);
+            transition: transform 0.1s ease;
+        }
+        input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); background: #60a5fa; }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 4px; cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+        }
+
+        .toggle-btn {
+            background: rgba(77, 159, 255, 0.1);
+            border: 1px solid rgba(77, 159, 255, 0.3);
+            color: #e2eaf8;
+            padding: 0.55rem;
+            border-radius: 8px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            width: 100%;
+        }
+        .toggle-btn:hover { border-color: #4d9fff; }
+        .toggle-btn.active { background: rgba(16, 185, 129, 0.15); border-color: #10b981; color: #34d399; }
+
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-top: 0.8rem; }
+        .stat-box {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(100, 160, 255, 0.1);
+            border-radius: 10px;
+            padding: 0.6rem 0.7rem;
+        }
+        .stat-box .stat-label { font-size: 0.62rem; color: rgba(226,234,248,0.45); letter-spacing: 0.05em; text-transform: uppercase; }
+        .stat-box .stat-value { font-size: 1.05rem; font-weight: 700; color: #4d9fff; margin-top: 0.15rem; }
+        .stat-box .stat-sub { font-size: 0.65rem; color: rgba(226,234,248,0.4); margin-top: 0.1rem; }
+
+        .knuckle-warning {
+            margin-top: 0.8rem;
+            font-size: 0.72rem;
+            line-height: 1.5;
+            color: #f0b94d;
+            background: rgba(240, 185, 77, 0.08);
+            border: 1px solid rgba(240, 185, 77, 0.25);
+            border-radius: 10px;
+            padding: 0.7rem 0.8rem;
+            display: none;
+        }
+        .knuckle-warning.show { display: block; }
+
+        .main-content {
+            flex-grow: 1;
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(100, 160, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #flowCanvas { width: 100%; height: 100%; display: block; }
+
+        .legend {
+            position: absolute;
+            bottom: 1.2rem;
+            left: 1.2rem;
+            font-size: 0.68rem;
+            color: rgba(226,234,248,0.55);
+            line-height: 1.7;
+            background: rgba(5,10,20,0.5);
+            border: 1px solid rgba(100,160,255,0.12);
+            border-radius: 10px;
+            padding: 0.6rem 0.8rem;
+        }
+        .legend span.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 0.4rem; }
+
+        .view-caption {
+            position: absolute;
+            top: 1.2rem;
+            left: 1.2rem;
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            color: rgba(226,234,248,0.5);
+            background: rgba(5,10,20,0.5);
+            border: 1px solid rgba(100,160,255,0.12);
+            border-radius: 10px;
+            padding: 0.5rem 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+
+    <nav class="wafu-nav flex items-center justify-between">
+        <a href="../index.html" class="text-xs tracking-[0.2em] text-[#4d9fff] hover:text-white transition-colors">
+            ← BACK TO GAMES
+        </a>
+    </nav>
+
+    <div class="app-container">
+        <aside class="sidebar glass-panel">
+            <div class="sidebar-header">
+                <h1>Magnus Lab</h1>
+                <p>縫い目 × 回転軸 × 空気の流れ</p>
+            </div>
+
+            <div class="control-group">
+                <h3>Vitals</h3>
+                <div class="control">
+                    <div class="control-label">
+                        <label for="speed">Speed [km/h]</label>
+                        <span id="speed-val" class="value-display">145</span>
+                    </div>
+                    <input type="range" id="speed" min="80" max="170" value="145" step="1">
+                </div>
+                <div class="control">
+                    <div class="control-label">
+                        <label for="rpm">Spin Rate [RPM]<br><small>300未満はナックル領域</small></label>
+                        <span id="rpm-val" class="value-display">2200</span>
+                    </div>
+                    <input type="range" id="rpm" min="0" max="4000" value="2200" step="20">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3>Spin Axis</h3>
+                <div class="control">
+                    <div class="control-label">
+                        <label for="tilt">Tilt Angle [deg]<br><small>0=バックスピン, 90=サイド, 180=トップ</small></label>
+                        <span id="tilt-val" class="value-display">0</span>
+                    </div>
+                    <input type="range" id="tilt" min="-180" max="180" value="0" step="5">
+                </div>
+                <div class="control">
+                    <div class="control-label">
+                        <label for="gyro">Gyro Angle [deg]<br><small>0=真の回転, 90=ジャイロ(縦回転)</small></label>
+                        <span id="gyro-val" class="value-display">0</span>
+                    </div>
+                    <input type="range" id="gyro" min="-90" max="90" value="0" step="5">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3>Seam Orientation (見た目)</h3>
+                <div class="control">
+                    <div class="control-label">
+                        <label for="seamOffset">Seam Offset [deg]<br><small>0≈2シーム的, 90≈4シーム的な見え方</small></label>
+                        <span id="seamOffset-val" class="value-display">25</span>
+                    </div>
+                    <input type="range" id="seamOffset" min="0" max="90" value="25" step="1">
+                </div>
+                <div class="control">
+                    <div class="control-label">
+                        <label for="seamPhase">Seam Phase [deg]<br><small>回転軸まわりの位相(スナップショット)</small></label>
+                        <span id="seamPhase-val" class="value-display">0</span>
+                    </div>
+                    <input type="range" id="seamPhase" min="0" max="360" value="0" step="1">
+                </div>
+                <button id="animateToggle" class="toggle-btn">▶ 回転をアニメーション</button>
+            </div>
+
+            <div class="control-group" style="margin-bottom: 0.5rem;">
+                <h3>結果</h3>
+                <div class="stat-grid">
+                    <div class="stat-box">
+                        <div class="stat-label">Magnus Force</div>
+                        <div class="stat-value" id="stat-force">0.00 N</div>
+                        <div class="stat-sub" id="stat-force-sub">方向: -</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">本塁到達時 変化量</div>
+                        <div class="stat-value" id="stat-disp">0 cm</div>
+                        <div class="stat-sub">概算(マグナス分のみ)</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Spin Factor S</div>
+                        <div class="stat-value" id="stat-S">0.00</div>
+                        <div class="stat-sub">S = Rω/v (有効回転)</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Lift Coeff. Cl</div>
+                        <div class="stat-value" id="stat-cl">0.00</div>
+                        <div class="stat-sub">簡易近似式</div>
+                    </div>
+                    <div class="stat-box" style="grid-column: span 2;">
+                        <div class="stat-label">Active Spin (有効回転率)</div>
+                        <div class="stat-value" id="stat-activespin">100%</div>
+                        <div class="stat-sub">cos(Gyro)。100%未満はジャイロ成分が混在し、マグナス力が弱まることを示す</div>
+                    </div>
+                </div>
+                <div class="knuckle-warning" id="knuckleWarning">
+                    ナックルボール領域: マグナス力はほぼゼロになり、代わりに縫い目の向き(Seam Offset/Phase)が空気の剥離点を左右し、わずかな軸のブレでも予測できない変化を生みます。位相を動かして縫い目の見え方の変化を確認してください。
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content glass-panel">
+            <canvas id="flowCanvas"></canvas>
+            <div class="view-caption" id="viewCaption">視点: 回転軸方向から見たボール断面</div>
+            <div class="legend">
+                <div><span class="dot" style="background:#4d9fff;"></span>空気の流線(簡略化ポテンシャル流)</div>
+                <div><span class="dot" style="background:#ffffff;"></span>縫い目(奥は半透明)</div>
+                <div><span class="dot" style="background:#f97373;"></span>マグナス力の向き</div>
+            </div>
+        </main>
+    </div>
+
+    <script src="seam.js"></script>
+    <script src="physics.js"></script>
+    <script src="flow.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
