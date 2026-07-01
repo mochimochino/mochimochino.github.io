@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Git 基本操作 | Takuma Matsumoto Docs</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1 {
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        pre {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+
+        ul,
+        ol {
+            margin-bottom: 20px;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Git コンフリクト解消手順（Rebase編）</h1>
+    <p>リモートの最新の変更の上に、自分のコミットを歴史の後ろから付け直すことで、履歴を一本の直線に保ちながら競合を解決する手法（<code>git rebase</code>）のマニュアルです。</p>
+
+    <!-- 目次形式 -->
+    <h2>目次</h2>
+    <ol>
+        <li><a href="#step1">最新のリモートコードを取得してリベースを開始する</a></li>
+        <li><a href="#step2">コンフリクトを検知・ファイルを修正する</a></li>
+        <li><a href="#step3">修正を確定してリベースを続行する</a></li>
+        <li><a href="#step4">リモートに強制プッシュ（Force Push）する</a></li>
+        <li><a href="#references">参考文献</a></li>
+    </ol>
+
+    <!-- 本文 -->
+    <h2 id="step1">1. 最新のリモートコードを取得してリベースを開始する</h2>
+    <p>自分の作業ブランチ（例: <code>feature</code>）にいる状態で、元となる親ブランチ（例: <code>main</code>）の最新状態を後ろに敷き直します。</p>
+    <pre><code>git fetch origin
+git rebase origin/main</code></pre>
+    <p><strong>【理由】</strong> 自分の変更を「あとから追加する」ためには、まずリモート側の最新状態の履歴をローカルに落とし込み、その最新状態をベース（土台）として自分のコミットを上に乗せ換える必要があるためです。
+    </p>
+
+    <h2 id="step2">2. コンフリクトを検知・ファイルを修正する</h2>
+    <p>リベース中にコンフリクトが発生すると、処理が一時停止します。<code>git status</code> で衝突しているファイルを確認し、使い慣れたエディタで開いて修正します。</p>
+    <p><strong>【注意】リベース中の衝突部分の表記</strong></p>
+    <pre><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+リモート側の最新コード（ベース側）
+=======
+自分が書いた、あとから追加しようとしているコード
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; 1234567... (コミットID)</code></pre>
+    <p><strong>【理由】</strong>
+        リベースは「リモートの最新状態に一時的にチェックアウトし、そこに自分のコミットを1つずつ適用していく」という動きをするため、Gitの内部的にはリモート側が現在地（<code>HEAD</code>）として扱われるからです。
+    </p>
+
+    <h2 id="step3">3. 修正を確定してリベースを続行する</h2>
+    <p>すべてのコンフリクト箇所の修正・整理が終わったら、Gitにリベースの再開を指示します。</p>
+    <pre><code>git add &lt;修正したファイル名&gt;
+git rebase --continue</code></pre>
+    <p><strong>【理由】</strong> リベース中にコミットを確定させる際、通常の <code>git commit</code>
+        を使ってしまうとリベースの管理状態から外れてしまいます。<code>git add</code>
+        でステージングに上げたあと、<code>--continue</code>（続ける）を指示することで、Gitが自動的にあなたのコミットを新しいベースの上に再構築してくれます。</p>
+
+    <h2 id="step4">4. リモートに強制プッシュ（Force Push）する</h2>
+    <p>ローカルでのリベースがすべて完了したら、リモートリポジトリに変更を反映させます。</p>
+    <pre><code>git push origin &lt;自分の作業ブランチ名&gt; --force-with-lease</code></pre>
+    <p><strong>【理由】</strong>
+        リベースを行うと、ローカルにあるあなたのコミットの「生い立ち（ベースとなる親コミットの歴史）」そのものが書き換わります。そのため、リモート側にある古い歴史と整合性が合わなくなり、通常のプッシュは拒否されます。歴史を上書きするために強制プッシュが必要となりますが、安全のために他人の変更を誤って消さない
+        <code>--force-with-lease</code> オプションを使用するのがベストプラクティスです。</p>
+
+    <!-- 参考文献 -->
+    <h2 id="references">5. 参考文献</h2>
+    <ul>
+        <li><a href="https://git-scm.com/book/ja/v2/Git%E3%81%AE%E3%83%A2%E3%83%BC%E3%83%89-%E3%83%AA%E3%83%99%E3%83%BC%E3%82%B9"
+                target="_blank" rel="noopener">Git 公式ドキュメント - リベース (Rebase)</a></li>
+        <li><a href="https://docs.github.com/ja/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges#rebase-and-merge-your-pull-request-commits"
+                target="_blank" rel="noopener">GitHub 公式ヘルプ - GitHub 上でのアトミックなリベースとマージについて</a></li>
+    </ul>
+
+</body>
+
+</html>
